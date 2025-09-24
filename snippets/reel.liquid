@@ -1,0 +1,311 @@
+{% comment %}
+  Reel Snippet - Renders Instagram/TikTok style vertical video
+  Usage: {% render 'reel', block: block %}
+{% endcomment %}
+
+<div class="reel-container reel-{{ block.id }} {{ block.settings.alignment }}" {{ block.shopify_attributes }}>
+  <div class="reel-wrapper">
+    {% if block.settings.video != blank %}
+      <video
+        class="reel-video"
+        {% if block.settings.video.sources.size > 0 %}
+          {% for source in block.settings.video.sources %}
+            {% if forloop.first %}src="{{ source.url }}"{% endif %}
+          {% endfor %}
+        {% endif %}
+        poster="{% if block.settings.cover_image != blank %}{{ block.settings.cover_image | image_url: width: 400 }}{% elsif block.settings.video.preview_image != blank %}{{ block.settings.video.preview_image | image_url: width: 400 }}{% endif %}"
+        {% if block.settings.autoplay %}autoplay muted playsinline{% endif %}
+        {% if block.settings.loop %}loop{% endif %}
+        controls
+      >
+        Your browser does not support the video tag.
+      </video>
+    {% elsif block.settings.video_url != blank %}
+      <div class="reel-iframe-wrapper">
+        {% if block.settings.video_url contains 'youtube' %}
+          <iframe
+            class="reel-iframe"
+            src="https://www.youtube.com/embed/{{ block.settings.video_url | split: '/' | last | split: '?v=' | last | split: '&' | first }}?rel=0{% if block.settings.autoplay %}&autoplay=1&mute=1{% endif %}{% if block.settings.loop %}&loop=1{% endif %}"
+            frameborder="0"
+            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+          ></iframe>
+        {% elsif block.settings.video_url contains 'vimeo' %}
+          <iframe
+            class="reel-iframe"
+            src="https://player.vimeo.com/video/{{ block.settings.video_url | split: '/' | last }}?{% if block.settings.autoplay %}autoplay=1&muted=1{% endif %}{% if block.settings.loop %}&loop=1{% endif %}"
+            frameborder="0"
+            allow="autoplay; fullscreen"
+            allowfullscreen
+          ></iframe>
+        {% else %}
+          <div class="reel-placeholder">
+            <p>Enter a valid YouTube or Vimeo URL</p>
+          </div>
+        {% endif %}
+      </div>
+    {% else %}
+      <div class="reel-placeholder">
+        <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polygon points="5 3 19 12 5 21 5 3"></polygon>
+        </svg>
+        <p>Add a video to showcase this product</p>
+      </div>
+    {% endif %}
+
+    {% if block.settings.show_overlay %}
+      <div class="reel-overlay">
+        {% if block.settings.title != blank %}
+          <h3 class="reel-title">{{ block.settings.title }}</h3>
+        {% endif %}
+        {% if block.settings.description != blank %}
+          <p class="reel-description">{{ block.settings.description }}</p>
+        {% endif %}
+        {% if block.settings.button_label != blank %}
+          <a href="{{ block.settings.button_link | default: product.url }}" class="reel-button">
+            {{ block.settings.button_label }}
+          </a>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {% if block.settings.show_interactions %}
+      <div class="reel-interactions">
+        <button class="reel-action" data-action="like" aria-label="Like">
+          <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+          </svg>
+          <span class="reel-count">234</span>
+        </button>
+        <button class="reel-action" data-action="comment" aria-label="Comment">
+          <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+          </svg>
+          <span class="reel-count">45</span>
+        </button>
+        <button class="reel-action" data-action="share" aria-label="Share">
+          <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="16 8 20 8 20 12"></polyline>
+            <line x1="14" y1="14" x2="20" y2="8"></line>
+            <path d="M20 14v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h7"></path>
+          </svg>
+        </button>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<style>
+  .reel-container {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    margin: 20px auto;
+  }
+
+  .reel-wrapper {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 9/16;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(102, 126, 234, 0.3);
+  }
+
+  .reel-video,
+  .reel-iframe {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .reel-iframe-wrapper {
+    width: 100%;
+    height: 100%;
+  }
+
+  .reel-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: #fff;
+    text-align: center;
+    padding: 30px;
+  }
+
+  .reel-placeholder svg {
+    margin-bottom: 20px;
+    opacity: 0.8;
+  }
+
+  .reel-placeholder p {
+    font-size: 16px;
+    opacity: 0.9;
+  }
+
+  /* Overlay */
+  .reel-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 40px 20px 30px;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.7) 50%, transparent 100%);
+    color: #fff;
+    z-index: 1;
+  }
+
+  .reel-title {
+    font-size: 28px;
+    font-weight: 800;
+    margin-bottom: 12px;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.6);
+    line-height: 1.2;
+  }
+
+  .reel-description {
+    font-size: 15px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    opacity: 0.95;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
+  }
+
+  .reel-button {
+    display: inline-block;
+    padding: 12px 28px;
+    background: #fff;
+    color: #667eea;
+    text-decoration: none;
+    border-radius: 30px;
+    font-weight: 700;
+    font-size: 16px;
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    box-shadow: 0 5px 20px rgba(255, 255, 255, 0.3);
+  }
+
+  .reel-button:hover {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 8px 30px rgba(255, 255, 255, 0.4);
+  }
+
+  /* Interactions */
+  .reel-interactions {
+    position: absolute;
+    right: 20px;
+    bottom: 120px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    z-index: 2;
+  }
+
+  .reel-action {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(20px);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    color: #fff;
+    padding: 14px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+  }
+
+  .reel-action:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: scale(1.15);
+    border-color: rgba(255, 255, 255, 0.5);
+  }
+
+  .reel-action:active {
+    transform: scale(0.95);
+  }
+
+  .reel-action.liked {
+    background: rgba(255, 68, 88, 0.3);
+    border-color: #ff4458;
+  }
+
+  .reel-action.liked svg {
+    fill: #ff4458;
+    stroke: #ff4458;
+  }
+
+  .reel-count {
+    font-size: 13px;
+    font-weight: 700;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Pulse animation for like */
+  @keyframes pulse-heart {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.3);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  .reel-action.liked svg {
+    animation: pulse-heart 0.5s ease-in-out;
+  }
+
+  /* Mobile responsive */
+  @media (max-width: 768px) {
+    .reel-container {
+      max-width: 100%;
+      margin: 0;
+    }
+
+    .reel-wrapper {
+      border-radius: 0;
+      box-shadow: none;
+    }
+
+    .reel-interactions {
+      right: 15px;
+      bottom: 100px;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const reelActions = document.querySelectorAll('.reel-{{ block.id }} .reel-action');
+
+    reelActions.forEach(action => {
+      if (action.dataset.action === 'like') {
+        action.addEventListener('click', function() {
+          this.classList.toggle('liked');
+          const count = this.querySelector('.reel-count');
+          if (count) {
+            let currentCount = parseInt(count.textContent) || 0;
+            count.textContent = this.classList.contains('liked') ? currentCount + 1 : Math.max(0, currentCount - 1);
+          }
+        });
+      } else if (action.dataset.action === 'share') {
+        action.addEventListener('click', function() {
+          if (navigator.share) {
+            navigator.share({
+              title: '{{ block.settings.title | default: "Check this out!" }}',
+              text: '{{ block.settings.description | default: "Amazing product!" }}',
+              url: window.location.href
+            });
+          }
+        });
+      }
+    });
+  });
+</script>
