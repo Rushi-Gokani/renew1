@@ -78,7 +78,20 @@
 
         <div class="quantity-selector">
           <label for="quantity">Quantity:</label>
-          <input type="number" name="quantity" id="quantity" value="1" min="1">
+          <div class="quantity-wrapper">
+            <button type="button" class="quantity-btn minus" onclick="updateQuantity(-1)" aria-label="Decrease quantity">
+              <svg width="12" height="2" viewBox="0 0 12 2" fill="currentColor">
+                <rect width="12" height="2"/>
+              </svg>
+            </button>
+            <input type="number" name="quantity" id="quantity" value="1" min="1" max="99" onchange="validateQuantity()">
+            <button type="button" class="quantity-btn plus" onclick="updateQuantity(1)" aria-label="Increase quantity">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
+                <rect x="5" width="2" height="12"/>
+                <rect y="5" width="12" height="2"/>
+              </svg>
+            </button>
+          </div>
         </div>
 
         <button type="submit" class="add-to-cart-btn" {% unless product.available %}disabled{% endunless %}>
@@ -288,8 +301,68 @@
     margin-bottom: 20px;
   }
 
-  .quantity-selector input {
-    width: 80px;
+  .quantity-wrapper {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #fff;
+    margin-top: 8px;
+  }
+
+  .quantity-btn {
+    width: 44px;
+    height: 44px;
+    border: none;
+    background: #fff;
+    color: #333;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    padding: 0;
+  }
+
+  .quantity-btn:hover:not(:disabled) {
+    background: #f5f5f5;
+  }
+
+  .quantity-btn:active:not(:disabled) {
+    background: #e8e8e8;
+  }
+
+  .quantity-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+
+  .quantity-btn svg {
+    pointer-events: none;
+  }
+
+  #quantity {
+    width: 60px;
+    height: 44px;
+    border: none;
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 600;
+    -moz-appearance: textfield;
+  }
+
+  #quantity::-webkit-outer-spin-button,
+  #quantity::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  #quantity:focus {
+    outline: none;
+    background: #f9f9f9;
   }
 
   .add-to-cart-btn {
@@ -381,6 +454,64 @@
   document.addEventListener('keydown', e => {
     if (e.key === 'ArrowLeft') changeSlide(-1);
     if (e.key === 'ArrowRight') changeSlide(1);
+  });
+
+  // Quantity selector functions
+  function updateQuantity(change) {
+    const input = document.getElementById('quantity');
+    let currentValue = parseInt(input.value) || 1;
+    let newValue = currentValue + change;
+
+    // Enforce min and max limits
+    if (newValue < 1) newValue = 1;
+    if (newValue > 99) newValue = 99;
+
+    input.value = newValue;
+    updateQuantityButtons();
+  }
+
+  function validateQuantity() {
+    const input = document.getElementById('quantity');
+    let value = parseInt(input.value);
+
+    // If not a valid number or less than 1, set to 1
+    if (isNaN(value) || value < 1) {
+      input.value = 1;
+    }
+    // If greater than 99, set to 99
+    else if (value > 99) {
+      input.value = 99;
+    }
+
+    updateQuantityButtons();
+  }
+
+  function updateQuantityButtons() {
+    const input = document.getElementById('quantity');
+    const value = parseInt(input.value) || 1;
+    const minusBtn = document.querySelector('.quantity-btn.minus');
+    const plusBtn = document.querySelector('.quantity-btn.plus');
+
+    // Disable minus button at minimum
+    if (minusBtn) {
+      minusBtn.disabled = value <= 1;
+    }
+
+    // Disable plus button at maximum
+    if (plusBtn) {
+      plusBtn.disabled = value >= 99;
+    }
+  }
+
+  // Initialize quantity buttons state on page load
+  document.addEventListener('DOMContentLoaded', () => {
+    updateQuantityButtons();
+
+    // Add input event listener for real-time validation
+    const quantityInput = document.getElementById('quantity');
+    if (quantityInput) {
+      quantityInput.addEventListener('input', validateQuantity);
+    }
   });
 </script>
 
