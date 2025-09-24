@@ -348,10 +348,15 @@
             "nav_button_hover_color": "#000000",
             "dot_color": "#cccccc",
             "dot_active_color": "#000000",
+            "icon_1": "shopify://shop_images/vitamins.png",
             "icon_text_1": "Rich in Nutrients",
+            "icon_2": "shopify://shop_images/vitamin.png",
             "icon_text_2": "Strong Antioxidant",
+            "icon_3": "shopify://shop_images/heart.png",
             "icon_text_3": "Boosts Heart Health",
+            "icon_4": "shopify://shop_images/hair.png",
             "icon_text_4": "Enhances Skin & Hair",
+            "icon_5": "shopify://shop_images/immunity.png",
             "icon_text_5": "Boosts Immunity"
           },
           "blocks": {}
