@@ -377,7 +377,10 @@
             "show_mobile_arrows": true,
             "show_mobile_dots": true,
             "card_background": "#ffffff",
-            "accent_color": "#000000"
+            "accent_color": "#000000",
+            "video_1": "shopify://files/videos/Product_Video_Generation_Request.mp4",
+            "video_2": "shopify://files/videos/Portrait_Reel_Video_Generated.mp4",
+            "video_3": "shopify://files/videos/Product_Showcase_Video_Generation.mp4"
           },
           "blocks": {}
         }
