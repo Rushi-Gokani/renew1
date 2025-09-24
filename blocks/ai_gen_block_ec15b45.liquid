@@ -1,0 +1,797 @@
+{% doc %}
+  @prompt
+    We need to add quick access to collection stab in which there is an image there is a link for the collection and it is a slider on mobile and it is like rounded circle on desktop so he needs circle basically we will be adding an image and link so the more it happens it will become like a slider on both desktop and mobile its like for quick actions for collection page, It works perfectly just need 2 things one the alignment 2 center of the whole circles or hold collections and secondly the option to disable navigation arrows with dots or something else rest everything else is perfect and remains the same so that needs to change
+
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-collection-tabs-{{ ai_gen_id }} {
+    width: 100%;
+    padding: 20px 0;
+  }
+
+  .ai-collection-tabs-container-{{ ai_gen_id }} {
+    position: relative;
+    overflow: visible;
+    text-align: center;
+    padding-top: 10px;
+  }
+
+  .ai-collection-tabs-wrapper-{{ ai_gen_id }} {
+    display: flex;
+    gap: {{ block.settings.item_spacing }}px;
+    transition: transform 0.3s ease;
+    padding: 0 20px;
+    justify-content: center;
+  }
+
+  .ai-collection-tab-{{ ai_gen_id }} {
+    flex-shrink: 0;
+    text-align: center;
+    text-decoration: none;
+    color: {{ block.settings.text_color }};
+    transition: transform 0.3s ease;
+  }
+
+  .ai-collection-tab-{{ ai_gen_id }}:hover {
+    transform: translateY(-5px);
+    color: {{ block.settings.text_hover_color }};
+  }
+
+  .ai-collection-tab-image-{{ ai_gen_id }} {
+    width: {{ block.settings.circle_size }}px;
+    height: calc({{ block.settings.circle_size }}px * 1.4);
+    border-radius: 25px;
+    overflow: hidden;
+    margin: 0 auto {{ block.settings.text_spacing }}px;
+    border: {{ block.settings.border_width }}px dashed {{ block.settings.border_color }};
+    transition: all 0.3s ease;
+  }
+
+  .ai-collection-tab-{{ ai_gen_id }}:hover .ai-collection-tab-image-{{ ai_gen_id }} {
+    border-color: {{ block.settings.border_hover_color }};
+  }
+
+  .ai-collection-tab-image-{{ ai_gen_id }} img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ai-collection-tab-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    background-color: {{ block.settings.placeholder_bg_color }};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-collection-tab-placeholder-{{ ai_gen_id }} svg {
+    width: 60%;
+    height: 60%;
+    opacity: 0.5;
+  }
+
+  .ai-collection-tab-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.text_size }}px;
+    font-weight: {{ block.settings.text_weight }};
+    margin: 0;
+    text-transform: {{ block.settings.text_transform }};
+  }
+
+  .ai-collection-tabs-nav-{{ ai_gen_id }} {
+    display: none;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: {{ block.settings.nav_button_color }};
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    z-index: 2;
+    transition: background-color 0.3s ease;
+  }
+
+  .ai-collection-tabs-nav-{{ ai_gen_id }}:hover {
+    background: {{ block.settings.nav_button_hover_color }};
+  }
+
+  .ai-collection-tabs-nav-{{ ai_gen_id }} svg {
+    width: 20px;
+    height: 20px;
+    fill: {{ block.settings.nav_icon_color }};
+  }
+
+  .ai-collection-tabs-nav-prev-{{ ai_gen_id }} {
+    left: 10px;
+  }
+
+  .ai-collection-tabs-nav-next-{{ ai_gen_id }} {
+    right: 10px;
+  }
+
+  .ai-collection-tabs-dots-{{ ai_gen_id }} {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 20px;
+  }
+
+  .ai-collection-tabs-dot-{{ ai_gen_id }} {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: {{ block.settings.dot_color }};
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+  }
+
+  .ai-collection-tabs-dot-{{ ai_gen_id }}.active {
+    background-color: {{ block.settings.dot_active_color }};
+    transform: scale(1.2);
+  }
+
+  .ai-collection-tabs-dot-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.dot_hover_color }};
+  }
+
+  .ai-collection-empty-state-{{ ai_gen_id }} {
+    text-align: center;
+    padding: 40px 20px;
+    color: #666;
+  }
+
+  .ai-collection-empty-state-{{ ai_gen_id }} h3 {
+    margin: 0 0 10px;
+    font-size: 18px;
+  }
+
+  .ai-collection-empty-state-{{ ai_gen_id }} p {
+    margin: 0;
+    font-size: 14px;
+  }
+
+  {% if block.settings.navigation_type == 'arrows' %}
+    @media screen and (max-width: 749px) {
+      .ai-collection-tabs-wrapper-{{ ai_gen_id }} {
+        padding: 0 10px;
+        justify-content: center;
+      }
+
+      .ai-collection-tab-image-{{ ai_gen_id }} {
+        width: {{ block.settings.circle_size_mobile }}px;
+        height: calc({{ block.settings.circle_size_mobile }}px * 1.4);
+      }
+
+      .ai-collection-tab-title-{{ ai_gen_id }} {
+        font-size: {{ block.settings.text_size_mobile }}px;
+      }
+
+      .ai-collection-tabs-nav-{{ ai_gen_id }} {
+        display: block;
+      }
+    }
+
+    @media screen and (min-width: 750px) {
+      .ai-collection-tabs-nav-{{ ai_gen_id }} {
+        display: block;
+      }
+    }
+  {% endif %}
+
+  {% if block.settings.navigation_type == 'dots' %}
+    @media screen and (max-width: 749px) {
+      .ai-collection-tabs-wrapper-{{ ai_gen_id }} {
+        padding: 0 10px;
+        justify-content: center;
+      }
+
+      .ai-collection-tab-image-{{ ai_gen_id }} {
+        width: {{ block.settings.circle_size_mobile }}px;
+        height: calc({{ block.settings.circle_size_mobile }}px * 1.4);
+      }
+
+      .ai-collection-tab-title-{{ ai_gen_id }} {
+        font-size: {{ block.settings.text_size_mobile }}px;
+      }
+
+      .ai-collection-tabs-dots-{{ ai_gen_id }} {
+        display: flex;}
+    }
+
+    @media screen and (min-width: 750px) {
+      .ai-collection-tabs-dots-{{ ai_gen_id }} {
+        display: flex;
+      }
+    }
+  {% endif %}
+
+  {% if block.settings.navigation_type == 'none' %}
+    @media screen and (max-width: 749px) {
+      .ai-collection-tabs-wrapper-{{ ai_gen_id }} {
+        padding: 0 10px;
+        justify-content: center;
+      }
+
+      .ai-collection-tab-image-{{ ai_gen_id }} {
+        width: {{ block.settings.circle_size_mobile }}px;
+        height: calc({{ block.settings.circle_size_mobile }}px * 1.4);
+      }
+
+      .ai-collection-tab-title-{{ ai_gen_id }} {
+        font-size: {{ block.settings.text_size_mobile }}px;
+      }
+    }
+  {% endif %}
+{% endstyle %}
+
+<collection-tabs-{{ ai_gen_id }}
+  class="ai-collection-tabs-{{ ai_gen_id }}"
+  data-navigation-type="{{ block.settings.navigation_type }}"
+  {{ block.shopify_attributes }}
+>
+  {% assign has_collections = false %}
+  {% for i in (1..8) %}
+    {% assign collection_key = 'collection_' | append: i %}
+    {% assign image_key = 'image_' | append: i %}
+    {% assign collection = block.settings[collection_key] %}
+    {% assign image = block.settings[image_key] %}
+    
+    {% if collection != blank %}
+      {% assign has_collections = true %}
+      {% break %}
+    {% endif %}
+  {% endfor %}
+
+  {% if has_collections %}
+    <div class="ai-collection-tabs-container-{{ ai_gen_id }}">
+      {% if block.settings.navigation_type == 'arrows' %}
+        <button
+          class="ai-collection-tabs-nav-{{ ai_gen_id }} ai-collection-tabs-nav-prev-{{ ai_gen_id }}"
+          aria-label="Previous collections"
+          data-direction="prev"
+        >
+          <svg viewBox="0 0 24 24">
+            <path d="M15 18l-6-6 6-6"/>
+          </svg>
+        </button>{% endif %}
+
+      <div class="ai-collection-tabs-wrapper-{{ ai_gen_id }}">
+        {% for i in (1..8) %}
+          {% assign collection_key = 'collection_' | append: i %}
+          {% assign image_key = 'image_' | append: i %}
+          {% assign collection = block.settings[collection_key] %}
+          {% assign image = block.settings[image_key] %}
+          
+          {% if collection != blank %}
+            <a
+              href="{{ collection.url }}"
+              class="ai-collection-tab-{{ ai_gen_id }}"
+            >
+              <div class="ai-collection-tab-image-{{ ai_gen_id }}">
+                {% if image != blank %}
+                  <img
+                    src="{{ image | image_url: width: 200 }}"
+                    alt="{{ image.alt | escape }}"
+                    loading="lazy"
+                    width="200"
+                    height="200"
+                  >
+                {% elsif collection.featured_image != blank %}
+                  <img
+                    src="{{ collection.featured_image | image_url: width: 200 }}"
+                    alt="{{ collection.featured_image.alt | escape }}"
+                    loading="lazy"
+                    width="200"
+                    height="200"
+                  >
+                {% else %}
+                  <div class="ai-collection-tab-placeholder-{{ ai_gen_id }}">
+                    {{ 'collection-1' | placeholder_svg_tag }}
+                  </div>
+                {% endif %}
+              </div>
+              <h3 class="ai-collection-tab-title-{{ ai_gen_id }}">{{ collection.title }}</h3>
+            </a>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+      {% if block.settings.navigation_type == 'arrows' %}
+        <button
+          class="ai-collection-tabs-nav-{{ ai_gen_id }} ai-collection-tabs-nav-next-{{ ai_gen_id }}"
+          aria-label="Next collections"
+          data-direction="next"
+        >
+          <svg viewBox="0 0 24 24">
+            <path d="M9 18l6-6-6-6"/>
+          </svg>
+        </button>
+      {% endif %}
+    </div>
+
+    {% if block.settings.navigation_type == 'dots' %}
+      <div class="ai-collection-tabs-dots-{{ ai_gen_id }}"></div>
+    {% endif %}
+  {% else %}
+    <div class="ai-collection-empty-state-{{ ai_gen_id }}">
+      <h3>Quick collection access</h3>
+      <p>Add collections to create quick navigation tabs</p>
+    </div>
+  {% endif %}
+</collection-tabs-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class CollectionTabs{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.currentIndex = 0;
+        this.itemsPerView = 1;
+        this.totalItems = 0;
+        this.navigationType = 'arrows';
+      }
+
+      connectedCallback() {
+        this.wrapper = this.querySelector('.ai-collection-tabs-wrapper-{{ ai_gen_id }}');
+        this.items = this.querySelectorAll('.ai-collection-tab-{{ ai_gen_id }}');
+        this.prevButton = this.querySelector('.ai-collection-tabs-nav-prev-{{ ai_gen_id }}');
+        this.nextButton = this.querySelector('.ai-collection-tabs-nav-next-{{ ai_gen_id }}');
+        this.dotsContainer = this.querySelector('.ai-collection-tabs-dots-{{ ai_gen_id }}');
+        this.navigationType = this.dataset.navigationType || 'arrows';
+
+        if (!this.wrapper || this.items.length === 0) return;
+
+        this.totalItems = this.items.length;
+        this.calculateItemsPerView();
+        this.setupEventListeners();
+        if (this.navigationType === 'dots') {
+          this.createDots();
+        }
+        
+        this.updateNavigation();
+
+        window.addEventListener('resize', () => {
+          this.calculateItemsPerView();
+          if (this.navigationType === 'dots') {
+            this.updateDots();
+          }this.updateNavigation();
+        });
+      }
+
+      calculateItemsPerView() {
+        if (!this.wrapper || this.items.length === 0) return;
+
+        const containerWidth = this.wrapper.offsetWidth;
+        const itemWidth = this.items[0].offsetWidth;
+        const gap = parseInt(getComputedStyle(this.wrapper).gap) || 0;
+        this.itemsPerView = Math.floor(containerWidth / (itemWidth + gap));this.itemsPerView = Math.max(1, Math.min(this.itemsPerView, this.totalItems));
+      }
+
+      createDots() {
+        if (!this.dotsContainer) return;
+        
+        this.dotsContainer.innerHTML = '';
+        const totalDots = Math.ceil(this.totalItems / this.itemsPerView);
+        
+        for (let i = 0; i < totalDots; i++) {
+          const dot = document.createElement('button');
+          dot.className = `ai-collection-tabs-dot-{{ ai_gen_id }}`;
+          dot.setAttribute('aria-label', `Go to slide ${i + 1}`);
+          dot.addEventListener('click', () => {
+            this.currentIndex = i;
+            this.updateSliderPosition();
+            this.updateDots();
+          });
+          this.dotsContainer.appendChild(dot);
+        }
+      }
+
+      updateDots() {
+        if (!this.dotsContainer) return;
+        
+        const dots = this.dotsContainer.querySelectorAll('.ai-collection-tabs-dot-{{ ai_gen_id }}');
+        const currentDot = Math.floor(this.currentIndex / this.itemsPerView);
+        
+        dots.forEach((dot, index) => {
+          dot.classList.toggle('active', index === currentDot);
+        });
+      }
+
+      setupEventListeners() {
+        if (this.prevButton) {
+          this.prevButton.addEventListener('click', () => this.slide('prev'));
+        }
+        if (this.nextButton) {
+          this.nextButton.addEventListener('click', () => this.slide('next'));
+        }
+
+        if (this.navigationType !== 'none') {
+          let startX = 0;
+          let currentX = 0;
+          let isDragging = false;
+
+          this.wrapper.addEventListener('touchstart', (e) => {
+            startX = e.touches[0].clientX;
+            isDragging = true;
+          });
+
+          this.wrapper.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+            currentX = e.touches[0].clientX;
+          });
+
+          this.wrapper.addEventListener('touchend', () => {
+            if (!isDragging) return;
+            isDragging = false;
+            const diff = startX - currentX;
+            if (Math.abs(diff) > 50) {
+              if (diff > 0) {
+                this.slide('next');
+              } else {
+                this.slide('prev');
+              }
+            }
+          });
+        }
+      }
+
+      slide(direction) {
+        const maxIndex = Math.max(0, this.totalItems - this.itemsPerView);
+        if (direction === 'next') {
+          this.currentIndex = Math.min(this.currentIndex + 1, maxIndex);
+        } else {
+          this.currentIndex = Math.max(this.currentIndex - 1, 0);
+        }
+
+        this.updateSliderPosition();
+        this.updateNavigation();
+        
+        if (this.navigationType === 'dots') {
+          this.updateDots();
+        }
+      }
+
+      updateSliderPosition() {
+        if (!this.wrapper || this.items.length === 0) return;
+
+        const itemWidth = this.items[0].offsetWidth;
+        const gap = parseInt(getComputedStyle(this.wrapper).gap) || 0;
+        const translateX = -(this.currentIndex * (itemWidth + gap));
+        
+        this.wrapper.style.transform = `translateX(${translateX}px)`;
+      }
+
+      updateNavigation() {
+        if (this.navigationType !== 'arrows' || !this.prevButton || !this.nextButton) return;
+
+        const maxIndex = Math.max(0, this.totalItems - this.itemsPerView);
+        this.prevButton.style.opacity = this.currentIndex === 0 ? '0.5' : '1';
+        this.prevButton.disabled = this.currentIndex === 0;
+        
+        this.nextButton.style.opacity = this.currentIndex >= maxIndex ? '0.5' : '1';
+        this.nextButton.disabled = this.currentIndex >= maxIndex;
+      }
+    }
+
+    customElements.define('collection-tabs-{{ ai_gen_id }}', CollectionTabs{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Collection quick access",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Navigation"
+    },
+    {
+      "type": "select",
+      "id": "navigation_type",
+      "label": "Navigation type",
+      "options": [
+        {"value": "arrows", "label": "Arrows"},
+        {"value": "dots", "label": "Dots"},
+        {"value": "none", "label": "None"}
+      ],
+      "default": "arrows"
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "range",
+      "id": "circle_size",
+      "min": 60,
+      "max": 150,
+      "step": 10,
+      "unit": "px",
+      "label": "Circle size (desktop)",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "circle_size_mobile",
+      "min": 50,
+      "max": 120,
+      "step": 10,
+      "unit": "px",
+      "label": "Circle size (mobile)",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "item_spacing",
+      "min": 10,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "Spacing between items",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "text_spacing",
+      "min": 5,
+      "max": 30,
+      "step": 5,
+      "unit": "px",
+      "label": "Space below image",
+      "default": 15
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "text_hover_color",
+      "label": "Text hover color",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border color",
+      "default": "#e6e6e6"
+    },
+    {
+      "type": "color",
+      "id": "border_hover_color",
+      "label": "Border hover color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "placeholder_bg_color",
+      "label": "Placeholder background",
+      "default": "#f4f4f4"
+    },
+    {
+      "type": "color",
+      "id": "nav_button_color",
+      "label": "Navigation button color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "nav_button_hover_color",
+      "label": "Navigation button hover color",
+      "default": "#f4f4f4"
+    },
+    {
+      "type": "color",
+      "id": "nav_icon_color",
+      "label": "Navigation icon color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "dot_color",
+      "label": "Dot color",
+      "default": "#cccccc"
+    },
+    {
+      "type": "color",
+      "id": "dot_active_color",
+      "label": "Active dot color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "dot_hover_color",
+      "label": "Dot hover color",
+      "default": "#666666"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Text size (desktop)",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "text_size_mobile",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Text size (mobile)",
+      "default": 12
+    },
+    {
+      "type": "select",
+      "id": "text_weight",
+      "label": "Text weight",
+      "options": [
+        {"value": "400", "label": "Normal"},
+        {"value": "500", "label": "Medium"},
+        {"value": "600", "label": "Semi-bold"},
+        {"value": "700", "label": "Bold"}
+      ],
+      "default": "500"
+    },
+    {
+      "type": "select",
+      "id": "text_transform",
+      "label": "Text transform",
+      "options": [
+        {"value": "none", "label": "None"},
+        {"value": "uppercase", "label": "Uppercase"},
+        {"value": "lowercase", "label": "Lowercase"},
+        {"value": "capitalize", "label": "Capitalize"}
+      ],
+      "default": "none"
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "min": 0,
+      "max": 5,
+      "step": 1,
+      "unit": "px",
+      "label": "Border width",
+      "default": 2
+    },
+    {
+      "type": "header",
+      "content": "Collection 1"
+    },
+    {
+      "type": "collection",
+      "id": "collection_1",
+      "label": "Collection"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_1",
+      "label": "Custom image"
+    },
+    {
+      "type": "header",
+      "content": "Collection 2"
+    },
+    {
+      "type": "collection",
+      "id": "collection_2",
+      "label": "Collection"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_2",
+      "label": "Custom image"
+    },
+    {
+      "type": "header",
+      "content": "Collection 3"
+    },
+    {
+      "type": "collection",
+      "id": "collection_3",
+      "label": "Collection"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_3",
+      "label": "Custom image"
+    },
+    {
+      "type": "header",
+      "content": "Collection 4"
+    },
+    {
+      "type": "collection",
+      "id": "collection_4",
+      "label": "Collection"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_4",
+      "label": "Custom image"
+    },
+    {
+      "type": "header",
+      "content": "Collection 5"
+    },
+    {
+      "type": "collection",
+      "id": "collection_5",
+      "label": "Collection"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_5",
+      "label": "Custom image"
+    },
+    {
+      "type": "header",
+      "content": "Collection 6"
+    },
+    {
+      "type": "collection",
+      "id": "collection_6",
+      "label": "Collection"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_6",
+      "label": "Custom image"
+    },
+    {
+      "type": "header",
+      "content": "Collection 7"
+    },
+    {
+      "type": "collection",
+      "id": "collection_7",
+      "label": "Collection"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_7",
+      "label": "Custom image"
+    },
+    {
+      "type": "header",
+      "content": "Collection 8"
+    },
+    {
+      "type": "collection",
+      "id": "collection_8",
+      "label": "Collection"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_8",
+      "label": "Custom image"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection quick access"
+    }
+  ],
+  "tag": null
+}
+{% endschema %}

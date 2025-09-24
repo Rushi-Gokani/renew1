@@ -1,0 +1,127 @@
+{% comment %}
+  Full Image Background (flexible fit)
+  - Uses CSS background-image so it's visible even with no content
+  - Desktop & Mobile height controls
+  - New setting "Fit mode" (cover / contain) to choose fill behavior
+  - Default = cover (fills entire section)
+{% endcomment %}
+
+<section
+  id="section-{{ section.id }}"
+  class="full-image-bg-section"
+  {% if section.settings.bg_image != blank %}
+    style="background-image: url('{{ section.settings.bg_image | img_url: 'master' }}');"
+    role="img"
+    aria-label="{{ section.settings.bg_image_alt }}"
+  {% endif %}
+>
+  {%- comment -%}
+    Content (if needed) can go here — section will still show background even if empty.
+  {%- endcomment -%}
+</section>
+
+<style>
+  /* map the fit mode to CSS via a helper class */
+  #section-{{ section.id }}.full-image-bg-section {
+    width: 100%;
+    overflow: hidden;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-color: transparent;
+    display: block;
+    height: {{ section.settings.height_desktop }}px;
+    min-height: 50px;
+  }
+
+  /* Apply chosen fit mode (cover / contain). If not set, fallback to cover. */
+  {% if section.settings.fit_mode == 'contain' %}
+  #section-{{ section.id }}.full-image-bg-section {
+    background-size: contain;
+  }
+  {% else %}
+  #section-{{ section.id }}.full-image-bg-section {
+    background-size: cover;
+  }
+  {% endif %}
+
+  /* Ensure section keeps height even without inline style attribute present */
+  #section-{{ section.id }}.full-image-bg-section[style=""],
+  #section-{{ section.id }}.full-image-bg-section:not([style]) {
+    height: {{ section.settings.height_desktop }}px;
+  }
+
+  @media (max-width: 768px) {
+    #section-{{ section.id }}.full-image-bg-section {
+      height: {{ section.settings.height_mobile }}px;
+    }
+    #section-{{ section.id }}.full-image-bg-section[style=""],
+    #section-{{ section.id }}.full-image-bg-section:not([style]) {
+      height: {{ section.settings.height_mobile }}px;
+    }
+
+    /* on mobile keep same chosen fit mode */
+    {% if section.settings.fit_mode == 'contain' %}
+    #section-{{ section.id }}.full-image-bg-section { background-size: contain; }
+    {% else %}
+    #section-{{ section.id }}.full-image-bg-section { background-size: cover; }
+    {% endif %}
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Full Image Background",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "bg_image",
+      "label": "Background Image"
+    },
+    {
+      "type": "text",
+      "id": "bg_image_alt",
+      "label": "Background image alt (for accessibility)",
+      "default": "Decorative background image"
+    },
+    {
+      "type": "select",
+      "id": "fit_mode",
+      "label": "Image fit behavior",
+      "options": [
+        {
+          "value": "cover",
+          "label": "Fill section (cover) — may crop"
+        },
+        {
+          "value": "contain",
+          "label": "Fit whole image (contain) — may letterbox"
+        }
+      ],
+      "default": "cover"
+    },
+    {
+      "type": "range",
+      "id": "height_desktop",
+      "label": "Desktop Height (px)",
+      "min": 100,
+      "max": 1100,
+      "step": 10,
+      "default": 600
+    },
+    {
+      "type": "range",
+      "id": "height_mobile",
+      "label": "Mobile Height (px)",
+      "min": 100,
+      "max": 1000,
+      "step": 10,
+      "default": 400
+    }
+  ],
+  "presets": [
+    {
+      "name": "Full Image Background"
+    }
+  ]
+}
+{% endschema %}
