@@ -313,7 +313,7 @@
         "ai_gen_block_311de83_Mn6z7p": {
           "type": "ai_gen_block_311de83",
           "settings": {
-            "description_line_1": "<p>Crafting exceptional products with attention to detail and quality that speaks for itself.</p>",
+            "description_line_1": "<p> Health Benefits of Moringa Powder</p>",
             "description_1_font": "trirong_n4",
             "description_1_font_size": 20,
             "description_line_2": "<p>Every item is thoughtfully designed to enhance your everyday experience.</p>",
@@ -348,11 +348,11 @@
             "nav_button_hover_color": "#000000",
             "dot_color": "#cccccc",
             "dot_active_color": "#000000",
-            "icon_text_1": "Silicone Free",
-            "icon_text_2": "Sulphate Free",
-            "icon_text_3": "Paraben Free",
-            "icon_text_4": "Cruelty Free",
-            "icon_text_5": "Clinically Proven Actives"
+            "icon_text_1": "Rich in Nutrients",
+            "icon_text_2": "Strong Antioxidant",
+            "icon_text_3": "Boosts Heart Health",
+            "icon_text_4": "Enhances Skin & Hair",
+            "icon_text_5": "Boosts Immunity"
           },
           "blocks": {}
         }
