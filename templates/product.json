@@ -11,15 +11,120 @@
   "sections": {
     "main": {
       "type": "product-simple",
-      "settings": {}
+      "settings": {
+        "show_vendor": false,
+        "show_sku": false
+      }
     },
     "product-recommendations": {
       "type": "product-recommendations",
-      "settings": {}
+      "blocks": {
+        "static-product-card": {
+          "type": "_product-card",
+          "static": true,
+          "settings": {
+            "product_card_gap": 16,
+            "inherit_color_scheme": true,
+            "color_scheme": "",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        }
+      },
+      "settings": {
+        "product": "",
+        "recommendation_type": "related",
+        "layout_type": "grid",
+        "carousel_on_mobile": false,
+        "max_products": 4,
+        "columns": 4,
+        "mobile_columns": "2",
+        "columns_gap": 16,
+        "rows_gap": 16,
+        "icons_style": "arrow",
+        "icons_shape": "none",
+        "section_width": "page-width",
+        "gap": 12,
+        "color_scheme": "",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    },
+    "section_NxmTDF": {
+      "type": "section",
+      "blocks": {
+        "reel_69BGXY": {
+          "type": "reel",
+          "name": "Social video showcase",
+          "settings": {
+            "video": "",
+            "heading": "Our Superfoods Are The Rheal Deal",
+            "subheading": "Discover the power of nature with our premium superfood blends, crafted for your health and wellness journey.",
+            "review_1": "Amazing taste! 🔥",
+            "review_2": "Best superfood ever! ⭐⭐⭐⭐⭐",
+            "review_3": "So healthy and delicious 💚",
+            "tiktok_url": "",
+            "instagram_url": "",
+            "facebook_url": "",
+            "handle_text": "@rhealfoods",
+            "handle_url": "",
+            "background_color": "#00593b",
+            "text_color": "#f5f5f5",
+            "bubble_background": "#ffffff",
+            "bubble_text_color": "#000000",
+            "icon_background": "#ffffff",
+            "icon_hover_background": "#f0f0f0",
+            "icon_color": "#000000",
+            "handle_color": "#ffffff",
+            "heading_size": 48,
+            "subheading_size": 18
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "reel_69BGXY"
+      ],
+      "name": "t:names.custom_section",
+      "settings": {
+        "content_direction": "column",
+        "vertical_on_mobile": true,
+        "horizontal_alignment": "flex-start",
+        "vertical_alignment": "center",
+        "align_baseline": false,
+        "horizontal_alignment_flex_direction_column": "flex-start",
+        "vertical_alignment_flex_direction_column": "center",
+        "gap": 12,
+        "section_width": "page-width",
+        "section_height": "small",
+        "section_height_custom": 50,
+        "color_scheme": "scheme-5",
+        "background_media": "none",
+        "video_position": "cover",
+        "background_image_position": "cover",
+        "border": "none",
+        "border_width": 1,
+        "border_opacity": 100,
+        "border_radius": 0,
+        "toggle_overlay": false,
+        "overlay_color": "#00000026",
+        "overlay_style": "solid",
+        "gradient_direction": "to top",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
     }
   },
   "order": [
     "main",
-    "product-recommendations"
+    "product-recommendations",
+    "section_NxmTDF"
   ]
 }
