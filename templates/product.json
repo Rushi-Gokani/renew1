@@ -92,6 +92,9 @@
       "block_order": [
         "reel_69BGXY"
       ],
+      "custom_css": [
+        "h2{color:white !important; }"
+      ],
       "name": "t:names.custom_section",
       "settings": {
         "content_direction": "column",
