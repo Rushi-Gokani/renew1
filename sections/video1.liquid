@@ -1,0 +1,112 @@
+{% comment %}
+  Fullscreen Responsive Video Section
+  - Separate videos for Desktop and Mobile
+  - Each fills the entire section
+{% endcomment %}
+
+<section class="full-video-section">
+  <div class="full-video-wrapper">
+
+    {%- if section.settings.video_desktop != blank -%}
+      <video 
+        class="full-video video-desktop" 
+        autoplay 
+        muted 
+        loop 
+        playsinline
+        poster="{{ section.settings.poster_desktop | image_url: width: 1600 }}"
+      >
+        <source src="{{ section.settings.video_desktop }}" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    {%- endif -%}
+
+    {%- if section.settings.video_mobile != blank -%}
+      <video 
+        class="full-video video-mobile" 
+        autoplay 
+        muted 
+        loop 
+        playsinline
+        poster="{{ section.settings.poster_mobile | image_url: width: 800 }}"
+      >
+        <source src="{{ section.settings.video_mobile }}" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    {%- endif -%}
+
+  </div>
+</section>
+
+<style>
+.full-video-section {
+  position: relative;
+  width: 100%;
+  min-height: 100vh; /* full height section */
+  overflow: hidden;
+}
+
+.full-video-wrapper {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.full-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: none; /* hidden until breakpoint */
+}
+
+/* Show desktop video only on larger screens */
+.video-desktop {
+  display: block;
+}
+.video-mobile {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .video-desktop {
+    display: none;
+  }
+  .video-mobile {
+    display: block;
+  }
+}
+</style>
+
+{% schema %}
+{
+  "name": "Full Video Section",
+  "settings": [
+    {
+      "type": "url",
+      "id": "video_desktop",
+      "label": "Desktop Video URL (MP4)"
+    },
+    {
+      "type": "image_picker",
+      "id": "poster_desktop",
+      "label": "Desktop Poster Image"
+    },
+    {
+      "type": "url",
+      "id": "video_mobile",
+      "label": "Mobile Video URL (MP4)"
+    },
+    {
+      "type": "image_picker",
+      "id": "poster_mobile",
+      "label": "Mobile Poster Image"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Full Video Section (Desktop + Mobile)"
+    }
+  ]
+}
+{% endschema %}
