@@ -1,0 +1,158 @@
+{% comment %}
+  Custom Footer section matching provided design:
+  - Left: brand blurb (Stylescape text) and description
+  - Middle columns: About, Help menus
+  - Right: Newsletter signup with pill input/button
+  - Bottom row: language selector centered, left copyright/policies, right social + payment icons
+{% endcomment %}
+
+<footer class="footer-custom color-{{ section.settings.color_scheme }}">
+  <div class="footer-custom__bg"></div>
+
+  <div class="footer-custom__inner section section--{{ section.settings.section_width }}">
+    <div class="footer-custom__grid">
+      <div class="footer-custom__brand">
+        {% if section.settings.brand_heading != blank %}
+          <h4 class="footer-custom__brand-title">{{ section.settings.brand_heading }}</h4>
+        {% endif %}
+        {% if section.settings.brand_text != blank %}
+          <p class="footer-custom__brand-text">{{ section.settings.brand_text }}</p>
+        {% endif %}
+      </div>
+
+      <div class="footer-custom__menu">
+        {% if section.settings.about_title != blank %}
+          <h4 class="footer-custom__col-title">{{ section.settings.about_title }}</h4>
+        {% endif %}
+        {% if section.settings.about_menu != blank %}
+          <ul class="footer-custom__links" role="list">
+            {% for link in linklists[section.settings.about_menu].links %}
+              <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+
+      <div class="footer-custom__menu">
+        {% if section.settings.help_title != blank %}
+          <h4 class="footer-custom__col-title">{{ section.settings.help_title }}</h4>
+        {% endif %}
+        {% if section.settings.help_menu != blank %}
+          <ul class="footer-custom__links" role="list">
+            {% for link in linklists[section.settings.help_menu].links %}
+              <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+
+      <div class="footer-custom__newsletter">
+        {% if section.settings.newsletter_title != blank %}
+          <h4 class="footer-custom__col-title">{{ section.settings.newsletter_title }}</h4>
+        {% endif %}
+        {% form 'customer', id: 'ContactFooter', class: 'newsletter-form' %}
+          <input type="hidden" name="contact[tags]" value="newsletter">
+          <div class="newsletter-form__row">
+            <input
+              id="NewsletterEmail-{{ section.id }}"
+              type="email"
+              name="contact[email]"
+              class="field"
+              value="{{ form.email }}"
+              aria-label="{{ 'newsletter.label' | t }}"
+              placeholder="{{ 'newsletter.label' | t }}"
+              required
+            >
+            <button type="submit" class="button">→</button>
+          </div>
+        {% endform %}
+      </div>
+    </div>
+
+    <div class="footer-custom__middle">
+      {% render 'dropdown-localization', show_country: false, show_language: true %}
+    </div>
+
+    <div class="footer-custom__utilities">
+      <div class="footer-custom__left">
+        {% render 'divider' %}
+        {% content_for 'block', type: '_footer-copyright', id: 'copyright' %}
+        {% content_for 'block', type: '_footer-policy-list', id: 'policy_list' %}
+      </div>
+      <div class="footer-custom__right">
+        {% content_for 'block', type: '_footer-social-icons', id: 'social_icons' %}
+        <div class="payment-icons" aria-label="Accepted payment methods">
+          {% for type in shop.enabled_payment_types %}
+            {{ type | payment_type_svg_tag }}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+{% stylesheet %}
+  .footer-custom {
+    background: var(--color-background);
+    color: var(--color-foreground);
+  }
+  .footer-custom__inner {
+    padding: 48px 0 16px;
+  }
+  .footer-custom__grid {
+    display: grid;
+    grid-template-columns: 1.2fr 0.7fr 0.7fr 1fr;
+    gap: 48px;
+    align-items: start;
+  }
+  @media screen and (max-width: 989px) {
+    .footer-custom__grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+  }
+  @media screen and (max-width: 599px) {
+    .footer-custom__grid { grid-template-columns: 1fr; gap: 24px; }
+  }
+  .footer-custom__brand-title { margin: 0 0 12px; font-weight: 600; }
+  .footer-custom__brand-text { margin: 0; color: var(--color-foreground-muted); max-width: 38ch; }
+  .footer-custom__col-title { margin: 0 0 12px; font-weight: 600; }
+  .footer-custom__links { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+  .footer-custom__links a { color: var(--color-foreground); opacity: .9; }
+
+  .footer-custom__newsletter .newsletter-form { max-width: 360px; }
+  .footer-custom__newsletter input[type="email"] { border-radius: 24px; padding: 12px 16px; }
+  .footer-custom__newsletter button { border-radius: 24px; padding: 12px 16px; }
+
+  .footer-custom__middle { display: flex; justify-content: center; padding: 24px 0; }
+
+  .footer-custom__utilities { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding-top: 16px; border-top: 1px solid var(--color-border); color: var(--color-foreground-muted); }
+  .footer-custom__left, .footer-custom__right { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .footer-custom__right .payment-icons { display: flex; gap: 8px; }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Custom footer",
+  "tag": "section",
+  "class": "section-wrapper",
+  "settings": [
+    { "type": "select", "id": "section_width", "label": "Width", "options": [
+      {"value":"page-width","label":"Page width"}, {"value":"full-width","label":"Full width"}
+    ], "default":"page-width" },
+    { "type": "select", "id": "color_scheme", "label": "Color scheme", "options": [
+      {"value":"scheme-1","label":"Scheme 1"},{"value":"scheme-2","label":"Scheme 2"},{"value":"scheme-3","label":"Scheme 3"},{"value":"scheme-4","label":"Scheme 4"},{"value":"scheme-5","label":"Scheme 5"}
+    ], "default": "scheme-5" },
+
+    { "type": "text", "id": "brand_heading", "label": "Brand heading", "default": "Stylescape" },
+    { "type": "textarea", "id": "brand_text", "label": "Brand description", "default": "All items showcased in this store are intended for demonstration purposes. Graciously provided by Bellroy for display only." },
+
+    { "type": "text", "id": "about_title", "label": "About column title", "default": "About" },
+    { "type": "link_list", "id": "about_menu", "label": "About menu" },
+    { "type": "text", "id": "help_title", "label": "Help column title", "default": "Help" },
+    { "type": "link_list", "id": "help_menu", "label": "Help menu" },
+
+    { "type": "text", "id": "newsletter_title", "label": "Newsletter title", "default": "Be in touch with us" }
+  ],
+  "enabled_on": { "groups": ["footer"] }
+}
+{% endschema %}
+
+
