@@ -1364,6 +1364,16 @@
 
   .ai-brand-features__icon-item-{{ ai_gen_id }} { padding: {{ block.settings.icon_padding | times: 0.75 }}px; }
   .ai-brand-features__icon-container-{{ ai_gen_id }} { width: {{ block.settings.icon_size | times: 0.85 }}px; height: {{ block.settings.icon_size | times: 0.85 }}px; padding: 5px; }
+
+  /* prevent typewriter overflow on small screens */
+  {% if block.settings.animation_style == 'typewriter' %}
+    .ai-brand-features__description-1-{{ ai_gen_id }} {
+      white-space: normal;
+      width: auto;
+      border-right: none;
+      animation: ai-fade-in-up-{{ ai_gen_id }} 0.7s ease-out forwards;
+    }
+  {% endif %}
 }
 
 /* super small screens: reduce gap & padding to avoid calc overflow */
