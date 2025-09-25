@@ -76,19 +76,24 @@
   .ai-two-column-image-{{ ai_gen_id }} {
     flex: 0 0 70%;
     position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .ai-two-column-image-{{ ai_gen_id }} img {
-    width: 100%;
+    width: auto;
+    max-width: 100%;
     height: auto;
-    object-fit: cover;
+    max-height: {{ block.settings.image_max_height }}px;
+    object-fit: contain;
     border-radius: {{ block.settings.image_border_radius }}px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   }
 
   .ai-two-column-image-placeholder-{{ ai_gen_id }} {
     width: 100%;
-    aspect-ratio: 16/10;
+    aspect-ratio: 16/6;
     background-color: #f5f5f7;
     border-radius: {{ block.settings.image_border_radius }}px;
     display: flex;
@@ -137,6 +142,10 @@
       flex: none;
       order: 1;
       width: 100%;
+    }
+
+    .ai-two-column-image-{{ ai_gen_id }} img {
+      max-height: {{ block.settings.image_max_height | times: 0.7 }}px;
     }
 
     .ai-two-column-heading-{{ ai_gen_id }} {
@@ -311,6 +320,16 @@
     {
       "type": "header",
       "content": "Image style"
+    },
+    {
+      "type": "range",
+      "id": "image_max_height",
+      "min": 120,
+      "max": 600,
+      "step": 10,
+      "unit": "px",
+      "label": "Image max height (desktop)",
+      "default": 280
     },
     {
       "type": "range",
