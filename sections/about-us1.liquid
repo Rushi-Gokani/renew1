@@ -1,107 +1,154 @@
 {% comment %}
-Renew — About Us & Product
-Shopify section: paste this as `sections/renew-about.liquid`
-Features:
-- Left: sticky video (video URL set in customizer)
-- Right: editable About / Product content
-- Mobile fallback poster
-- Play/pause on visibility
+Renew — Full-Bleed Hero Product Section (Shopify)
+File: sections/renew-hero-product.liquid
+
+Features
+- Full-bleed hero with left-aligned sticky video (use Video URL setting)
+- Right product panel with title, price, CTA and badges
+- Repeat CTAs: hero CTA + pinned buy button
+- Story blocks (Ingredients, Craft, Sustainability)
+- Recipe cards (editable) and trust microcopy
+- Image/video poster fallbacks and IntersectionObserver play/pause
+- Schema-driven so everything editable in the theme customizer
+
+Drop into your theme's sections folder and add via customizer.
 {% endcomment %}
 
-<section class="renew-section" aria-label="About Renew Moringa Powder">
-  <div class="renew-inner">
-    <div class="renew-media">
+<section class="renew-hero-product" aria-label="Renew Moringa — Hero">
+  <div class="renew-hero-inner">
+    <!-- HERO MEDIA (full-bleed left) -->
+    <div class="hero-media">
       {% if section.settings.video_url != blank %}
-        <div class="renew-video-wrap" style="--top-offset: {{ section.settings.sticky_top | default: 24 }}px">
-          <video
-            class="renew-video"
-            src="{{ section.settings.video_url }}"
-            poster="{{ section.settings.poster | img_url: '2048x' }}"
-            {% if section.settings.autoplay %}autoplay{% endif %}
-            {% if section.settings.muted %}muted{% endif %}
-            {% if section.settings.loop %}loop{% endif %}
-            playsinline
-            preload="metadata"
-            aria-label="Renew moringa product video"
-          ></video>
-          {% if section.settings.show_logo and section.settings.logo != blank %}
-            <img class="renew-logo" src="{{ section.settings.logo | img_url: '300x' }}" alt="{{ section.settings.company | default: 'Renew' }} logo"/>
+        <div class="hero-video-sticky" style="--top-offset:{{ section.settings.sticky_top | default: 80 }}px">
+          <video class="hero-video" src="{{ section.settings.video_url }}" poster="{{ section.settings.poster | img_url: '2048x' }}" {% if section.settings.autoplay %}autoplay{% endif %} {% if section.settings.muted %}muted{% endif %} {% if section.settings.loop %}loop{% endif %} playsinline preload="metadata" aria-hidden="false"></video>
+          {% if section.settings.logo != blank and section.settings.show_logo %}
+            <img class="hero-logo" src="{{ section.settings.logo | img_url: '400x' }}" alt="{{ section.settings.company | default: 'Renew' }} logo"/>
           {% endif %}
         </div>
       {% else %}
-        <div class="renew-poster" style="background-image:url({{ section.settings.poster | img_url: '2048x' }});">
-          {% if section.settings.show_logo and section.settings.logo != blank %}
-            <img class="renew-logo" src="{{ section.settings.logo | img_url: '300x' }}" alt="{{ section.settings.company | default: 'Renew' }} logo"/>
-          {% endif %}
-        </div>
+        <div class="hero-poster" style="background-image:url({{ section.settings.poster | img_url: '2048x' }});"></div>
       {% endif %}
     </div>
 
-    <div class="renew-content">
-      <span class="eyebrow">About {{ section.settings.company | default: 'Renew' }}</span>
-      <h2 class="renew-title">{{ section.settings.title | default: 'Nourish naturally with Renew Moringa Powder' }}</h2>
-      <p class="renew-lead">{{ section.settings.subtitle | default: 'Pure, stone-ground moringa — from farm to jar.' }}</p>
+    <!-- PRODUCT PANEL -->
+    <aside class="hero-panel">
+      <div class="panel-inner">
+        <span class="eyebrow">{{ section.settings.eyebrow | default: 'New' }}</span>
+        <h1 class="hero-title">{{ section.settings.title | default: 'Renew Moringa Powder' }}</h1>
+        <p class="hero-sub">{{ section.settings.subtitle | default: 'Stone-ground • Farm-fresh • Daily nutrition' }}</p>
 
-      <div class="renew-copy">
-        {{ section.settings.description | default: '<p>Renew sources smallholder farms and gently processes the leaves to keep nutrients intact. Add to smoothies, tea, or recipes for a nutrient boost.</p>' }}
+        <div class="price-row">
+          <div class="price">{{ section.settings.price_text | default: '$12.99' }}</div>
+          {% if section.settings.compare_text != blank %}<div class="compare">{{ section.settings.compare_text }}</div>{% endif %}
+        </div>
+
+        <p class="micro">{{ section.settings.microcopy | default: '100% natural • No additives • Vegan' }}</p>
+
+        <div class="panel-ctas">
+          <a class="btn-primary" href="{{ section.settings.cta_url | default: '/collections/all' }}">{{ section.settings.cta_text | default: 'Buy now' }}</a>
+          <a class="btn-secondary" href="#recipes">See recipes</a>
+        </div>
+
+        <div class="trust">
+          <span class="badge">Small-batch</span>
+          <span class="badge">Sustainably sourced</span>
+          <span class="badge">Lab-tested</span>
+        </div>
+
+        <div class="story-cards">
+          <article class="card">
+            <h4>Ingredients</h4>
+            <p>{{ section.settings.story_1 | default: 'Pure moringa leaves, sun-dried and stone-ground.' }}</p>
+          </article>
+          <article class="card">
+            <h4>Craft</h4>
+            <p>{{ section.settings.story_2 | default: 'Hand-picked, small-batch processing to retain nutrients.' }}</p>
+          </article>
+          <article class="card">
+            <h4>Sustainability</h4>
+            <p>{{ section.settings.story_3 | default: 'Supporting local farms and responsible harvests.' }}</p>
+          </article>
+        </div>
+
       </div>
+    </aside>
+  </div>
 
-      <ul class="features">
-        {% if section.settings.benefit_1 != blank %}<li>{{ section.settings.benefit_1 }}</li>{% endif %}
-        {% if section.settings.benefit_2 != blank %}<li>{{ section.settings.benefit_2 }}</li>{% endif %}
-        {% if section.settings.benefit_3 != blank %}<li>{{ section.settings.benefit_3 }}</li>{% endif %}
-      </ul>
-
-      <div class="cta-row">
-        {% if section.settings.cta_text != blank %}
-          <a href="{{ section.settings.cta_url }}" class="btn-primary" aria-label="{{ section.settings.cta_text }}">{{ section.settings.cta_text }}</a>
-        {% endif %}
-
-        {% if section.settings.show_price and section.settings.price_text != blank %}
-          <div class="price">{{ section.settings.price_text }}</div>
-        {% endif %}
-      </div>
-
-      <div class="footer-note">
-        <img class="product-thumb" src="{{ section.settings.product_image | img_url: '400x' }}" alt="{{ section.settings.title | default: 'Renew Moringa' }}"/>
-        <div class="small">{% if section.settings.small_note != blank %}{{ section.settings.small_note }}{% else %}100% natural • No additives • Vegan{% endif %}</div>
-      </div>
+  <!-- RECIPES / USE-CASES -->
+  <div id="recipes" class="recipes-row">
+    <h3 class="recipes-title">How to use Renew</h3>
+    <div class="recipes-grid">
+      {% for i in (1..3) %}
+        {% assign img_key = 'recipe_image_' | append: i %}
+        {% assign title_key = 'recipe_title_' | append: i %}
+        {% assign desc_key = 'recipe_desc_' | append: i %}
+        {% assign cta_key = 'recipe_cta_' | append: i %}
+        {% assign url_key = 'recipe_url_' | append: i %}
+        <article class="recipe-card">
+          {% if section.settings[img_key] != blank %}
+            <img src="{{ section.settings[img_key] | img_url: '800x' }}" alt="Recipe {{ i }}"/>
+          {% endif %}
+          <div class="rc-body">
+            <h4>{{ section.settings[title_key] | default: 'Smoothie boost' }}</h4>
+            <p class="rc-desc">{{ section.settings[desc_key] | default: 'Add 1 tsp to your morning smoothie for an easy nutrient boost.' }}</p>
+            {% if section.settings[cta_key] != blank %}
+              <a class="rc-cta" href="{{ section.settings[url_key] }}">{{ section.settings[cta_key] }}</a>
+            {% endif %}
+          </div>
+        </article>
+      {% endfor %}
     </div>
   </div>
 
   <style>
-    :root{--renew-accent: #8be26b; --bg: #07101a; --card: rgba(255,255,255,0.03);}
-    .renew-section{padding:40px 24px; background: linear-gradient(180deg, var(--bg), #041019);}
-    .renew-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 480px;gap:28px;align-items:start}
+    :root{--accent:#8be26b;--bg:#fff;--dark:#07101a}
+    .renew-hero-product{display:block;background:var(--bg);color:var(--dark);padding:0;margin:0}
+    .renew-hero-inner{display:grid;grid-template-columns: 1fr 420px;gap:32px;align-items:stretch}
 
-    /* MEDIA (video or poster) */
-    .renew-media{position:relative}
-    .renew-video-wrap{position:relative}
-    .renew-video-wrap{height:calc(100vh - var(--top-offset));max-height:760px;overflow:hidden;border-radius:16px}
-    .renew-video{width:100%;height:100%;object-fit:cover;display:block}
-    .renew-poster{height:420px;background-size:cover;background-position:center;border-radius:16px}
-    .renew-logo{position:absolute;left:16px;top:16px;height:44px;width:auto;border-radius:8px;box-shadow:0 6px 20px rgba(2,6,23,0.6)}
+    /* MEDIA column */
+    .hero-media{position:relative}
+    .hero-video-sticky{position:sticky;top:var(--top-offset);height:calc(100vh - var(--top-offset));overflow:hidden;border-radius:10px}
+    .hero-video{width:100%;height:100%;object-fit:cover;display:block}
+    .hero-poster{height:640px;background-size:cover;background-position:center;border-radius:10px}
+    .hero-logo{position:absolute;left:18px;top:18px;height:56px;box-shadow:0 8px 30px rgba(0,0,0,0.2)}
 
-    /* CONTENT */
-    .renew-content{padding:22px 18px;background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);border-radius:14px}
-    .eyebrow{display:inline-block;background:linear-gradient(90deg, rgba(139,226,107,0.12), rgba(139,226,107,0.06));color:var(--renew-accent);padding:6px 10px;border-radius:999px;font-weight:700;font-size:13px}
-    .renew-title{font-size:30px;margin:10px 0 8px}
-    .renew-lead{color:rgba(255,255,255,0.8);margin:0 0 12px}
-    .renew-copy{color:rgba(255,255,255,0.75);margin-bottom:14px}
-    .features{list-style:none;padding:0;margin:0 0 18px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    .features li{background:var(--card);padding:10px 12px;border-radius:10px;font-weight:600}
-    .cta-row{display:flex;gap:14px;align-items:center}
-    .btn-primary{background:var(--renew-accent);color:#041019;padding:12px 18px;border-radius:10px;font-weight:700;text-decoration:none;box-shadow:0 8px 30px rgba(139,226,107,0.12)}
-    .price{color:rgba(255,255,255,0.9);font-weight:700}
-    .footer-note{display:flex;gap:12px;align-items:center;margin-top:18px}
-    .product-thumb{height:64px;border-radius:10px;object-fit:cover}
-    .small{color:rgba(255,255,255,0.6);font-size:13px}
+    /* PANEL */
+    .hero-panel{padding:48px 28px;display:flex;align-items:flex-start}
+    .panel-inner{background:#fff;border-radius:12px;padding:28px;box-shadow:0 12px 40px rgba(7,16,26,0.08)}
+    .eyebrow{color:var(--accent);font-weight:700;font-size:13px}
+    .hero-title{font-size:34px;margin:8px 0 6px}
+    .hero-sub{color:#445;opacity:0.8;margin:0 0 18px}
+    .price-row{display:flex;align-items:baseline;gap:14px}
+    .price{font-size:22px;font-weight:800}
+    .compare{text-decoration:line-through;color:#888}
+    .micro{font-size:13px;color:#666;margin:12px 0}
+    .panel-ctas{display:flex;gap:12px;margin-top:10px}
+    .btn-primary{background:var(--accent);color:#042;padding:12px 18px;border-radius:10px;text-decoration:none;font-weight:800}
+    .btn-secondary{background:transparent;border:1px solid #ddd;padding:10px 14px;border-radius:10px;text-decoration:none;color:#333}
+    .trust{display:flex;gap:8px;margin-top:18px}
+    .badge{background:#f6f8f6;padding:6px 10px;border-radius:999px;font-size:13px}
+
+    .story-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px}
+    .card{background:#fafafa;padding:12px;border-radius:10px}
+    .card h4{margin:0 0 6px}
+
+    /* RECIPES */
+    .recipes-row{padding:40px 28px;background:linear-gradient(180deg,#fbfdfb,#fff);}
+    .recipes-title{margin:0 0 18px;font-size:22px}
+    .recipes-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .recipe-card{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 8px 30px rgba(2,6,23,0.03)}
+    .recipe-card img{width:100%;height:160px;object-fit:cover}
+    .rc-body{padding:12px}
+    .rc-desc{font-size:14px;color:#444}
+    .rc-cta{display:inline-block;margin-top:8px;color:var(--accent);font-weight:700;text-decoration:none}
 
     /* Responsive */
-    @media (max-width:900px){
-      .renew-inner{grid-template-columns:1fr;}
-      .renew-video-wrap{height:48vh}
-      .renew-poster{height:36vh}
+    @media (max-width: 980px){
+      .renew-hero-inner{grid-template-columns:1fr;}
+      .hero-video-sticky{position:relative;top:auto;height:48vh}
+      .hero-poster{height:36vh}
+      .hero-panel{padding:24px}
+      .recipes-grid{grid-template-columns:1fr}
     }
   </style>
 
@@ -110,63 +157,75 @@ Features:
       var section = document.currentScript && document.currentScript.parentNode;
       if(!section) return;
 
-      // Play/pause when the section is visible (saves CPU and mobile battery)
-      var video = section.querySelector('.renew-video');
-      if(!video) return;
+      var video = section.querySelector('.hero-video');
+      if(video){
+        // Ensure muted for autoplay
+        video.muted = {{ section.settings.muted | default: true }};
 
-      // Ensure muted for autoplay on mobile
-      video.muted = {{ section.settings.muted | default: true }};
-
-      // IntersectionObserver
-      var io = new IntersectionObserver(function(entries){
-        entries.forEach(function(e){
-          if(e.isIntersecting){
-            var playPromise = video.play();
-            if(playPromise !== undefined){
-              playPromise.catch(function(){ /* ignore */ });
+        var io = new IntersectionObserver(function(entries){
+          entries.forEach(function(e){
+            if(e.isIntersecting){
+              video.play().catch(function(){});
+            } else {
+              video.pause();
             }
-          } else {
-            try{ video.pause(); }catch(err){}
-          }
-        });
-      },{threshold:0.45});
+          });
+        }, {threshold:0.5});
 
-      io.observe(section);
+        io.observe(section);
+      }
 
     })();
   </script>
 
   {% schema %}
   {
-    "name": "Renew — About & Product",
-    "settings": [
+    "name":"Renew — Product",
+    "settings":[
+      {"type":"text","id":"eyebrow","label":"Eyebrow text","default":"New"},
       {"type":"text","id":"company","label":"Company name","default":"Renew"},
-      {"type":"text","id":"title","label":"Title","default":"Nourish naturally with Renew Moringa Powder"},
-      {"type":"text","id":"subtitle","label":"Subtitle","default":"Pure, stone-ground moringa — from farm to jar."},
-      {"type":"textarea","id":"description","label":"Description","default":"<p>Renew sources smallholder farms and gently processes the leaves to keep nutrients intact. Add to smoothies, tea, or recipes for a nutrient boost.</p>"},
+      {"type":"text","id":"title","label":"Title","default":"Renew Moringa Powder"},
+      {"type":"text","id":"subtitle","label":"Subtitle","default":"Stone-ground • Farm-fresh • Daily nutrition"},
+      {"type":"text","id":"price_text","label":"Price text","default":"$12.99"},
+      {"type":"text","id":"compare_text","label":"Compare at (optional)"},
+      {"type":"text","id":"microcopy","label":"Microcopy under CTA","default":"100% natural • No additives • Vegan"},
 
       {"type":"url","id":"video_url","label":"Video URL (paste uploaded file URL)"},
-      {"type":"image_picker","id":"poster","label":"Video poster image"},
-      {"type":"image_picker","id":"logo","label":"Company logo (optional)"},
-      {"type":"image_picker","id":"product_image","label":"Product image / thumbnail"},
+      {"type":"image_picker","id":"poster","label":"Poster image / fallback"},
+      {"type":"image_picker","id":"logo","label":"Logo"},
+      {"type":"checkbox","id":"show_logo","label":"Show logo over video","default":true},
 
       {"type":"checkbox","id":"autoplay","label":"Autoplay video","default":true},
-      {"type":"checkbox","id":"muted","label":"Muted (required for mobile autoplay)","default":true},
+      {"type":"checkbox","id":"muted","label":"Muted (for mobile autoplay)","default":true},
       {"type":"checkbox","id":"loop","label":"Loop video","default":true},
-      {"type":"checkbox","id":"show_logo","label":"Show company logo over video","default":true},
-      {"type":"number","id":"sticky_top","label":"Sticky top offset (px)"},
+      {"type":"number","id":"sticky_top","label":"Sticky top offset (px)","default":80},
 
-      {"type":"text","id":"benefit_1","label":"Benefit 1","default":"Rich in vitamins A, C & E"},
-      {"type":"text","id":"benefit_2","label":"Benefit 2","default":"High in antioxidants"},
-      {"type":"text","id":"benefit_3","label":"Benefit 3","default":"Sustainably sourced"},
+      {"type":"text","id":"story_1","label":"Story card 1 text","default":"Pure moringa leaves, sun-dried and stone-ground."},
+      {"type":"text","id":"story_2","label":"Story card 2 text","default":"Hand-picked, small-batch processing to retain nutrients."},
+      {"type":"text","id":"story_3","label":"Story card 3 text","default":"Supporting local farms and responsible harvests."},
 
       {"type":"text","id":"cta_text","label":"CTA text","default":"Buy now"},
       {"type":"url","id":"cta_url","label":"CTA link","default":"/collections/all"},
-      {"type":"text","id":"price_text","label":"Price text (optional)","default":"$12.99 / 100g"},
-      {"type":"checkbox","id":"show_price","label":"Show price text","default":true},
-      {"type":"textarea","id":"small_note","label":"Small note text","default":"100% natural • No additives • Vegan"}
+
+      {"type":"image_picker","id":"recipe_image_1","label":"Recipe 1 image"},
+      {"type":"text","id":"recipe_title_1","label":"Recipe 1 title","default":"Moringa Smoothie"},
+      {"type":"textarea","id":"recipe_desc_1","label":"Recipe 1 description","default":"Add 1 tsp Renew to your morning smoothie with banana, berries & almond milk."},
+      {"type":"text","id":"recipe_cta_1","label":"Recipe 1 CTA text","default":"View recipe"},
+      {"type":"url","id":"recipe_url_1","label":"Recipe 1 link"},
+
+      {"type":"image_picker","id":"recipe_image_2","label":"Recipe 2 image"},
+      {"type":"text","id":"recipe_title_2","label":"Recipe 2 title","default":"Golden Latte"},
+      {"type":"textarea","id":"recipe_desc_2","label":"Recipe 2 description","default":"Stir 1 tsp into warm milk with a dash of cinnamon for a calming tonic."},
+      {"type":"text","id":"recipe_cta_2","label":"Recipe 2 CTA text","default":"View recipe"},
+      {"type":"url","id":"recipe_url_2","label":"Recipe 2 link"},
+
+      {"type":"image_picker","id":"recipe_image_3","label":"Recipe 3 image"},
+      {"type":"text","id":"recipe_title_3","label":"Recipe 3 title","default":"Savory Dip"},
+      {"type":"textarea","id":"recipe_desc_3","label":"Recipe 3 description","default":"Mix 1 tsp into hummus or yogurt for a green boost."},
+      {"type":"text","id":"recipe_cta_3","label":"Recipe 3 CTA text","default":"View recipe"},
+      {"type":"url","id":"recipe_url_3","label":"Recipe 3 link"}
     ],
-    "presets": [{"name":"Renew — About & Product","category":"Image & text"}]
+    "presets":[{"name":"Renew — Full-Bleed Hero Product","category":"Hero"}]
   }
   {% endschema %}
 </section>

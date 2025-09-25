@@ -310,12 +310,30 @@
         "padding-block-start": 0,
         "padding-block-end": 0
       }
+    },
+    "about_us1_PUpmTk": {
+      "type": "about-us1",
+      "name": "Renew — About & Product",
+      "settings": {
+        "company": "Renew",
+        "title": "Nourish naturally with Renew Moringa Powder",
+        "subtitle": "Pure, stone-ground moringa — from farm to jar.",
+        "price_text": "Rs 100",
+        "video_url": "",
+        "show_logo": true,
+        "autoplay": true,
+        "muted": true,
+        "loop": true,
+        "cta_text": "Buy now",
+        "cta_url": "shopify://products/reneuw-moringa-powder"
+      }
     }
   },
   "order": [
     "hero_LwNAKz",
     "section_Ekt8MW",
     "main",
-    "1758095958470aa1e4"
+    "1758095958470aa1e4",
+    "about_us1_PUpmTk"
   ]
 }
