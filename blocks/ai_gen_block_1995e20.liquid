@@ -82,11 +82,10 @@
   }
 
   .ai-two-column-image-{{ ai_gen_id }} img {
-    width: auto;
     max-width: 100%;
     height: auto;
     max-height: {{ block.settings.image_max_height }}px;
-    object-fit: contain;
+    object-fit: cover;
     border-radius: {{ block.settings.image_border_radius }}px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   }
