@@ -46,6 +46,9 @@
         "announcement_wm4EiK",
         "announcement_cfF9yM"
       ],
+      "custom_css": [
+        "p{color:white;}"
+      ],
       "name": "t:names.announcement_bar",
       "settings": {
         "speed": 5,
