@@ -37,7 +37,7 @@
     "type_font_h6": "body",
     "type_size_h6": "12",
     "type_case_h6": "none",
-    "page_width": "wide",
+    "page_width": "narrow",
     "card_hover_effect": "scale",
     "badge_position": "top-right",
     "badge_corner_radius": 2,

@@ -325,11 +325,12 @@
             "heading_size": 48,
             "text_size": 18,
             "text_color": "#000000",
-            "button_background_color": "#000000",
+            "button_background_color": "#00593b",
             "button_text_color": "#ffffff",
-            "button_hover_background_color": "#333333",
+            "button_hover_background_color": "#18694e",
             "button_hover_text_color": "#ffffff",
             "button_border_radius": 8,
+            "image_max_height": 280,
             "image_border_radius": 12
           },
           "blocks": {}
