@@ -116,6 +116,8 @@
 <style>
   .product-simple-section {
     padding: 40px 20px;
+    /* Prevent horizontal overflow on small screens */
+    overflow-x: hidden;
   }
 
   .product-simple-grid {
@@ -130,6 +132,20 @@
     .product-simple-grid {
       grid-template-columns: 1fr;
       gap: 30px;
+    }
+    /* Ensure all children respect container width on mobile */
+    .product-simple-section *,
+    .product-simple-section *::before,
+    .product-simple-section *::after {
+      box-sizing: border-box;
+      max-width: 100%;
+    }
+    .product-simple-section img {
+      max-width: 100%;
+      height: auto;
+    }
+    .thumbnail-list {
+      -webkit-overflow-scrolling: touch;
     }
   }
 
@@ -536,8 +552,9 @@
     thumbnails.forEach(thumb => thumb.classList.remove('active'));
 
     // Wrap around if necessary
-    if (index >= slides.length) currentSlide = 0;
-    if (index < 0) currentSlide = slides.length - 1;
+    currentSlide = index;
+    if (currentSlide >= slides.length) currentSlide = 0;
+    if (currentSlide < 0) currentSlide = slides.length - 1;
 
     // Show current slide
     if (slides[currentSlide]) {
