@@ -1,0 +1,172 @@
+{% comment %}
+Renew — About Us & Product
+Shopify section: paste this as `sections/renew-about.liquid`
+Features:
+- Left: sticky video (video URL set in customizer)
+- Right: editable About / Product content
+- Mobile fallback poster
+- Play/pause on visibility
+{% endcomment %}
+
+<section class="renew-section" aria-label="About Renew Moringa Powder">
+  <div class="renew-inner">
+    <div class="renew-media">
+      {% if section.settings.video_url != blank %}
+        <div class="renew-video-wrap" style="--top-offset: {{ section.settings.sticky_top | default: 24 }}px">
+          <video
+            class="renew-video"
+            src="{{ section.settings.video_url }}"
+            poster="{{ section.settings.poster | img_url: '2048x' }}"
+            {% if section.settings.autoplay %}autoplay{% endif %}
+            {% if section.settings.muted %}muted{% endif %}
+            {% if section.settings.loop %}loop{% endif %}
+            playsinline
+            preload="metadata"
+            aria-label="Renew moringa product video"
+          ></video>
+          {% if section.settings.show_logo and section.settings.logo != blank %}
+            <img class="renew-logo" src="{{ section.settings.logo | img_url: '300x' }}" alt="{{ section.settings.company | default: 'Renew' }} logo"/>
+          {% endif %}
+        </div>
+      {% else %}
+        <div class="renew-poster" style="background-image:url({{ section.settings.poster | img_url: '2048x' }});">
+          {% if section.settings.show_logo and section.settings.logo != blank %}
+            <img class="renew-logo" src="{{ section.settings.logo | img_url: '300x' }}" alt="{{ section.settings.company | default: 'Renew' }} logo"/>
+          {% endif %}
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="renew-content">
+      <span class="eyebrow">About {{ section.settings.company | default: 'Renew' }}</span>
+      <h2 class="renew-title">{{ section.settings.title | default: 'Nourish naturally with Renew Moringa Powder' }}</h2>
+      <p class="renew-lead">{{ section.settings.subtitle | default: 'Pure, stone-ground moringa — from farm to jar.' }}</p>
+
+      <div class="renew-copy">
+        {{ section.settings.description | default: '<p>Renew sources smallholder farms and gently processes the leaves to keep nutrients intact. Add to smoothies, tea, or recipes for a nutrient boost.</p>' }}
+      </div>
+
+      <ul class="features">
+        {% if section.settings.benefit_1 != blank %}<li>{{ section.settings.benefit_1 }}</li>{% endif %}
+        {% if section.settings.benefit_2 != blank %}<li>{{ section.settings.benefit_2 }}</li>{% endif %}
+        {% if section.settings.benefit_3 != blank %}<li>{{ section.settings.benefit_3 }}</li>{% endif %}
+      </ul>
+
+      <div class="cta-row">
+        {% if section.settings.cta_text != blank %}
+          <a href="{{ section.settings.cta_url }}" class="btn-primary" aria-label="{{ section.settings.cta_text }}">{{ section.settings.cta_text }}</a>
+        {% endif %}
+
+        {% if section.settings.show_price and section.settings.price_text != blank %}
+          <div class="price">{{ section.settings.price_text }}</div>
+        {% endif %}
+      </div>
+
+      <div class="footer-note">
+        <img class="product-thumb" src="{{ section.settings.product_image | img_url: '400x' }}" alt="{{ section.settings.title | default: 'Renew Moringa' }}"/>
+        <div class="small">{% if section.settings.small_note != blank %}{{ section.settings.small_note }}{% else %}100% natural • No additives • Vegan{% endif %}</div>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    :root{--renew-accent: #8be26b; --bg: #07101a; --card: rgba(255,255,255,0.03);}
+    .renew-section{padding:40px 24px; background: linear-gradient(180deg, var(--bg), #041019);}
+    .renew-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 480px;gap:28px;align-items:start}
+
+    /* MEDIA (video or poster) */
+    .renew-media{position:relative}
+    .renew-video-wrap{position:relative}
+    .renew-video-wrap{height:calc(100vh - var(--top-offset));max-height:760px;overflow:hidden;border-radius:16px}
+    .renew-video{width:100%;height:100%;object-fit:cover;display:block}
+    .renew-poster{height:420px;background-size:cover;background-position:center;border-radius:16px}
+    .renew-logo{position:absolute;left:16px;top:16px;height:44px;width:auto;border-radius:8px;box-shadow:0 6px 20px rgba(2,6,23,0.6)}
+
+    /* CONTENT */
+    .renew-content{padding:22px 18px;background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);border-radius:14px}
+    .eyebrow{display:inline-block;background:linear-gradient(90deg, rgba(139,226,107,0.12), rgba(139,226,107,0.06));color:var(--renew-accent);padding:6px 10px;border-radius:999px;font-weight:700;font-size:13px}
+    .renew-title{font-size:30px;margin:10px 0 8px}
+    .renew-lead{color:rgba(255,255,255,0.8);margin:0 0 12px}
+    .renew-copy{color:rgba(255,255,255,0.75);margin-bottom:14px}
+    .features{list-style:none;padding:0;margin:0 0 18px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .features li{background:var(--card);padding:10px 12px;border-radius:10px;font-weight:600}
+    .cta-row{display:flex;gap:14px;align-items:center}
+    .btn-primary{background:var(--renew-accent);color:#041019;padding:12px 18px;border-radius:10px;font-weight:700;text-decoration:none;box-shadow:0 8px 30px rgba(139,226,107,0.12)}
+    .price{color:rgba(255,255,255,0.9);font-weight:700}
+    .footer-note{display:flex;gap:12px;align-items:center;margin-top:18px}
+    .product-thumb{height:64px;border-radius:10px;object-fit:cover}
+    .small{color:rgba(255,255,255,0.6);font-size:13px}
+
+    /* Responsive */
+    @media (max-width:900px){
+      .renew-inner{grid-template-columns:1fr;}
+      .renew-video-wrap{height:48vh}
+      .renew-poster{height:36vh}
+    }
+  </style>
+
+  <script>
+    (function(){
+      var section = document.currentScript && document.currentScript.parentNode;
+      if(!section) return;
+
+      // Play/pause when the section is visible (saves CPU and mobile battery)
+      var video = section.querySelector('.renew-video');
+      if(!video) return;
+
+      // Ensure muted for autoplay on mobile
+      video.muted = {{ section.settings.muted | default: true }};
+
+      // IntersectionObserver
+      var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+          if(e.isIntersecting){
+            var playPromise = video.play();
+            if(playPromise !== undefined){
+              playPromise.catch(function(){ /* ignore */ });
+            }
+          } else {
+            try{ video.pause(); }catch(err){}
+          }
+        });
+      },{threshold:0.45});
+
+      io.observe(section);
+
+    })();
+  </script>
+
+  {% schema %}
+  {
+    "name": "Renew — About & Product",
+    "settings": [
+      {"type":"text","id":"company","label":"Company name","default":"Renew"},
+      {"type":"text","id":"title","label":"Title","default":"Nourish naturally with Renew Moringa Powder"},
+      {"type":"text","id":"subtitle","label":"Subtitle","default":"Pure, stone-ground moringa — from farm to jar."},
+      {"type":"textarea","id":"description","label":"Description","default":"<p>Renew sources smallholder farms and gently processes the leaves to keep nutrients intact. Add to smoothies, tea, or recipes for a nutrient boost.</p>"},
+
+      {"type":"url","id":"video_url","label":"Video URL (paste uploaded file URL)"},
+      {"type":"image_picker","id":"poster","label":"Video poster image"},
+      {"type":"image_picker","id":"logo","label":"Company logo (optional)"},
+      {"type":"image_picker","id":"product_image","label":"Product image / thumbnail"},
+
+      {"type":"checkbox","id":"autoplay","label":"Autoplay video","default":true},
+      {"type":"checkbox","id":"muted","label":"Muted (required for mobile autoplay)","default":true},
+      {"type":"checkbox","id":"loop","label":"Loop video","default":true},
+      {"type":"checkbox","id":"show_logo","label":"Show company logo over video","default":true},
+      {"type":"number","id":"sticky_top","label":"Sticky top offset (px)"},
+
+      {"type":"text","id":"benefit_1","label":"Benefit 1","default":"Rich in vitamins A, C & E"},
+      {"type":"text","id":"benefit_2","label":"Benefit 2","default":"High in antioxidants"},
+      {"type":"text","id":"benefit_3","label":"Benefit 3","default":"Sustainably sourced"},
+
+      {"type":"text","id":"cta_text","label":"CTA text","default":"Buy now"},
+      {"type":"url","id":"cta_url","label":"CTA link","default":"/collections/all"},
+      {"type":"text","id":"price_text","label":"Price text (optional)","default":"$12.99 / 100g"},
+      {"type":"checkbox","id":"show_price","label":"Show price text","default":true},
+      {"type":"textarea","id":"small_note","label":"Small note text","default":"100% natural • No additives • Vegan"}
+    ],
+    "presets": [{"name":"Renew — About & Product","category":"Image & text"}]
+  }
+  {% endschema %}
+</section>
