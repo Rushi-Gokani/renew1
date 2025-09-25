@@ -393,6 +393,11 @@
   /* Form Styles */
   .product-form {
     margin-top: 30px;
+    /* Place quantity and add-to-cart side by side like the reference */
+    display: grid;
+    grid-template-columns: minmax(120px, 160px) 1fr;
+    gap: 12px;
+    align-items: center;
   }
 
   .variant-selector {
@@ -417,64 +422,40 @@
     margin-bottom: 30px;
   }
 
-  .quantity-selector label {
-    display: block;
-    font-weight: 600;
-    color: #333;
-  }
+  .quantity-selector label { display: none; }
 
   .quantity-wrapper {
     display: inline-flex;
     align-items: center;
-    padding: 3px;
+    padding: 0 8px;
     position: relative;
+    border: 1px solid #000;
+    border-radius: 6px;
+    min-height: 44px;
+    background: #fff;
+    gap: 4px;
   }
 
   .quantity-btn {
-    width: 48px;
-    height: 48px;
+    width: 32px;
+    height: 32px;
     border: none;
-    background: #fff;
-    color: black;
+    background: transparent;
+    color: #000;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    transition: none;
     padding: 0;
-    
-    font-size: 24px;
+    font-size: 18px;
     font-weight: 600;
-    position: relative;
-    overflow: hidden;
   }
 
-  .quantity-btn:before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    border-radius: 50%;
-    background: rgba(102, 126, 234, 0.1);
-    transform: translate(-50%, -50%);
-    transition: width 0.6s, height 0.6s;
-  }
-
-  .quantity-btn:hover:not(:disabled):before {
-    width: 100px;
-    height: 100px;
-  }
-
-  .quantity-btn:hover:not(:disabled) {
-    transform: scale(1.1);
-    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-  }
-
-  .quantity-btn:active:not(:disabled) {
-    transform: scale(0.95);
-  }
+  /* Remove fancy hover/active effects for a minimal look */
+  .quantity-btn:before { display: none; }
+  .quantity-btn:hover:not(:disabled) { transform: none; box-shadow: none; }
+  .quantity-btn:active:not(:disabled) { transform: none; }
 
   .quantity-btn:disabled {
     opacity: 0.3;
@@ -496,18 +477,18 @@
 
   .quantity-input-wrapper {
     position: relative;
-    background: #fff;
-    border-radius: 25px;
-    padding: 0 20px;
+    background: transparent;
+    border-radius: 0;
+    padding: 0 4px;
   }
 
   .quantity-input {
-    width: 60px;
-    height: 48px;
+    width: 36px;
+    height: 32px;
     border: none;
     text-align: center;
-    font-size: 20px;
-    font-weight: 700;
+    font-size: 16px;
+    font-weight: 500;
     background: transparent;
     color: #333;
     -moz-appearance: textfield;
@@ -523,28 +504,9 @@
     outline: none;
   }
 
-  /* Animated bubble */
-  .quantity-bubble {
-    position: absolute;
-    top: -40px;
-    left: 50%;
-    transform: translateX(-50%) scale(0);
-    background: linear-gradient(135deg,rgb(69, 211, 117) 0%,rgb(9, 63, 21) 100%);
-    color: #fff;
-    padding: 8px 12px;
-    border-radius: 20px;
-    font-size: 14px;
-    font-weight: 600;
-    opacity: 0;
-    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-    pointer-events: none;
-    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
-  }
-
-  .quantity-bubble.show {
-    transform: translateX(-50%) scale(1);
-    opacity: 1;
-  }
+  /* Hide animated bubble for the minimal spec */
+  .quantity-bubble { display: none; }
+  .quantity-bubble.show { display: none; }
 
   .quantity-bubble-arrow {
     position: absolute;
@@ -628,15 +590,20 @@
   }
 
   .add-to-cart-btn:disabled {
-    opacity: 0.5;
+    background: #888;
+    color: #fff;
+    opacity: 1;
     cursor: not-allowed;
   }
   @media (max-width: 768px) {
-  .stock-indicator {
-    /* Your mobile-specific styles */
-   margin-left: 0px;
+    .stock-indicator { margin-left: 0px; }
+
+    /* Keep the side-by-side layout on mobile as well */
+    .product-form {
+      grid-template-columns: minmax(120px, 160px) 1fr;
+      gap: 12px;
+    }
   }
-}
 
 </style>
 
