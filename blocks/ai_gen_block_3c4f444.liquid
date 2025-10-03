@@ -1,4 +1,4 @@
-{% doc %}
+c{% doc %}
   @prompt
     Make a centered section on a light cream background titled "What's Inside" (large bold serif, deep green) with a subtitle below in smaller sans-serif deep green reading "Just 6 superfoods to support your gut. And yes, that’s it."; include a three-item horizontal carousel of product cards (desktop: three cards side-by-side, evenly spaced and centered; mobile: single card centered with slight peek of adjacent cards) where each card is a square 220–260px image with 24px rounded corners, a 4–6px bright green border and subtle inner shadow, and a bold serif product name in deep green centered below each image; overlay circular navigation arrows (green circle with white arrow) vertically centered to the left and right of the carousel, and place a row of small pagination dots centered beneath the cards with the active dot green and inactive dots light gray; allow full customization of images, alt text, product titles, border color/thickness, corner radius, fonts (serif for titles, sans-serif for subtitle), spacing, and arrow/dot colors; ensure responsive behavior: on desktop show three columns with generous horizontal padding, on tablet show two columns, on mobile show one centered card with touch swipe enabled and arrows/dots easily tappable; include options to adjust image size, card spacing, and typography scale for small screens., Make a centered section on a light cream background titled "What's Inside" (large bold serif in deep green) with a subtitle below in smaller sans-serif deep green reading "Just 6 superfoods to support your gut. And yes, that’s it."; include a carousel that displays 6 product cards total, showing 3 cards side by side on desktop and swiping to reveal the next 3, while on tablet it shows 2 at a time and on mobile 1 at a time with smooth swipe; each card should be a square image with rounded corners, a green border, and a bold serif product name in deep green centered below the image; add circular green navigation arrows on left and right of the carousel and pagination dots below with the active dot in green; allow customization of images, text, border style, spacing, typography, and navigation colors; ensure responsive scaling so cards remain well spaced and readable on all devices.
 {% enddoc %}
@@ -35,30 +35,20 @@
 
   .ai-superfoods-carousel-wrapper-{{ ai_gen_id }} {
     position: relative;
-    max-width: 1200px;
+    max-width: 100%;
     margin: 0 auto;
     overflow: hidden;
   }
 
-  .ai-superfoods-carousel-viewport-{{ ai_gen_id }} {
-    overflow: hidden;
-    width: 100%;
-    position: relative;
-  }
-
   .ai-superfoods-carousel-{{ ai_gen_id }} {
     display: flex;
-    transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transition: transform 0.5s ease;
     gap: {{ block.settings.card_spacing }}px;
-    will-change: transform;
   }
 
   .ai-superfoods-card-{{ ai_gen_id }} {
     flex: 0 0 auto;
     text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
   }
 
   .ai-superfoods-image-wrapper-{{ ai_gen_id }} {
@@ -168,35 +158,22 @@
   }
 
   @media screen and (min-width: 990px) {
-    .ai-superfoods-carousel-wrapper-{{ ai_gen_id }} {
-      padding: 0 {{ block.settings.desktop_padding }}px;
-    }
-
     .ai-superfoods-card-{{ ai_gen_id }} {
       width: calc((100% - {{ block.settings.card_spacing | times: 2 }}px) / 3);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      flex: 0 0 auto;
     }
 
-    .ai-superfoods-carousel-{{ ai_gen_id }} {
-      gap: {{ block.settings.card_spacing }}px;
+    .ai-superfoods-carousel-wrapper-{{ ai_gen_id }} {
+      padding: 0 {{ block.settings.desktop_padding }}px;
     }
   }
 
   @media screen and (max-width: 989px) and (min-width: 750px) {
-    .ai-superfoods-carousel-wrapper-{{ ai_gen_id }} {
-      padding: 0 {{ block.settings.tablet_padding }}px;
-    }
-
     .ai-superfoods-card-{{ ai_gen_id }} {
       width: calc((100% - {{ block.settings.card_spacing }}px) / 2);
-      flex: 0 0 auto;
     }
 
-    .ai-superfoods-carousel-{{ ai_gen_id }} {
-      gap: {{ block.settings.card_spacing }}px;
+    .ai-superfoods-carousel-wrapper-{{ ai_gen_id }} {
+      padding: 0 {{ block.settings.tablet_padding }}px;
     }
 
     .ai-superfoods-image-wrapper-{{ ai_gen_id }} {
@@ -218,24 +195,17 @@
   }
 
   @media screen and (max-width: 749px) {
+    .ai-superfoods-card-{{ ai_gen_id }} {
+      width: calc(100% - {{ block.settings.card_spacing }}px);
+    }
+
     .ai-superfoods-carousel-wrapper-{{ ai_gen_id }} {
       padding: 0 {{ block.settings.mobile_padding }}px;
     }
 
-    .ai-superfoods-card-{{ ai_gen_id }} {
-      width: 100%;
-      flex: 0 0 auto;
-      display: flex;
-      justify-content: center;
-    }
-
-    .ai-superfoods-carousel-{{ ai_gen_id }} {
-      gap: 0;
-    }
-
     .ai-superfoods-image-wrapper-{{ ai_gen_id }} {
-      width: {{ block.settings.image_size | times: 0.7 }}px;
-      height: {{ block.settings.image_size | times: 0.7 }}px;
+      width: {{ block.settings.image_size | times: 0.8 }}px;
+      height: {{ block.settings.image_size | times: 0.8 }}px;
     }
 
     .ai-superfoods-title-{{ ai_gen_id }} {
@@ -275,9 +245,8 @@
       <p class="ai-superfoods-subtitle-{{ ai_gen_id }}">{{ block.settings.subtitle }}</p>
     {% endif %}
 
-    <div class="ai-superfoods-carousel-wrapper-{{ ai_gen_id }}" role="region" aria-roledescription="carousel" aria-label="Product carousel">
-      <div class="ai-superfoods-carousel-viewport-{{ ai_gen_id }}">
-        <div class="ai-superfoods-carousel-{{ ai_gen_id }}" data-carousel role="group" aria-atomic="true">
+    <div class="ai-superfoods-carousel-wrapper-{{ ai_gen_id }}">
+      <div class="ai-superfoods-carousel-{{ ai_gen_id }}" data-carousel>
         {% for i in (1..6) %}
           {% liquid
             assign image_key = 'product_image_' | append: i
@@ -313,7 +282,6 @@
             {% endif %}
           </div>
         {% endfor %}
-        </div>
       </div>
 
       <button
@@ -368,7 +336,7 @@
       getSlidesPerView() {
         if (window.innerWidth >= 990) return 3;
         if (window.innerWidth >= 750) return 2;
-        return 1; // Mobile shows 1 card per slide
+        return 1;
       }
 
       setupEventListeners() {
@@ -377,55 +345,34 @@
 
         let startX = 0;
         let isDragging = false;
-        let currentX = 0;
 
         this.carousel.addEventListener('touchstart', (e) => {
           startX = e.touches[0].clientX;
           isDragging = true;
-          this.carousel.style.transition = 'none';
-        }, { passive: true });
+        });
 
         this.carousel.addEventListener('touchmove', (e) => {
           if (!isDragging) return;
-          currentX = e.touches[0].clientX;
-          const diff = currentX - startX;
-          const currentTransform = -this.currentPage * (this.getViewportWidth() / this.slidesPerView * this.slidesPerView + this.getCardSpacing() * (this.slidesPerView - 1));
-          this.carousel.style.transform = `translateX(${currentTransform + diff}px)`;
-        }, { passive: true });
+          e.preventDefault();
+        });
 
         this.carousel.addEventListener('touchend', (e) => {
           if (!isDragging) return;
           isDragging = false;
-          this.carousel.style.transition = '';
-
+          
           const endX = e.changedTouches[0].clientX;
           const diff = startX - endX;
-
+          
           if (Math.abs(diff) > 50) {
             if (diff > 0) {
               this.goToNextPage();
             } else {
               this.goToPrevPage();
             }
-          } else {
-            this.updateCarousel();
           }
-        }, { passive: true });
-
-        const resizeObserver = new ResizeObserver(() => {
-          this.handleResize();
         });
-        resizeObserver.observe(this.carousel.closest('.ai-superfoods-carousel-viewport-{{ ai_gen_id }}'));
 
-        // Keyboard navigation
-        this.addEventListener('keydown', (e) => {
-          if (e.key === 'ArrowLeft') this.goToPrevPage();
-          if (e.key === 'ArrowRight') this.goToNextPage();
-        });
-      }
-
-      getViewportWidth() {
-        return this.carousel.closest('.ai-superfoods-carousel-viewport-{{ ai_gen_id }}').offsetWidth;
+        window.addEventListener('resize', () => this.handleResize());
       }
 
       handleResize() {
@@ -471,29 +418,26 @@
       }
 
       updateCarousel() {
-        const viewport = this.carousel.closest('.ai-superfoods-carousel-viewport-{{ ai_gen_id }}');
-        const viewportWidth = viewport.offsetWidth;
-        const cardWidth = viewportWidth / this.slidesPerView;
-        const totalWidth = this.totalSlides * cardWidth + (this.totalSlides - 1) * this.getCardSpacing();
-        const translateX = -this.currentPage * (cardWidth * this.slidesPerView + this.getCardSpacing() * (this.slidesPerView - 1));
+        const cardWidthPercent = 100 / this.slidesPerView;
+        const translateX = -this.currentPage * 100;
 
-        this.carousel.style.transform = `translateX(${translateX}px)`;
-        this.carousel.style.width = `${totalWidth}px`;
+        this.carousel.style.transform = `translateX(${translateX}%)`;
+
+        const computedStyles = window.getComputedStyle(this.carousel);
+        const gapValue = computedStyles.getPropertyValue('gap');
+        const gapPx = parseFloat(gapValue) || 0;
 
         const cards = this.carousel.querySelectorAll('.ai-superfoods-card-{{ ai_gen_id }}');
-        cards.forEach((card, index) => {
-          card.style.width = `${cardWidth}px`;
-          card.style.flex = '0 0 auto';
+        cards.forEach((card) => {
+          if (this.slidesPerView === 1) {
+            card.style.width = `calc(100% - ${gapPx}px)`;
+          } else {
+            card.style.width = `${cardWidthPercent}%`;
+          }
         });
 
         this.updatePagination();
         this.updateArrows();
-      }
-
-      getCardSpacing() {
-        if (window.innerWidth >= 990) return {{ block.settings.card_spacing }};
-        if (window.innerWidth >= 750) return {{ block.settings.card_spacing }};
-        return 0;
       }
 
       updatePagination() {
