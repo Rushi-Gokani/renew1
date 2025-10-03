@@ -209,26 +209,26 @@
 
   @media screen and (max-width: 749px) {
     .ai-superfoods-card-{{ ai_gen_id }} {
-      width: 100%;
+      width: calc(33.333% - {{ block.settings.card_spacing | times: 2 | divided_by: 3 }}px);
       flex-shrink: 0;
       display: flex;
       justify-content: center;
-      scroll-snap-align: center;
     }
 
     .ai-superfoods-carousel-wrapper-{{ ai_gen_id }} {
       padding: 0 {{ block.settings.mobile_padding }}px;
-      overflow-x: hidden;
+      overflow: hidden;
     }
 
     .ai-superfoods-carousel-{{ ai_gen_id }} {
-      scroll-snap-type: x mandatory;
-      -webkit-overflow-scrolling: touch;
+      display: flex;
+      transition: transform 0.5s ease;
+      gap: {{ block.settings.card_spacing }}px;
     }
 
     .ai-superfoods-image-wrapper-{{ ai_gen_id }} {
-      width: {{ block.settings.image_size | times: 0.8 }}px;
-      height: {{ block.settings.image_size | times: 0.8 }}px;
+      width: {{ block.settings.image_size | times: 0.7 }}px;
+      height: {{ block.settings.image_size | times: 0.7 }}px;
     }
 
     .ai-superfoods-title-{{ ai_gen_id }} {
@@ -359,7 +359,7 @@
       getSlidesPerView() {
         if (window.innerWidth >= 990) return 3;
         if (window.innerWidth >= 750) return 2;
-        return 1;
+        return 3; // Mobile now shows 3 cards per slide
       }
 
       setupEventListeners() {
@@ -442,10 +442,10 @@
 
       updateCarousel() {
         const cardWidth = 100 / this.slidesPerView;
-        const translateX = -this.currentPage * 100;
-        
+        const translateX = -this.currentPage * (100 * this.slidesPerView / this.totalSlides);
+
         this.carousel.style.transform = `translateX(${translateX}%)`;
-        
+
         const cards = this.carousel.querySelectorAll('.ai-superfoods-card-{{ ai_gen_id }}');
         cards.forEach((card, index) => {
           card.style.width = `${cardWidth}%`;
