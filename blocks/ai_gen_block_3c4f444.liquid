@@ -49,6 +49,9 @@
   .ai-superfoods-card-{{ ai_gen_id }} {
     flex: 0 0 auto;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 
   .ai-superfoods-image-wrapper-{{ ai_gen_id }} {
@@ -160,10 +163,20 @@
   @media screen and (min-width: 990px) {
     .ai-superfoods-card-{{ ai_gen_id }} {
       width: calc((100% - {{ block.settings.card_spacing | times: 2 }}px) / 3);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
     .ai-superfoods-carousel-wrapper-{{ ai_gen_id }} {
       padding: 0 {{ block.settings.desktop_padding }}px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .ai-superfoods-carousel-{{ ai_gen_id }} {
+      justify-content: center;
+      max-width: 100%;
     }
   }
 
@@ -197,10 +210,20 @@
   @media screen and (max-width: 749px) {
     .ai-superfoods-card-{{ ai_gen_id }} {
       width: 100%;
+      flex-shrink: 0;
+      display: flex;
+      justify-content: center;
+      scroll-snap-align: center;
     }
 
     .ai-superfoods-carousel-wrapper-{{ ai_gen_id }} {
       padding: 0 {{ block.settings.mobile_padding }}px;
+      overflow-x: hidden;
+    }
+
+    .ai-superfoods-carousel-{{ ai_gen_id }} {
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
     }
 
     .ai-superfoods-image-wrapper-{{ ai_gen_id }} {
