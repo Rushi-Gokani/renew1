@@ -52,8 +52,10 @@ c{% doc %}
   }
 
   .ai-superfoods-image-wrapper-{{ ai_gen_id }} {
-    width: {{ block.settings.image_size }}px;
-    height: {{ block.settings.image_size }}px;
+    width: 100%;
+    max-width: {{ block.settings.image_size }}px;
+    aspect-ratio: 1 / 1;
+    height: auto;
     border: {{ block.settings.border_thickness }}px solid {{ block.settings.border_color }};
     border-radius: {{ block.settings.corner_radius }}px;
     overflow: hidden;
@@ -177,8 +179,7 @@ c{% doc %}
     }
 
     .ai-superfoods-image-wrapper-{{ ai_gen_id }} {
-      width: {{ block.settings.image_size | times: 0.9 }}px;
-      height: {{ block.settings.image_size | times: 0.9 }}px;
+      max-width: {{ block.settings.image_size | times: 0.9 }}px;
     }
 
     .ai-superfoods-title-{{ ai_gen_id }} {
@@ -216,8 +217,7 @@ c{% doc %}
     }
 
     .ai-superfoods-image-wrapper-{{ ai_gen_id }} {
-      width: {{ block.settings.image_size | times: 0.8 }}px;
-      height: {{ block.settings.image_size | times: 0.8 }}px;
+      max-width: {{ block.settings.image_size | times: 0.8 }}px;
     }
 
     .ai-superfoods-title-{{ ai_gen_id }} {
@@ -335,6 +335,7 @@ c{% doc %}
 
       connectedCallback() {
         this.carousel = this.querySelector('[data-carousel]');
+        this.carouselWrapper = this.querySelector('.ai-superfoods-carousel-wrapper-{{ ai_gen_id }}');
         this.prevButton = this.querySelector('[data-direction="prev"]');
         this.nextButton = this.querySelector('[data-direction="next"]');
         this.pagination = this.querySelector('[data-pagination]');
@@ -430,23 +431,25 @@ c{% doc %}
       }
 
       updateCarousel() {
-        const cardWidthPercent = 100 / this.slidesPerView;
-        const translateX = -this.currentPage * 100;
-
-        this.carousel.style.transform = `translateX(${translateX}%)`;
-
+        const wrapperWidth = this.carouselWrapper ? this.carouselWrapper.clientWidth : this.clientWidth;
         const computedStyles = window.getComputedStyle(this.carousel);
         const gapValue = computedStyles.getPropertyValue('gap');
         const gapPx = parseFloat(gapValue) || 0;
 
         const cards = this.carousel.querySelectorAll('.ai-superfoods-card-{{ ai_gen_id }}');
+
+        const itemsPerPage = this.slidesPerView;
+        const totalGapPerPage = gapPx * Math.max(0, itemsPerPage - 1);
+        const cardWidthPx = Math.max(0, (wrapperWidth - totalGapPerPage) / itemsPerPage);
+
         cards.forEach((card) => {
-          if (this.slidesPerView === 1) {
-            card.style.width = `calc(100% - ${gapPx}px)`;
-          } else {
-            card.style.width = `${cardWidthPercent}%`;
-          }
+          card.style.width = `${cardWidthPx}px`;
+          card.style.flex = '0 0 auto';
         });
+
+        const pageWidthPx = cardWidthPx * itemsPerPage + totalGapPerPage;
+        const translateX = -this.currentPage * pageWidthPx;
+        this.carousel.style.transform = `translateX(${translateX}px)`;
 
         this.updatePagination();
         this.updateArrows();
