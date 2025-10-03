@@ -1,6 +1,565 @@
+{% doc %}
+  @prompt
+    Make a split-screen section with a light cream background; on desktop, place the text block on the right side with an editable heading, subheading, and bold call-to-action button, and on the left side display a 2x2 grid of four rounded customer photos; on mobile, stack the layout so the text and button appear on the top half and the images take the bottom half, with the four images displayed in a horizontal carousel that auto-scrolls infinitely at an adjustable speed and also supports manual swipe control.
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-split-screen-{{ ai_gen_id }} {
+    background-color: #f9f8f6;
+    padding: 60px 20px;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+  }
+
+  .ai-split-screen-container-{{ ai_gen_id }} {
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+  }
+
+  .ai-split-screen-images-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    aspect-ratio: 1;
+  }
+
+  .ai-split-screen-image-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .ai-split-screen-image-{{ ai_gen_id }} img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ai-split-screen-image-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    background-color: #e6e6e6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #999;
+    font-size: 14px;
+  }
+
+  .ai-split-screen-image-placeholder-{{ ai_gen_id }} svg {
+    width: 60%;
+    height: 60%;
+    opacity: 0.3;
+  }
+
+  .ai-split-screen-content-{{ ai_gen_id }} {
+    padding: 40px;
+  }
+
+  .ai-split-screen-heading-{{ ai_gen_id }} {
+    font-family: {{ settings.type_heading_font.family }}, {{ settings.type_heading_font.fallback_families }};
+    font-weight: {{ settings.type_heading_font.weight }};
+    font-size: {{ block.settings.heading_size }}px;
+    line-height: 1.2;
+    color: {{ block.settings.text_color }};
+    margin: 0 0 20px;
+  }
+
+  .ai-split-screen-subheading-{{ ai_gen_id }} {
+    font-family: {{ settings.type_body_font.family }}, {{ settings.type_body_font.fallback_families }};
+    font-weight: {{ settings.type_body_font.weight }};
+    font-size: {{ block.settings.subheading_size }}px;
+    line-height: 1.5;
+    color: {{ block.settings.text_color }};
+    margin: 0 0 30px;
+    opacity: 0.8;
+  }
+
+  .ai-split-screen-button-{{ ai_gen_id }} {
+    display: inline-block;
+    padding: 16px 32px;
+    background-color: {{ block.settings.button_bg_color }};
+    color: {{ block.settings.button_text_color }};
+    text-decoration: none;
+    font-family: {{ settings.type_body_font.family }}, {{ settings.type_body_font.fallback_families }};
+    font-weight: 600;
+    font-size: 16px;
+    border-radius: {{ block.settings.button_border_radius }}px;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+  }
+
+  .ai-split-screen-button-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.button_hover_bg_color }};
+    color: {{ block.settings.button_hover_text_color }};
+    transform: translateY(-2px);
+  }
+
+  .ai-split-screen-carousel-{{ ai_gen_id }} {
+    display: none;
+    position: relative;
+    overflow: hidden;
+    border-radius: 20px;
+    aspect-ratio: 16/9;
+  }
+
+  .ai-split-screen-carousel-track-{{ ai_gen_id }} {
+    display: flex;
+    transition: transform 0.5s ease;
+    height: 100%;
+  }
+
+  .ai-split-screen-carousel-slide-{{ ai_gen_id }} {
+    flex: 0 0 100%;
+    height: 100%;
+    position: relative;
+  }
+
+  .ai-split-screen-carousel-slide-{{ ai_gen_id }} img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ai-split-screen-carousel-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    background-color: #e6e6e6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #999;
+    font-size: 14px;
+  }
+
+  .ai-split-screen-carousel-placeholder-{{ ai_gen_id }} svg {
+    width: 40%;
+    height: 40%;
+    opacity: 0.3;
+  }
+
+  .ai-split-screen-carousel-dots-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+  }
+
+  .ai-split-screen-carousel-dot-{{ ai_gen_id }} {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .ai-split-screen-carousel-dot-{{ ai_gen_id }}.active {
+    background-color: white;
+  }
+
+  @media screen and (max-width: 768px) {
+    .ai-split-screen-{{ ai_gen_id }} {
+      padding: 40px 20px;
+      min-height: auto;
+    }
+
+    .ai-split-screen-container-{{ ai_gen_id }} {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+
+    .ai-split-screen-content-{{ ai_gen_id }} {
+      order: -1;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .ai-split-screen-images-{{ ai_gen_id }} {
+      display: none;
+    }
+
+    .ai-split-screen-carousel-{{ ai_gen_id }} {
+      display: block;
+    }
+
+    .ai-split-screen-heading-{{ ai_gen_id }} {
+      font-size: {{ block.settings.heading_size | times: 0.8 }}px;
+    }
+
+    .ai-split-screen-subheading-{{ ai_gen_id }} {
+      font-size: {{ block.settings.subheading_size | times: 0.9 }}px;
+    }
+  }
+{% endstyle %}
+
+<split-screen-section-{{ ai_gen_id }}
+  class="ai-split-screen-{{ ai_gen_id }}"
+  data-scroll-speed="{{ block.settings.carousel_speed }}"
+  {{ block.shopify_attributes }}
+>
+  <div class="ai-split-screen-container-{{ ai_gen_id }}">
+    <div class="ai-split-screen-images-{{ ai_gen_id }}">
+      {% for i in (1..4) %}
+        {% liquid
+          assign image_key = 'customer_image_' | append: i
+          assign customer_image = block.settings[image_key]
+        %}
+        <div class="ai-split-screen-image-{{ ai_gen_id }}">
+          {% if customer_image %}
+            <img
+              src="{{ customer_image | image_url: width: 400 }}"
+              alt="{{ customer_image.alt | escape }}"
+              loading="lazy"
+              width="400"
+              height="400"
+            >
+          {% else %}
+            <div class="ai-split-screen-image-placeholder-{{ ai_gen_id }}">
+              {{ 'image' | placeholder_svg_tag }}
+            </div>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+
+    <div class="ai-split-screen-carousel-{{ ai_gen_id }}">
+      <div class="ai-split-screen-carousel-track-{{ ai_gen_id }}">
+        {% for i in (1..4) %}
+          {% liquid
+            assign image_key = 'customer_image_' | append: i
+            assign customer_image = block.settings[image_key]
+          %}
+          <div class="ai-split-screen-carousel-slide-{{ ai_gen_id }}">
+            {% if customer_image %}
+              <img
+                src="{{ customer_image | image_url: width: 800 }}"
+                alt="{{ customer_image.alt | escape }}"
+                loading="lazy"
+                width="800"
+                height="450"
+              >
+            {% else %}
+              <div class="ai-split-screen-carousel-placeholder-{{ ai_gen_id }}">
+                {{ 'image' | placeholder_svg_tag }}
+              </div>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+      <div class="ai-split-screen-carousel-dots-{{ ai_gen_id }}">
+        {% for i in (1..4) %}
+          <div class="ai-split-screen-carousel-dot-{{ ai_gen_id }}" data-slide="{{ forloop.index0 }}"></div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="ai-split-screen-content-{{ ai_gen_id }}">
+      {% if block.settings.heading != blank %}
+        <h2 class="ai-split-screen-heading-{{ ai_gen_id }}">{{ block.settings.heading }}</h2>
+      {% endif %}
+
+      {% if block.settings.subheading != blank %}
+        <p class="ai-split-screen-subheading-{{ ai_gen_id }}">{{ block.settings.subheading }}</p>
+      {% endif %}
+
+      {% if block.settings.button_text != blank %}
+        <a
+          href="{{ block.settings.button_link }}"
+          class="ai-split-screen-button-{{ ai_gen_id }}"
+        >
+          {{ block.settings.button_text }}
+        </a>
+      {% endif %}
+    </div>
+  </div>
+</split-screen-section-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class SplitScreenSection{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.currentSlide = 0;
+        this.totalSlides = 4;
+        this.autoScrollInterval = null;
+        this.isUserInteracting = false;
+      }
+
+      connectedCallback() {
+        this.carousel = this.querySelector('.ai-split-screen-carousel-{{ ai_gen_id }}');
+        this.track = this.querySelector('.ai-split-screen-carousel-track-{{ ai_gen_id }}');
+        this.dots = this.querySelectorAll('.ai-split-screen-carousel-dot-{{ ai_gen_id }}');
+        this.scrollSpeed = parseInt(this.dataset.scrollSpeed) || 3000;
+
+        this.setupEventListeners();
+        this.updateCarousel();
+        this.startAutoScroll();
+      }
+
+      setupEventListeners() {
+        this.dots.forEach((dot, index) => {
+          dot.addEventListener('click', () => {
+            this.goToSlide(index);
+            this.pauseAutoScroll();
+          });
+        });
+
+        let startX = 0;
+        let currentX = 0;
+        let isDragging = false;
+
+        this.carousel.addEventListener('touchstart', (e) => {
+          startX = e.touches[0].clientX;
+          isDragging = true;
+          this.pauseAutoScroll();
+        });
+
+        this.carousel.addEventListener('touchmove', (e) => {
+          if (!isDragging) return;
+          currentX = e.touches[0].clientX;
+          e.preventDefault();
+        });
+
+        this.carousel.addEventListener('touchend', () => {
+          if (!isDragging) return;
+          isDragging = false;
+
+          const diff = startX - currentX;
+          const threshold = 50;
+
+          if (Math.abs(diff) > threshold) {
+            if (diff > 0) {
+              this.nextSlide();
+            } else {
+              this.prevSlide();
+            }
+          }
+
+          this.resumeAutoScroll();
+        });
+
+        this.carousel.addEventListener('mouseenter', () => {
+          this.pauseAutoScroll();
+        });
+
+        this.carousel.addEventListener('mouseleave', () => {
+          this.resumeAutoScroll();
+        });
+      }
+
+      goToSlide(index) {
+        this.currentSlide = index;
+        this.updateCarousel();
+      }
+
+      nextSlide() {
+        this.currentSlide = (this.currentSlide + 1) % this.totalSlides;
+        this.updateCarousel();
+      }
+
+      prevSlide() {
+        this.currentSlide = (this.currentSlide - 1 + this.totalSlides) % this.totalSlides;
+        this.updateCarousel();
+      }
+
+      updateCarousel() {
+        const translateX = -this.currentSlide * 100;
+        this.track.style.transform = `translateX(${translateX}%)`;
+
+        this.dots.forEach((dot, index) => {
+          dot.classList.toggle('active', index === this.currentSlide);
+        });
+      }
+
+      startAutoScroll() {
+        this.autoScrollInterval = setInterval(() => {
+          if (!this.isUserInteracting) {
+            this.nextSlide();
+          }
+        }, this.scrollSpeed);
+      }
+
+      pauseAutoScroll() {
+        this.isUserInteracting = true;
+        if (this.autoScrollInterval) {
+          clearInterval(this.autoScrollInterval);
+        }
+      }
+
+      resumeAutoScroll() {
+        setTimeout(() => {
+          this.isUserInteracting = false;
+          this.startAutoScroll();
+        }, 1000);
+      }
+
+      disconnectedCallback() {
+        if (this.autoScrollInterval) {
+          clearInterval(this.autoScrollInterval);
+        }
+      }
+    }
+
+    customElements.define('split-screen-section-{{ ai_gen_id }}', SplitScreenSection{{ ai_gen_id }});
+  })();
+</script>
+
 {% schema %}
- {
-   "name": "AI_Block",
-   "tag": "shopify-ai-generated-block"
- }
+{
+  "name": "Split screen testimonials",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "What Our Customers Say"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Join thousands of satisfied customers who trust our products and service excellence."
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "Read More Reviews"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "header",
+      "content": "Customer images"
+    },
+    {
+      "type": "image_picker",
+      "id": "customer_image_1",
+      "label": "Customer image 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "customer_image_2",
+      "label": "Customer image 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "customer_image_3",
+      "label": "Customer image 3"
+    },
+    {
+      "type": "image_picker",
+      "id": "customer_image_4",
+      "label": "Customer image 4"
+    },
+    {
+      "type": "header",
+      "content": "Mobile carousel"
+    },
+    {
+      "type": "range",
+      "id": "carousel_speed",
+      "min": 1000,
+      "max": 8000,
+      "step": 500,
+      "unit": "ms",
+      "label": "Auto-scroll speed",
+      "default": 3000
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "min": 24,
+      "max": 72,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading size",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "subheading_size",
+      "min": 14,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Subheading size",
+      "default": 18
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Button style"
+    },
+    {
+      "type": "color",
+      "id": "button_bg_color",
+      "label": "Background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_bg_color",
+      "label": "Hover background",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_text_color",
+      "label": "Hover text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 8
+    }
+  ],
+  "presets": [
+    {
+      "name": "Split screen testimonials"
+    }
+  ]
+}
 {% endschema %}
