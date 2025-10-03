@@ -195,6 +195,18 @@ c{% doc %}
   }
 
   @media screen and (max-width: 749px) {
+    .ai-superfoods-section-{{ ai_gen_id }} {
+      overflow-x: hidden;
+    }
+
+    .ai-superfoods-carousel-wrapper-{{ ai_gen_id }} {
+      overflow: hidden;
+    }
+
+    .ai-superfoods-carousel-{{ ai_gen_id }} {
+      gap: {{ block.settings.card_spacing | times: 0.6 }}px;
+    }
+
     .ai-superfoods-card-{{ ai_gen_id }} {
       width: calc(100% - {{ block.settings.card_spacing }}px);
     }
