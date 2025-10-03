@@ -76,9 +76,84 @@
         "padding-block-start": 40,
         "padding-block-end": 80
       }
+    },
+    "175948250074c8cf2e": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_143d27d_jBWpX9": {
+          "type": "ai_gen_block_143d27d",
+          "settings": {
+            "heading": "Why Choose Us",
+            "description": "Discover the benefits that make us stand out from the competition",
+            "background_color": "#f9f8f6",
+            "wave_height": 60,
+            "section_padding_top": 20,
+            "section_padding_bottom": 60,
+            "content_spacing": 40,
+            "grid_gap": 40,
+            "heading_color": "#000000",
+            "heading_size": 36,
+            "heading_margin": 16,
+            "text_color": "#666666",
+            "description_size": 16,
+            "item_padding": 20,
+            "icon_size": 70,
+            "icon_background_color": "#000000",
+            "icon_text_color": "#ffffff",
+            "icon_text_size": 24,
+            "icon_margin": 20,
+            "perk_title_color": "#000000",
+            "perk_title_size": 20,
+            "title_margin": 12,
+            "perk_text_color": "#666666",
+            "perk_text_size": 14,
+            "perk_1_icon": "✓",
+            "perk_1_title": "Fast Shipping",
+            "perk_1_text": "Get your orders delivered quickly with our express shipping options",
+            "perk_2_icon": "★",
+            "perk_2_title": "Premium Quality",
+            "perk_2_text": "All our products are carefully selected for the highest quality standards",
+            "perk_3_icon": "♡",
+            "perk_3_title": "24/7 Support",
+            "perk_3_text": "Our customer support team is always ready to help you with any questions"
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_143d27d_jBWpX9"
+      ],
+      "settings": {
+        "content_direction": "column",
+        "vertical_on_mobile": true,
+        "horizontal_alignment": "flex-start",
+        "vertical_alignment": "center",
+        "align_baseline": false,
+        "horizontal_alignment_flex_direction_column": "flex-start",
+        "vertical_alignment_flex_direction_column": "center",
+        "gap": 12,
+        "section_width": "page-width",
+        "section_height": "",
+        "section_height_custom": 50,
+        "color_scheme": "",
+        "background_media": "none",
+        "video_position": "cover",
+        "background_image_position": "cover",
+        "border": "none",
+        "border_width": 1,
+        "border_opacity": 100,
+        "border_radius": 0,
+        "toggle_overlay": false,
+        "overlay_color": "#00000026",
+        "overlay_style": "solid",
+        "gradient_direction": "to top",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
     }
   },
   "order": [
-    "main"
+    "main",
+    "175948250074c8cf2e"
   ]
 }
