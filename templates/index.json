@@ -459,6 +459,85 @@
         "padding-block-end": 0
       }
     },
+    "17594794863b5b6bdd": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_1a205b7_BhckJf": {
+          "type": "ai_gen_block_1a205b7",
+          "settings": {
+            "title": "Join 1,000,000+ Customers Who Love Rheal",
+            "subtitle": "See what our customers are saying about their experience",
+            "rating_text": "Excellent",
+            "total_reviews": "Based on 50,000+ reviews",
+            "autoplay": true,
+            "autoplay_speed": 3000,
+            "pause_on_hover": true,
+            "show_play_pause": true,
+            "background_color": "#00593b",
+            "text_color": "#ffffff",
+            "star_color": "#ffd700",
+            "card_background": "#90EE90",
+            "card_text_color": "#000000",
+            "verified_color": "#008060",
+            "arrow_background": "#ffffff",
+            "arrow_hover_background": "#f5f5f5",
+            "arrow_color": "#000000",
+            "title_size": 48,
+            "subtitle_size": 16,
+            "quote_size": 16,
+            "name_size": 16,
+            "card_border_radius": 12,
+            "testimonial_1_quote": "This product has completely transformed my daily routine. The quality is exceptional and the results speak for themselves.",
+            "testimonial_1_name": "Sarah Johnson",
+            "testimonial_2_quote": "I've tried many similar products, but nothing comes close to this. Outstanding customer service and fast shipping too!",
+            "testimonial_2_name": "Michael Chen",
+            "testimonial_3_quote": "Worth every penny! The attention to detail and craftsmanship is evident in every aspect of this product.",
+            "testimonial_3_name": "Emma Rodriguez",
+            "testimonial_4_quote": "Exceeded my expectations in every way. The team behind this product clearly knows what they're doing.",
+            "testimonial_4_name": "David Thompson",
+            "testimonial_5_quote": "I recommend this to everyone I know. It's rare to find a product that delivers on all its promises.",
+            "testimonial_5_name": "Lisa Park",
+            "testimonial_6_quote": "The best investment I've made this year. Quality, functionality, and style all in one package.",
+            "testimonial_6_name": "James Wilson",
+            "testimonial_7_quote": "Simply amazing! The results were noticeable within days and have only gotten better with time.",
+            "testimonial_7_name": "Rachel Green",
+            "testimonial_8_quote": "Outstanding product with exceptional support. This company truly cares about their customers.",
+            "testimonial_8_name": "Alex Martinez"
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_1a205b7_BhckJf"
+      ],
+      "settings": {
+        "content_direction": "column",
+        "vertical_on_mobile": true,
+        "horizontal_alignment": "flex-start",
+        "vertical_alignment": "center",
+        "align_baseline": false,
+        "horizontal_alignment_flex_direction_column": "flex-start",
+        "vertical_alignment_flex_direction_column": "center",
+        "gap": 12,
+        "section_width": "page-width",
+        "section_height": "",
+        "section_height_custom": 50,
+        "color_scheme": "",
+        "background_media": "none",
+        "video_position": "cover",
+        "background_image_position": "cover",
+        "border": "none",
+        "border_width": 1,
+        "border_opacity": 100,
+        "border_radius": 0,
+        "toggle_overlay": false,
+        "overlay_color": "#00000026",
+        "overlay_style": "solid",
+        "gradient_direction": "to top",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    },
     "featured_product_LxGRmg": {
       "type": "featured-product",
       "blocks": {
@@ -999,6 +1078,7 @@
     "17571595500a220e08",
     "175801723152279b4b",
     "175740271039812516",
+    "17594794863b5b6bdd",
     "featured_product_LxGRmg",
     "17555115151d4fcae0",
     "collection_list_bGtkjG",
