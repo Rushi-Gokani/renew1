@@ -15,8 +15,8 @@
         "ai_gen_block_41b82e1_RW8dw6": {
           "type": "ai_gen_block_41b82e1",
           "settings": {
-            "heading": "Become a Rheal Ambassador",
-            "subheading": "We’re on the hunt for Rheal Ambassadors to help us spread the message of living healthier & happier with superfoods!\nAnd we’d love for YOU to join us.",
+            "heading": "Become a RENEUW Ambassador",
+            "subheading": "We’re on the hunt for RENEUW Ambassadors to help us spread the message of living healthier & happier with superfoods! And we’d love for YOU to join us.",
             "button_text": "JOIN NOW",
             "button_link": "",
             "customer_image_1": "shopify://shop_images/Gemini_Generated_Image_k45f8yk45f8yk45f.png",
@@ -357,7 +357,7 @@
             "check_icon_size": 20,
             "button_text": "Shop Now",
             "button_link": "",
-            "button_background_color": "#000000",
+            "button_background_color": "#00593b",
             "button_text_color": "#ffffff",
             "button_border_color": "#000000",
             "button_hover_background_color": "#333333",
