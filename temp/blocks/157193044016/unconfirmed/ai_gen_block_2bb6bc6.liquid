@@ -1,6 +1,807 @@
+{% doc %}
+  @prompt
+    Make a “How it Works” section with a dark green background and a centered heading at the top; below, add two tier cards side by side on desktop with rounded corners and shadow; each card should have an image at the top, a bold tier title, and a list of benefits with icons, bold labels, and supporting text; on mobile, stack the cards vertically so Tier 1 appears on top and Tier 2 appears below.
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-how-it-works-{{ ai_gen_id }} {
+    background-color: {{ block.settings.background_color }};
+    padding: {{ block.settings.section_padding_top }}px 20px {{ block.settings.section_padding_bottom }}px;
+    width: 100%;
+  }
+
+  .ai-how-it-works-container-{{ ai_gen_id }} {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .ai-how-it-works-heading-{{ ai_gen_id }} {
+    text-align: center;
+    margin: 0 0 {{ block.settings.heading_margin_bottom }}px;
+    color: {{ block.settings.heading_color }};
+    font-size: {{ block.settings.heading_size }}px;
+    font-family: {{ settings.type_heading_font.family }}, {{ settings.type_heading_font.fallback_families }};
+    font-weight: {{ settings.type_heading_font.weight }};
+    line-height: 1.2;
+  }
+
+  .ai-how-it-works-cards-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: {{ block.settings.cards_gap }}px;
+    margin-top: {{ block.settings.cards_margin_top }}px;
+  }
+
+  .ai-how-it-works-card-{{ ai_gen_id }} {
+    background-color: {{ block.settings.card_background_color }};
+    border-radius: {{ block.settings.card_border_radius }}px;
+    padding: {{ block.settings.card_padding }}px;
+    box-shadow: {{ block.settings.card_shadow_x }}px {{ block.settings.card_shadow_y }}px {{ block.settings.card_shadow_blur }}px {{ block.settings.card_shadow_color }};
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .ai-how-it-works-card-{{ ai_gen_id }}:hover {
+    transform: translateY(-{{ block.settings.card_hover_lift }}px);
+    box-shadow: {{ block.settings.card_shadow_x }}px {{ block.settings.card_shadow_y | plus: 4 }}px {{ block.settings.card_shadow_blur | plus: 8 }}px {{ block.settings.card_shadow_color }};
+  }
+
+  .ai-how-it-works-card-image-{{ ai_gen_id }} {
+    width: 100%;
+    height: {{ block.settings.card_image_height }}px;
+    object-fit: cover;
+    border-radius: {{ block.settings.card_image_border_radius }}px;
+    margin-bottom: {{ block.settings.card_image_margin_bottom }}px;
+  }
+
+  .ai-how-it-works-card-image-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: {{ block.settings.card_image_height }}px;
+    background-color: #f4f4f4;
+    border-radius: {{ block.settings.card_image_border_radius }}px;
+    margin-bottom: {{ block.settings.card_image_margin_bottom }}px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-how-it-works-card-image-placeholder-{{ ai_gen_id }} svg {
+    width: 60px;
+    height: 60px;
+    opacity: 0.5;
+  }
+
+  .ai-how-it-works-card-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.card_title_size }}px;
+    font-weight: 700;
+    color: {{ block.settings.card_title_color }};
+    margin: 0 0 {{ block.settings.card_title_margin_bottom }}px;
+    font-family: {{ settings.type_heading_font.family }}, {{ settings.type_heading_font.fallback_families }};
+    line-height: 1.3;
+  }
+
+  .ai-how-it-works-benefits-{{ ai_gen_id }} {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .ai-how-it-works-benefit-{{ ai_gen_id }} {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: {{ block.settings.benefit_spacing }}px;
+  }
+
+  .ai-how-it-works-benefit-{{ ai_gen_id }}:last-child {
+    margin-bottom: 0;
+  }
+
+  .ai-how-it-works-benefit-icon-{{ ai_gen_id }} {
+    width: {{ block.settings.benefit_icon_size }}px;
+    height: {{ block.settings.benefit_icon_size }}px;
+    background-color: {{ block.settings.benefit_icon_background }};
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: {{ block.settings.benefit_icon_margin_right }}px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .ai-how-it-works-benefit-icon-{{ ai_gen_id }} svg {
+    width: {{ block.settings.benefit_icon_size | times: 0.6 }}px;
+    height: {{ block.settings.benefit_icon_size | times: 0.6 }}px;
+    stroke: {{ block.settings.benefit_icon_color }};
+    fill: none;
+  }
+
+  .ai-how-it-works-benefit-content-{{ ai_gen_id }} {
+    flex: 1;
+  }
+
+  .ai-how-it-works-benefit-label-{{ ai_gen_id }} {
+    font-size: {{ block.settings.benefit_label_size }}px;
+    font-weight: 600;
+    color: {{ block.settings.benefit_label_color }};
+    margin: 0 0 {{ block.settings.benefit_label_margin_bottom }}px;
+    font-family: {{ settings.type_subheading_font.family }}, {{ settings.type_subheading_font.fallback_families }};
+    line-height: 1.4;
+  }
+
+  .ai-how-it-works-benefit-text-{{ ai_gen_id }} {
+    font-size: {{ block.settings.benefit_text_size }}px;
+    color: {{ block.settings.benefit_text_color }};
+    margin: 0;
+    font-family: {{ settings.type_body_font.family }}, {{ settings.type_body_font.fallback_families }};
+    line-height: 1.5;
+  }
+
+  @media screen and (max-width: 768px) {
+    .ai-how-it-works-cards-{{ ai_gen_id }} {
+      grid-template-columns: 1fr;
+      gap: {{ block.settings.cards_gap_mobile }}px;
+    }
+
+    .ai-how-it-works-{{ ai_gen_id }} {
+      padding: {{ block.settings.section_padding_top_mobile }}px 16px {{ block.settings.section_padding_bottom_mobile }}px;
+    }
+
+    .ai-how-it-works-heading-{{ ai_gen_id }} {
+      font-size: {{ block.settings.heading_size_mobile }}px;
+      margin-bottom: {{ block.settings.heading_margin_bottom_mobile }}px;
+    }
+
+    .ai-how-it-works-card-{{ ai_gen_id }} {
+      padding: {{ block.settings.card_padding_mobile }}px;
+    }
+
+    .ai-how-it-works-card-image-{{ ai_gen_id }},
+    .ai-how-it-works-card-image-placeholder-{{ ai_gen_id }} {
+      height: {{ block.settings.card_image_height_mobile }}px;
+    }
+  }
+{% endstyle %}
+
+<div class="ai-how-it-works-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-how-it-works-container-{{ ai_gen_id }}">
+    {% if block.settings.heading != blank %}
+      <h2 class="ai-how-it-works-heading-{{ ai_gen_id }}">{{ block.settings.heading }}</h2>
+    {% endif %}
+
+    <div class="ai-how-it-works-cards-{{ ai_gen_id }}">
+      <div class="ai-how-it-works-card-{{ ai_gen_id }}">
+        {% if block.settings.tier1_image %}
+          <img
+            src="{{ block.settings.tier1_image | image_url: width: 600 }}"
+            alt="{{ block.settings.tier1_image.alt | escape }}"
+            class="ai-how-it-works-card-image-{{ ai_gen_id }}"
+            loading="lazy"
+            width="600"
+            height="{{ block.settings.card_image_height }}"
+          >
+        {% else %}
+          <div class="ai-how-it-works-card-image-placeholder-{{ ai_gen_id }}">
+            {{ 'image' | placeholder_svg_tag }}
+          </div>
+        {% endif %}
+
+        {% if block.settings.tier1_title != blank %}
+          <h3 class="ai-how-it-works-card-title-{{ ai_gen_id }}">{{ block.settings.tier1_title }}</h3>
+        {% endif %}
+
+        <ul class="ai-how-it-works-benefits-{{ ai_gen_id }}">
+          {% for i in (1..5) %}
+            {% liquid
+              assign benefit_label_key = 'tier1_benefit_' | append: i | append: '_label'
+              assign benefit_text_key = 'tier1_benefit_' | append: i | append: '_text'
+              assign benefit_label = block.settings[benefit_label_key]
+              assign benefit_text = block.settings[benefit_text_key]
+            %}
+            {% if benefit_label != blank %}
+              <li class="ai-how-it-works-benefit-{{ ai_gen_id }}">
+                <div class="ai-how-it-works-benefit-icon-{{ ai_gen_id }}">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20,6 9,17 4,12"></polyline>
+                  </svg>
+                </div>
+                <div class="ai-how-it-works-benefit-content-{{ ai_gen_id }}">
+                  <div class="ai-how-it-works-benefit-label-{{ ai_gen_id }}">{{ benefit_label }}</div>
+                  {% if benefit_text != blank %}
+                    <div class="ai-how-it-works-benefit-text-{{ ai_gen_id }}">{{ benefit_text }}</div>
+                  {% endif %}
+                </div>
+              </li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </div>
+
+      <div class="ai-how-it-works-card-{{ ai_gen_id }}">
+        {% if block.settings.tier2_image %}
+          <img
+            src="{{ block.settings.tier2_image | image_url: width: 600 }}"
+            alt="{{ block.settings.tier2_image.alt | escape }}"
+            class="ai-how-it-works-card-image-{{ ai_gen_id }}"
+            loading="lazy"
+            width="600"
+            height="{{ block.settings.card_image_height }}"
+          >
+        {% else %}
+          <div class="ai-how-it-works-card-image-placeholder-{{ ai_gen_id }}">
+            {{ 'image' | placeholder_svg_tag }}
+          </div>
+        {% endif %}
+
+        {% if block.settings.tier2_title != blank %}
+          <h3 class="ai-how-it-works-card-title-{{ ai_gen_id }}">{{ block.settings.tier2_title }}</h3>
+        {% endif %}
+
+        <ul class="ai-how-it-works-benefits-{{ ai_gen_id }}">
+          {% for i in (1..5) %}
+            {% liquid
+              assign benefit_label_key = 'tier2_benefit_' | append: i | append: '_label'
+              assign benefit_text_key = 'tier2_benefit_' | append: i | append: '_text'
+              assign benefit_label = block.settings[benefit_label_key]
+              assign benefit_text = block.settings[benefit_text_key]
+            %}
+            {% if benefit_label != blank %}
+              <li class="ai-how-it-works-benefit-{{ ai_gen_id }}">
+                <div class="ai-how-it-works-benefit-icon-{{ ai_gen_id }}">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20,6 9,17 4,12"></polyline>
+                  </svg>
+                </div>
+                <div class="ai-how-it-works-benefit-content-{{ ai_gen_id }}">
+                  <div class="ai-how-it-works-benefit-label-{{ ai_gen_id }}">{{ benefit_label }}</div>
+                  {% if benefit_text != blank %}
+                    <div class="ai-how-it-works-benefit-text-{{ ai_gen_id }}">{{ benefit_text }}</div>
+                  {% endif %}
+                </div>
+              </li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
 {% schema %}
- {
-   "name": "AI_Block",
-   "tag": "shopify-ai-generated-block"
- }
+{
+  "name": "How it works",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "How It Works"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#1a5d3a"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "min": 20,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading size",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "heading_size_mobile",
+      "min": 16,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading size mobile",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top_mobile",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding mobile",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom_mobile",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding mobile",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "heading_margin_bottom",
+      "min": 20,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "Heading bottom margin",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "heading_margin_bottom_mobile",
+      "min": 16,
+      "max": 60,
+      "step": 4,
+      "unit": "px",
+      "label": "Heading bottom margin mobile",
+      "default": 32
+    },
+    {
+      "type": "header",
+      "content": "Cards layout"
+    },
+    {
+      "type": "range",
+      "id": "cards_gap",
+      "min": 16,
+      "max": 60,
+      "step": 4,
+      "unit": "px",
+      "label": "Cards gap desktop",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "cards_gap_mobile",
+      "min": 16,
+      "max": 40,
+      "step": 4,
+      "unit": "px",
+      "label": "Cards gap mobile",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "cards_margin_top",
+      "min": 0,
+      "max": 60,
+      "step": 4,
+      "unit": "px",
+      "label": "Cards top margin",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Card style"
+    },
+    {
+      "type": "color",
+      "id": "card_background_color",
+      "label": "Card background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "card_border_radius",
+      "min": 0,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "label": "Card border radius",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "card_padding",
+      "min": 16,
+      "max": 48,
+      "step": 4,
+      "unit": "px",
+      "label": "Card padding desktop",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "card_padding_mobile",
+      "min": 12,
+      "max": 32,
+      "step": 4,
+      "unit": "px",
+      "label": "Card padding mobile",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "card_shadow_x",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "unit": "px",
+      "label": "Shadow horizontal offset",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "card_shadow_y",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Shadow vertical offset",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "card_shadow_blur",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Shadow blur",
+      "default": 12
+    },
+    {
+      "type": "color",
+      "id": "card_shadow_color",
+      "label": "Shadow color",
+      "default": "#00000020"
+    },
+    {
+      "type": "range",
+      "id": "card_hover_lift",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "unit": "px",
+      "label": "Hover lift effect",
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Card images"
+    },
+    {
+      "type": "range",
+      "id": "card_image_height",
+      "min": 120,
+      "max": 300,
+      "step": 10,
+      "unit": "px",
+      "label": "Image height desktop",
+      "default": 200
+    },
+    {
+      "type": "range",
+      "id": "card_image_height_mobile",
+      "min": 100,
+      "max": 250,
+      "step": 10,
+      "unit": "px",
+      "label": "Image height mobile",
+      "default": 160
+    },
+    {
+      "type": "range",
+      "id": "card_image_border_radius",
+      "min": 0,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "label": "Image border radius",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "card_image_margin_bottom",
+      "min": 12,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "label": "Image bottom margin",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Card titles"
+    },
+    {
+      "type": "color",
+      "id": "card_title_color",
+      "label": "Title color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "card_title_size",
+      "min": 16,
+      "max": 36,
+      "step": 2,
+      "unit": "px",
+      "label": "Title size",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "card_title_margin_bottom",
+      "min": 8,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "label": "Title bottom margin",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Benefits style"
+    },
+    {
+      "type": "range",
+      "id": "benefit_spacing",
+      "min": 8,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "label": "Benefit spacing",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "benefit_icon_size",
+      "min": 16,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "label": "Icon size",
+      "default": 24
+    },
+    {
+      "type": "color",
+      "id": "benefit_icon_background",
+      "label": "Icon background",
+      "default": "#22c55e"
+    },
+    {
+      "type": "color",
+      "id": "benefit_icon_color",
+      "label": "Icon color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "benefit_icon_margin_right",
+      "min": 8,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Icon right margin",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "benefit_label_size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Label size",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "benefit_label_color",
+      "label": "Label color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "benefit_label_margin_bottom",
+      "min": 2,
+      "max": 8,
+      "step": 1,
+      "unit": "px",
+      "label": "Label bottom margin",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "benefit_text_size",
+      "min": 12,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Text size",
+      "default": 14
+    },
+    {
+      "type": "color",
+      "id": "benefit_text_color",
+      "label": "Text color",
+      "default": "#666666"
+    },
+    {
+      "type": "header",
+      "content": "Tier 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "tier1_image",
+      "label": "Tier 1 image"
+    },
+    {
+      "type": "text",
+      "id": "tier1_title",
+      "label": "Tier 1 title",
+      "default": "Tier 1"
+    },
+    {
+      "type": "text",
+      "id": "tier1_benefit_1_label",
+      "label": "Benefit 1 label",
+      "default": "Fast delivery"
+    },
+    {
+      "type": "text",
+      "id": "tier1_benefit_1_text",
+      "label": "Benefit 1 text",
+      "default": "Get your order within 2-3 business days"
+    },
+    {
+      "type": "text",
+      "id": "tier1_benefit_2_label",
+      "label": "Benefit 2 label",
+      "default": "Quality guarantee"
+    },
+    {
+      "type": "text",
+      "id": "tier1_benefit_2_text",
+      "label": "Benefit 2 text",
+      "default": "100% satisfaction or money back"
+    },
+    {
+      "type": "text",
+      "id": "tier1_benefit_3_label",
+      "label": "Benefit 3 label",
+      "default": "Expert support"
+    },
+    {
+      "type": "text",
+      "id": "tier1_benefit_3_text",
+      "label": "Benefit 3 text",
+      "default": "24/7 customer service available"
+    },
+    {
+      "type": "text",
+      "id": "tier1_benefit_4_label",
+      "label": "Benefit 4 label"
+    },
+    {
+      "type": "text",
+      "id": "tier1_benefit_4_text",
+      "label": "Benefit 4 text"
+    },
+    {
+      "type": "text",
+      "id": "tier1_benefit_5_label",
+      "label": "Benefit 5 label"
+    },
+    {
+      "type": "text",
+      "id": "tier1_benefit_5_text",
+      "label": "Benefit 5 text"
+    },
+    {
+      "type": "header",
+      "content": "Tier 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "tier2_image",
+      "label": "Tier 2 image"
+    },
+    {
+      "type": "text",
+      "id": "tier2_title",
+      "label": "Tier 2 title",
+      "default": "Tier 2"
+    },
+    {
+      "type": "text",
+      "id": "tier2_benefit_1_label",
+      "label": "Benefit 1 label",
+      "default": "Premium materials"
+    },
+    {
+      "type": "text",
+      "id": "tier2_benefit_1_text",
+      "label": "Benefit 1 text",
+      "default": "Made with the finest quality materials"
+    },
+    {
+      "type": "text",
+      "id": "tier2_benefit_2_label",
+      "label": "Benefit 2 label",
+      "default": "Extended warranty"
+    },
+    {
+      "type": "text",
+      "id": "tier2_benefit_2_text",
+      "label": "Benefit 2 text",
+      "default": "2-year warranty on all products"
+    },
+    {
+      "type": "text",
+      "id": "tier2_benefit_3_label",
+      "label": "Benefit 3 label",
+      "default": "Priority access"
+    },
+    {
+      "type": "text",
+      "id": "tier2_benefit_3_text",
+      "label": "Benefit 3 text",
+      "default": "First access to new releases and sales"
+    },
+    {
+      "type": "text",
+      "id": "tier2_benefit_4_label",
+      "label": "Benefit 4 label"
+    },
+    {
+      "type": "text",
+      "id": "tier2_benefit_4_text",
+      "label": "Benefit 4 text"
+    },
+    {
+      "type": "text",
+      "id": "tier2_benefit_5_label",
+      "label": "Benefit 5 label"
+    },
+    {
+      "type": "text",
+      "id": "tier2_benefit_5_text",
+      "label": "Benefit 5 text"
+    }
+  ],
+  "presets": [
+    {
+      "name": "How it works"
+    }
+  ]
+}
 {% endschema %}
