@@ -277,8 +277,60 @@
     "1759500040941b94e3": {
       "type": "_blocks",
       "blocks": {
+        "superfoods_carousel_fixed_NnHrBU": {
+          "type": "superfoods_carousel_fixed",
+          "name": "What's Inside - Fixed",
+          "settings": {
+            "title": "FEEL THE RENEUW DIFFERENCE",
+            "subtitle": "RENEUW IMPACTS MULTIPLE DIFFERENT PARTS OF YOUR BODY",
+            "product_alt_1": "",
+            "product_name_1": "Superfood 1",
+            "product_alt_2": "",
+            "product_name_2": "Superfood 2",
+            "product_alt_3": "",
+            "product_name_3": "Superfood 3",
+            "product_alt_4": "",
+            "product_name_4": "Superfood 4",
+            "product_alt_5": "",
+            "product_name_5": "Superfood 5",
+            "product_alt_6": "",
+            "product_name_6": "Superfood 6",
+            "background_color": "#f9f8f6",
+            "title_color": "#1a5d3a",
+            "subtitle_color": "#1a5d3a",
+            "product_name_color": "#1a5d3a",
+            "border_color": "#4ade80",
+            "arrow_background_color": "#1a5d3a",
+            "arrow_icon_color": "#ffffff",
+            "dot_active_color": "#1a5d3a",
+            "dot_inactive_color": "#d1d5db",
+            "title_font": "serif",
+            "title_size": 48,
+            "subtitle_font": "system_ui_n4",
+            "subtitle_size": 16,
+            "product_name_font": "serif",
+            "product_name_size": 18,
+            "image_size": 240,
+            "border_thickness": 4,
+            "corner_radius": 24,
+            "card_spacing": 40,
+            "arrow_size": 50,
+            "dot_size": 10,
+            "section_padding_top": 60,
+            "section_padding_bottom": 60,
+            "title_margin_bottom": 16,
+            "subtitle_margin_bottom": 40,
+            "image_margin_bottom": 16,
+            "pagination_margin_top": 30,
+            "desktop_padding": 80,
+            "tablet_padding": 40,
+            "mobile_padding": 20
+          },
+          "blocks": {}
+        },
         "ai_gen_block_3c4f444_VwmWc4": {
           "type": "ai_gen_block_3c4f444",
+          "disabled": true,
           "settings": {
             "title": "FEEL THE RENEUW DIFFERENCE",
             "subtitle": "RENEUW IMPACTS MULTIPLE DIFFERENT PARTS OF YOUR BODY",
@@ -335,6 +387,7 @@
         }
       },
       "block_order": [
+        "superfoods_carousel_fixed_NnHrBU",
         "ai_gen_block_3c4f444_VwmWc4"
       ],
       "settings": {
