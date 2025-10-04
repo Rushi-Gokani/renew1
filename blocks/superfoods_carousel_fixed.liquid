@@ -206,23 +206,11 @@
     .superfoods-carousel-wrapper-{{ block_id }} {
       padding: 0 {{ block.settings.desktop_padding }}px;
       overflow: hidden;
-      width: 100%;
-      display: flex;
-      justify-content: center;
+      width: calc({{ block.settings.image_size | times: 3 }}px + {{ block.settings.card_spacing | times: 2 }}px);
+      max-width: 100%;
+      margin: 0 auto;
+      display: block;
       position: relative;
-    }
-    
-    /* Hide 4th card with background overlay */
-    .superfoods-carousel-wrapper-{{ block_id }}::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: calc({{ block.settings.image_size }}px + {{ block.settings.card_spacing }}px);
-      height: 100%;
-      background: {{ block.settings.background_color }};
-      z-index: 10;
-      pointer-events: none;
     }
     
     .superfoods-card-{{ block_id }} {
@@ -231,9 +219,12 @@
     }
     
     .superfoods-carousel-{{ block_id }} {
+      display: flex;
+      gap: {{ block.settings.card_spacing }}px;
+      transition: transform 0.5s ease;
       width: calc({{ block.settings.image_size | times: 6 }}px + {{ block.settings.card_spacing | times: 5 }}px);
-      max-width: calc({{ block.settings.image_size | times: 6 }}px + {{ block.settings.card_spacing | times: 5 }}px);
       overflow: visible;
+      will-change: transform;
     }
   }
 
@@ -494,6 +485,15 @@
         const pageW = cardW * this.slidesPerView + gap * (this.slidesPerView - 1);
         const translateX = -this.currentPage * pageW;
         this.carousel.style.transform = `translate3d(${translateX}px,0,0)`;
+        
+        // Debug logging
+        console.log('Desktop carousel update:', {
+          currentPage: this.currentPage,
+          cardW: cardW,
+          pageW: pageW,
+          translateX: translateX,
+          totalPages: this.totalPages
+        });
       } else {
         // Mobile: translate by viewport width (100vw per card)
         const viewportW = window.innerWidth;
