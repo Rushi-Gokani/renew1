@@ -201,15 +201,14 @@
     background-color: {{ block.settings.dot_active_color }};
   }
 
-  /* Desktop: exactly 3 cards visible, no peek */
+  /* Desktop: exactly 3 cards visible, centered */
   @media (min-width: 990px) {
     .superfoods-carousel-wrapper-{{ block_id }} {
       padding: 0 {{ block.settings.desktop_padding }}px;
       overflow: hidden;
-      width: calc({{ block.settings.image_size | times: 3 }}px + {{ block.settings.card_spacing | times: 2 }}px + {{ block.settings.border_thickness | times: 6 }}px + 40px);
-      max-width: 100%;
-      margin: 0 auto;
-      display: block;
+      width: 100%;
+      display: flex;
+      justify-content: center;
       position: relative;
     }
     
@@ -225,6 +224,11 @@
       width: calc({{ block.settings.image_size | times: 6 }}px + {{ block.settings.card_spacing | times: 5 }}px);
       overflow: visible;
       will-change: transform;
+    }
+    
+    /* Center the carousel content */
+    .superfoods-carousel-{{ block_id }} {
+      transform-origin: center;
     }
   }
 
@@ -480,11 +484,17 @@
       const gap = {{ block.settings.card_spacing }};
 
       if (this.slidesPerView >= 3) {
-        // Desktop/Tablet: translate by actual content page width (fixed card width)
+        // Desktop/Tablet: center each set of 3 cards
         const cardW = {{ block.settings.image_size }};
         const pageW = cardW * this.slidesPerView + gap * (this.slidesPerView - 1);
         const translateX = -this.currentPage * pageW;
-        this.carousel.style.transform = `translate3d(${translateX}px,0,0)`;
+        
+        // Center the carousel content
+        const wrapperW = this.carouselWrapper.getBoundingClientRect().width;
+        const carouselW = cardW * 6 + gap * 5; // Total width of all 6 cards
+        const centerOffset = (wrapperW - pageW) / 2;
+        
+        this.carousel.style.transform = `translate3d(${translateX + centerOffset}px,0,0)`;
         
         // Debug logging
         console.log('Desktop carousel update:', {
@@ -492,6 +502,7 @@
           cardW: cardW,
           pageW: pageW,
           translateX: translateX,
+          centerOffset: centerOffset,
           totalPages: this.totalPages
         });
       } else {
