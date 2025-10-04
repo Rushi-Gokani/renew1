@@ -180,12 +180,21 @@
     fill: {{ block.settings.arrow_icon_color }};
   }
 
+@media (max-width: 767px) {
   .superfoods-nav-arrow--prev-{{ block_id }} {
     left: 12px;
   }
 
   .superfoods-nav-arrow--next-{{ block_id }} {
     right: 12px;
+  }
+}
+  .superfoods-nav-arrow--prev-{{ block_id }} {
+    left: -70px;
+  }
+
+  .superfoods-nav-arrow--next-{{ block_id }} {
+    right: -70px;
   }
 
   .superfoods-pagination-{{ block_id }} {
