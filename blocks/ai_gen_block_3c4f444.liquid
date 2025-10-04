@@ -37,16 +37,13 @@
 
   .ai-superfoods-carousel-{{ ai_gen_id }}{
     display:flex; gap:var(--gap); transition:transform .5s ease;
-    /* 💡 critical: give the track a base width on mobile/tablet */
-    width:100%;
-    max-width:100%;
-    box-sizing:border-box; will-change:transform;
+    width:100%; max-width:100%; box-sizing:border-box; will-change:transform;
     touch-action:pan-y; padding:0 1px; /* guards against 1px rounding */
   }
 
   .ai-superfoods-card-{{ ai_gen_id }}{flex:0 0 auto; text-align:center; min-width:0;}
 
-  /* Tablet & Mobile: size cards purely in CSS using vars */
+  /* Tablet & Mobile: size cards in CSS using vars */
   @media (max-width: 989px){
     .ai-superfoods-card-{{ ai_gen_id }}{
       width: calc( (100% - (var(--gap) * (var(--items) - 1))) / var(--items) );
@@ -94,7 +91,6 @@
   @media (min-width: 990px){
     .ai-superfoods-carousel-wrapper-{{ ai_gen_id }}{padding:0 {{ block.settings.desktop_padding }}px;}
     .ai-superfoods-card-{{ ai_gen_id }}{width:{{ block.settings.image_size }}px;flex:0 0 auto;}
-    /* override mobile/tablet rule so track shrinks to content */
     .ai-superfoods-carousel-{{ ai_gen_id }}{width:fit-content;max-width:calc({{ block.settings.image_size | times: 3 }}px + {{ block.settings.card_spacing | times: 2 }}px);}
   }
 
@@ -142,11 +138,10 @@
           <div class="ai-superfoods-card-{{ ai_gen_id }}" data-slide="{{ forloop.index0 }}">
             <div class="ai-superfoods-image-wrapper-{{ ai_gen_id }}">
               {% if product_image %}
-                <img
-                  src="{{ product_image | image_url: width: 600 }}"
-                  alt="{{ product_alt | default: product_name | escape }}"
-                  class="ai-superfoods-image-{{ ai_gen_id }}"
-                  loading="lazy" width="600" height="600">
+                <img src="{{ product_image | image_url: width: 600 }}"
+                     alt="{{ product_alt | default: product_name | escape }}"
+                     class="ai-superfoods-image-{{ ai_gen_id }}"
+                     loading="lazy" width="600" height="600">
               {% else %}
                 <div class="ai-superfoods-image-{{ ai_gen_id }} ai-superfoods-placeholder-{{ ai_gen_id }}">
                   {{ 'product-apparel-1' | placeholder_svg_tag }}
@@ -177,6 +172,7 @@
       super();
       this.totalSlides = 6;
       this.currentPage = 0;
+      this._raf = null;
     }
 
     connectedCallback(){
@@ -185,12 +181,18 @@
       this.prevButton = this.querySelector('[data-direction="prev"]');
       this.nextButton = this.querySelector('[data-direction="next"]');
       this.pagination = this.querySelector('[data-pagination]');
-      this.updateBreakpoints();
+
+      // Defer first paint until layout is ready (avoids 0px measurements)
+      requestAnimationFrame(() => {
+        this.updateBreakpoints();
+        this.createDots();
+        this.update(true);
+      });
 
       this.prevButton.addEventListener('click', () => this.go(-1));
       this.nextButton.addEventListener('click', () => this.go(1));
 
-      // touch swipe
+      // Touch swipe
       let startX=0, dragging=false;
       this.carousel.addEventListener('touchstart', e=>{ startX=e.touches[0].clientX; dragging=true; }, {passive:true});
       this.carousel.addEventListener('touchmove', e=>{ if(!dragging) return; e.preventDefault(); }, {passive:false});
@@ -200,10 +202,9 @@
         if(Math.abs(dx)>50) this.go(dx>0?1:-1);
       });
 
+      // Recalc on resize and when images load
       window.addEventListener('resize', ()=>{ this.updateBreakpoints(); this.update(); });
-
-      this.createDots();
-      this.update(); // initial paint
+      this.querySelectorAll('img').forEach(img => img.addEventListener('load', ()=> this.update()));
     }
 
     getSlidesPerView(){
@@ -217,7 +218,8 @@
       this.totalPages = Math.ceil(this.totalSlides / this.slidesPerView);
       // expose to CSS for card sizing on tablet/mobile
       this.style.setProperty('--items', this.slidesPerView);
-      this.style.setProperty('--gap', getComputedStyle(this.carousel).getPropertyValue('gap') || '0px');
+      const gap = getComputedStyle(this.querySelector('.ai-superfoods-carousel-{{ ai_gen_id }}')).getPropertyValue('gap') || '0px';
+      this.style.setProperty('--gap', gap);
       this.currentPage = Math.min(this.currentPage, this.totalPages - 1);
     }
 
@@ -237,29 +239,50 @@
       if(next !== this.currentPage){ this.currentPage = next; this.update(); }
     }
 
-    update(){
-      const wrapperW = Math.floor(this.carouselWrapper.getBoundingClientRect().width);
-      const gap = parseFloat(getComputedStyle(this.carousel).getPropertyValue('gap')) || 0;
+    _wrapperWidth(){
+      const w = Math.max(
+        this.carouselWrapper.getBoundingClientRect().width || 0,
+        this.carouselWrapper.clientWidth || 0
+      );
+      return Math.floor(w);
+    }
 
-      if(this.slidesPerView >= 3){
-        // Desktop: translate by actual content page width (fixed card width)
-        const cardW = {{ block.settings.image_size }};
-        const pageW = cardW * this.slidesPerView + gap * (this.slidesPerView - 1);
-        this.carousel.style.transform = `translate3d(${-this.currentPage * pageW}px,0,0)`;
-      }else{
-        // Tablet/Mobile: translate by wrapper width (viewport page)
-        this.carousel.style.transform = `translate3d(${-this.currentPage * wrapperW}px,0,0)`;
-      }
+    update(initial=false){
+      const run = () => {
+        let wrapperW = this._wrapperWidth();
 
-      // dots & arrows
-      const dots = this.pagination.querySelectorAll('.ai-superfoods-dot-{{ ai_gen_id }}');
-      if(dots.length !== this.totalPages) this.createDots();
-      this.pagination.querySelectorAll('.ai-superfoods-dot-{{ ai_gen_id }}').forEach((d,i)=>d.classList.toggle('active', i===this.currentPage));
+        // If width is 0 (e.g., still not laid out), try again next frame
+        if(wrapperW === 0){
+          if(!initial){ cancelAnimationFrame(this._raf); }
+          this._raf = requestAnimationFrame(()=> this.update(true));
+          return;
+        }
 
-      this.prevButton.disabled = this.currentPage===0;
-      this.nextButton.disabled = this.currentPage===this.totalPages-1;
-      this.prevButton.style.opacity = this.prevButton.disabled ? '0.5':'1';
-      this.nextButton.style.opacity = this.nextButton.disabled ? '0.5':'1';
+        const gap = parseFloat(getComputedStyle(this.carousel).getPropertyValue('gap')) || 0;
+
+        if(this.slidesPerView >= 3){
+          // Desktop: translate by actual content page width (fixed card width)
+          const cardW = {{ block.settings.image_size }};
+          const pageW = cardW * this.slidesPerView + gap * (this.slidesPerView - 1);
+          this.carousel.style.transform = `translate3d(${-this.currentPage * pageW}px,0,0)`;
+        }else{
+          // Tablet/Mobile: translate by wrapper width (viewport page)
+          this.carousel.style.transform = `translate3d(${-this.currentPage * wrapperW}px,0,0)`;
+        }
+
+        // dots & arrows
+        if(this.pagination.children.length !== this.totalPages) this.createDots();
+        this.pagination.querySelectorAll('.ai-superfoods-dot-{{ ai_gen_id }}').forEach((d,i)=>d.classList.toggle('active', i===this.currentPage));
+
+        this.prevButton.disabled = this.currentPage===0;
+        this.nextButton.disabled = this.currentPage===this.totalPages-1;
+        this.prevButton.style.opacity = this.prevButton.disabled ? '0.5':'1';
+        this.nextButton.style.opacity = this.nextButton.disabled ? '0.5':'1';
+      };
+
+      // Batch updates on next frame to ensure layout is complete
+      cancelAnimationFrame(this._raf);
+      this._raf = requestAnimationFrame(run);
     }
   }
   customElements.define('superfoods-carousel-{{ ai_gen_id }}', SuperfoodsCarousel{{ ai_gen_id }});
