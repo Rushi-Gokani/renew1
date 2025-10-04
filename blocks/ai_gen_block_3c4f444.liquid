@@ -161,6 +161,15 @@
     background-color: {{ block.settings.dot_active_color }};
   }
 
+  /* --- NEW: harden layout to prevent horizontal overflow --- */
+  .ai-superfoods-section-{{ ai_gen_id }},
+  .ai-superfoods-container-{{ ai_gen_id }},
+  .ai-superfoods-carousel-wrapper-{{ ai_gen_id }},
+  .ai-superfoods-carousel-{{ ai_gen_id }} {
+    box-sizing: border-box;
+    max-width: 100%;
+  }
+
   @media screen and (min-width: 990px) {
     .ai-superfoods-card-{{ ai_gen_id }} {
       width: {{ block.settings.image_size }}px;
@@ -205,25 +214,22 @@
   }
 
   @media screen and (max-width: 749px) {
-    .ai-superfoods-section-{{ ai_gen_id }} {
-      overflow-x: hidden;
-      width: 100%;
-    }
-
-    .ai-superfoods-container-{{ ai_gen_id }} {
-      overflow-x: hidden;
+    .ai-superfoods-section-{{ ai_gen_id }},
+    .ai-superfoods-container-{{ ai_gen_id }},
+    .ai-superfoods-carousel-wrapper-{{ ai_gen_id }},
+    .ai-superfoods-carousel-{{ ai_gen_id }} {
+      overflow: clip; /* stricter than hidden; no scroll area */
       width: 100%;
     }
 
     .ai-superfoods-carousel-wrapper-{{ ai_gen_id }} {
-      overflow: hidden;
-      width: 100%;
       padding: 0 {{ block.settings.mobile_padding }}px;
     }
 
     .ai-superfoods-carousel-{{ ai_gen_id }} {
       gap: {{ block.settings.card_spacing | times: 0.6 }}px;
       width: 100%;
+      max-width: 100%;
     }
 
     .ai-superfoods-card-{{ ai_gen_id }} {
@@ -253,6 +259,10 @@
       width: {{ block.settings.arrow_size | times: 1.2 }}px;
       height: {{ block.settings.arrow_size | times: 1.2 }}px;
     }
+
+    /* Keep arrows safely inside so they don't push layout */
+    .ai-superfoods-nav-arrow--prev-{{ ai_gen_id }} { left: 12px; }
+    .ai-superfoods-nav-arrow--next-{{ ai_gen_id }} { right: 12px; }
 
     .ai-superfoods-dot-{{ ai_gen_id }} {
       width: {{ block.settings.dot_size | times: 1.2 }}px;
@@ -379,12 +389,12 @@
         this.carousel.addEventListener('touchstart', (e) => {
           startX = e.touches[0].clientX;
           isDragging = true;
-        });
+        }, { passive: true });
 
         this.carousel.addEventListener('touchmove', (e) => {
           if (!isDragging) return;
           e.preventDefault();
-        });
+        }, { passive: false });
 
         this.carousel.addEventListener('touchend', (e) => {
           if (!isDragging) return;
@@ -412,6 +422,9 @@
           this.totalPages = Math.ceil(this.totalSlides / this.slidesPerView);
           this.currentPage = Math.min(this.currentPage, this.totalPages - 1);
           this.createPagination();
+          this.updateCarousel();
+        } else {
+          // Recalculate widths on same breakpoint too (prevents rounding overflow)
           this.updateCarousel();
         }
       }
@@ -448,7 +461,10 @@
       }
 
       updateCarousel() {
-        const wrapperWidth = this.carouselWrapper ? this.carouselWrapper.clientWidth : this.clientWidth;
+        const wrapperWidth = this.carouselWrapper
+          ? this.carouselWrapper.getBoundingClientRect().width
+          : this.getBoundingClientRect().width;
+
         const computedStyles = window.getComputedStyle(this.carousel);
         const gapValue = computedStyles.getPropertyValue('gap');
         const gapPx = parseFloat(gapValue) || 0;
@@ -466,20 +482,21 @@
           
           const pageWidthPx = cardWidthPx * itemsPerPage + gapPx * (itemsPerPage - 1);
           const translateX = -this.currentPage * pageWidthPx;
-          this.carousel.style.transform = `translateX(${translateX}px)`;
+          this.carousel.style.transform = `translate3d(${translateX}px, 0, 0)`;
         } else {
-          // Mobile/Tablet: Responsive width cards
+          // Mobile/Tablet: Responsive width cards (avoid fractional overflow)
           const totalGapPerPage = gapPx * Math.max(0, itemsPerPage - 1);
-          const cardWidthPx = Math.max(0, (wrapperWidth - totalGapPerPage) / itemsPerPage);
+          const available = Math.max(0, wrapperWidth - totalGapPerPage);
+          const singleCard = Math.floor(available / itemsPerPage);
 
           cards.forEach((card) => {
-            card.style.width = `${cardWidthPx}px`;
+            card.style.width = `${singleCard}px`;
             card.style.flex = '0 0 auto';
           });
 
-          const pageWidthPx = cardWidthPx * itemsPerPage + totalGapPerPage;
+          const pageWidthPx = singleCard * itemsPerPage + totalGapPerPage;
           const translateX = -this.currentPage * pageWidthPx;
-          this.carousel.style.transform = `translateX(${translateX}px)`;
+          this.carousel.style.transform = `translate3d(${translateX}px, 0, 0)`;
         }
 
         this.updatePagination();
