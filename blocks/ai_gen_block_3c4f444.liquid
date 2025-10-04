@@ -9,11 +9,22 @@
     background-color: {{ block.settings.background_color }};
     padding: {{ block.settings.section_padding_top }}px 20px {{ block.settings.section_padding_bottom }}px;
     text-align: center;
+
+    /* --- HARD STOP for horizontal overflow at any size --- */
+    overflow-x: hidden;
+    position: relative;
+    box-sizing: border-box;
+    width: 100%;
   }
 
   .ai-superfoods-container-{{ ai_gen_id }} {
     max-width: 1200px;
     margin: 0 auto;
+
+    /* prevent inner children from exceeding viewport width */
+    overflow-x: hidden;
+    box-sizing: border-box;
+    width: 100%;
   }
 
   .ai-superfoods-title-{{ ai_gen_id }} {
@@ -37,20 +48,34 @@
     position: relative;
     max-width: 100%;
     margin: 0 auto;
+
+    /* hard clip the moving track; contain layout so transforms can't leak */
     overflow: hidden;
+    contain: layout paint size;
     display: flex;
     justify-content: center;
+    box-sizing: border-box;
+    width: 100%;
   }
 
   .ai-superfoods-carousel-{{ ai_gen_id }} {
     display: flex;
     transition: transform 0.5s ease;
     gap: {{ block.settings.card_spacing }}px;
+
+    /* avoid accidental intrinsic overflows */
+    max-width: 100%;
+    box-sizing: border-box;
+    will-change: transform;
+    touch-action: pan-y; /* disable horizontal page scroll while swiping */
   }
 
   .ai-superfoods-card-{{ ai_gen_id }} {
     flex: 0 0 auto;
     text-align: center;
+
+    /* KEY: allow flex items to shrink without pushing width */
+    min-width: 0;
   }
 
   .ai-superfoods-image-wrapper-{{ ai_gen_id }} {
@@ -70,6 +95,7 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+    display: block; /* removes inline-gap that can cause 1px overflow */
   }
 
   .ai-superfoods-placeholder-{{ ai_gen_id }} {
@@ -128,13 +154,8 @@
     fill: {{ block.settings.arrow_icon_color }};
   }
 
-  .ai-superfoods-nav-arrow--prev-{{ ai_gen_id }} {
-    left: 10px;
-  }
-
-  .ai-superfoods-nav-arrow--next-{{ ai_gen_id }} {
-    right: 10px;
-  }
+  .ai-superfoods-nav-arrow--prev-{{ ai_gen_id }} { left: 10px; }
+  .ai-superfoods-nav-arrow--next-{{ ai_gen_id }} { right: 10px; }
 
   .ai-superfoods-pagination-{{ ai_gen_id }} {
     display: flex;
@@ -153,34 +174,18 @@
     background-color: {{ block.settings.dot_inactive_color }};
   }
 
-  .ai-superfoods-dot-{{ ai_gen_id }}:hover {
-    transform: scale(1.2);
-  }
-
-  .ai-superfoods-dot-{{ ai_gen_id }}.active {
-    background-color: {{ block.settings.dot_active_color }};
-  }
-
-  /* --- NEW: harden layout to prevent horizontal overflow --- */
-  .ai-superfoods-section-{{ ai_gen_id }},
-  .ai-superfoods-container-{{ ai_gen_id }},
-  .ai-superfoods-carousel-wrapper-{{ ai_gen_id }},
-  .ai-superfoods-carousel-{{ ai_gen_id }} {
-    box-sizing: border-box;
-    max-width: 100%;
-  }
+  .ai-superfoods-dot-{{ ai_gen_id }}:hover { transform: scale(1.2); }
+  .ai-superfoods-dot-{{ ai_gen_id }}.active { background-color: {{ block.settings.dot_active_color }}; }
 
   @media screen and (min-width: 990px) {
     .ai-superfoods-card-{{ ai_gen_id }} {
       width: {{ block.settings.image_size }}px;
       flex: 0 0 auto;
     }
-
     .ai-superfoods-carousel-wrapper-{{ ai_gen_id }} {
       padding: 0 {{ block.settings.desktop_padding }}px;
       justify-content: center;
     }
-
     .ai-superfoods-carousel-{{ ai_gen_id }} {
       width: fit-content;
       max-width: calc({{ block.settings.image_size | times: 3 }}px + {{ block.settings.card_spacing | times: 2 }}px);
@@ -188,40 +193,15 @@
   }
 
   @media screen and (max-width: 989px) and (min-width: 750px) {
-    .ai-superfoods-card-{{ ai_gen_id }} {
-      width: calc((100% - {{ block.settings.card_spacing }}px) / 2);
-    }
-
-    .ai-superfoods-carousel-wrapper-{{ ai_gen_id }} {
-      padding: 0 {{ block.settings.tablet_padding }}px;
-    }
-
-    .ai-superfoods-image-wrapper-{{ ai_gen_id }} {
-      max-width: {{ block.settings.image_size | times: 0.9 }}px;
-    }
-
-    .ai-superfoods-title-{{ ai_gen_id }} {
-      font-size: {{ block.settings.title_size | times: 0.9 }}px;
-    }
-
-    .ai-superfoods-subtitle-{{ ai_gen_id }} {
-      font-size: {{ block.settings.subtitle_size | times: 0.9 }}px;
-    }
-
-    .ai-superfoods-product-name-{{ ai_gen_id }} {
-      font-size: {{ block.settings.product_name_size | times: 0.9 }}px;
-    }
+    .ai-superfoods-card-{{ ai_gen_id }} { width: calc((100% - {{ block.settings.card_spacing }}px) / 2); }
+    .ai-superfoods-carousel-wrapper-{{ ai_gen_id }} { padding: 0 {{ block.settings.tablet_padding }}px; }
+    .ai-superfoods-image-wrapper-{{ ai_gen_id }} { max-width: {{ block.settings.image_size | times: 0.9 }}px; }
+    .ai-superfoods-title-{{ ai_gen_id }} { font-size: {{ block.settings.title_size | times: 0.9 }}px; }
+    .ai-superfoods-subtitle-{{ ai_gen_id }} { font-size: {{ block.settings.subtitle_size | times: 0.9 }}px; }
+    .ai-superfoods-product-name-{{ ai_gen_id }} { font-size: {{ block.settings.product_name_size | times: 0.9 }}px; }
   }
 
   @media screen and (max-width: 749px) {
-    .ai-superfoods-section-{{ ai_gen_id }},
-    .ai-superfoods-container-{{ ai_gen_id }},
-    .ai-superfoods-carousel-wrapper-{{ ai_gen_id }},
-    .ai-superfoods-carousel-{{ ai_gen_id }} {
-      overflow: clip; /* stricter than hidden; no scroll area */
-      width: 100%;
-    }
-
     .ai-superfoods-carousel-wrapper-{{ ai_gen_id }} {
       padding: 0 {{ block.settings.mobile_padding }}px;
     }
@@ -230,12 +210,15 @@
       gap: {{ block.settings.card_spacing | times: 0.6 }}px;
       width: 100%;
       max-width: 100%;
+      /* small padding guards against rounding creating 1px overflow */
+      padding: 0 1px;
     }
 
     .ai-superfoods-card-{{ ai_gen_id }} {
       width: 100%;
       flex: 0 0 100%;
       max-width: 100%;
+      min-width: 0;
     }
 
     .ai-superfoods-image-wrapper-{{ ai_gen_id }} {
@@ -243,24 +226,14 @@
       margin: 0 auto {{ block.settings.image_margin_bottom }}px;
     }
 
-    .ai-superfoods-title-{{ ai_gen_id }} {
-      font-size: {{ block.settings.title_size | times: 0.8 }}px;
-    }
-
-    .ai-superfoods-subtitle-{{ ai_gen_id }} {
-      font-size: {{ block.settings.subtitle_size | times: 0.8 }}px;
-    }
-
-    .ai-superfoods-product-name-{{ ai_gen_id }} {
-      font-size: {{ block.settings.product_name_size | times: 0.8 }}px;
-    }
+    .ai-superfoods-title-{{ ai_gen_id }} { font-size: {{ block.settings.title_size | times: 0.8 }}px; }
+    .ai-superfoods-subtitle-{{ ai_gen_id }} { font-size: {{ block.settings.subtitle_size | times: 0.8 }}px; }
+    .ai-superfoods-product-name-{{ ai_gen_id }} { font-size: {{ block.settings.product_name_size | times: 0.8 }}px; }
 
     .ai-superfoods-nav-arrow-{{ ai_gen_id }} {
       width: {{ block.settings.arrow_size | times: 1.2 }}px;
       height: {{ block.settings.arrow_size | times: 1.2 }}px;
     }
-
-    /* Keep arrows safely inside so they don't push layout */
     .ai-superfoods-nav-arrow--prev-{{ ai_gen_id }} { left: 12px; }
     .ai-superfoods-nav-arrow--next-{{ ai_gen_id }} { right: 12px; }
 
@@ -393,7 +366,7 @@
 
         this.carousel.addEventListener('touchmove', (e) => {
           if (!isDragging) return;
-          e.preventDefault();
+          e.preventDefault(); // keep the page from horizontally scrolling
         }, { passive: false });
 
         this.carousel.addEventListener('touchend', (e) => {
@@ -404,11 +377,8 @@
           const diff = startX - endX;
           
           if (Math.abs(diff) > 50) {
-            if (diff > 0) {
-              this.goToNextPage();
-            } else {
-              this.goToPrevPage();
-            }
+            if (diff > 0) this.goToNextPage();
+            else this.goToPrevPage();
           }
         });
 
@@ -422,11 +392,8 @@
           this.totalPages = Math.ceil(this.totalSlides / this.slidesPerView);
           this.currentPage = Math.min(this.currentPage, this.totalPages - 1);
           this.createPagination();
-          this.updateCarousel();
-        } else {
-          // Recalculate widths on same breakpoint too (prevents rounding overflow)
-          this.updateCarousel();
         }
+        this.updateCarousel(); // always recalc widths
       }
 
       createPagination() {
@@ -462,21 +429,20 @@
 
       updateCarousel() {
         const wrapperWidth = this.carouselWrapper
-          ? this.carouselWrapper.getBoundingClientRect().width
-          : this.getBoundingClientRect().width;
+          ? Math.floor(this.carouselWrapper.getBoundingClientRect().width)
+          : Math.floor(this.getBoundingClientRect().width);
 
         const computedStyles = window.getComputedStyle(this.carousel);
         const gapValue = computedStyles.getPropertyValue('gap');
-        const gapPx = parseFloat(gapValue) || 0;
+        const gapPx = Math.round(parseFloat(gapValue) || 0);
 
         const cards = this.carousel.querySelectorAll('.ai-superfoods-card-{{ ai_gen_id }}');
         const itemsPerPage = this.slidesPerView;
 
         if (window.innerWidth >= 990) {
-          // Desktop: Fixed width cards, centered layout
           const cardWidthPx = {{ block.settings.image_size }};
           cards.forEach((card) => {
-            card.style.width = `${cardWidthPx}px`;
+            card.style.width = cardWidthPx + 'px';
             card.style.flex = '0 0 auto';
           });
           
@@ -484,13 +450,13 @@
           const translateX = -this.currentPage * pageWidthPx;
           this.carousel.style.transform = `translate3d(${translateX}px, 0, 0)`;
         } else {
-          // Mobile/Tablet: Responsive width cards (avoid fractional overflow)
+          // Mobile/Tablet: exact integers only to avoid 1px bleed
           const totalGapPerPage = gapPx * Math.max(0, itemsPerPage - 1);
           const available = Math.max(0, wrapperWidth - totalGapPerPage);
-          const singleCard = Math.floor(available / itemsPerPage);
+          const singleCard = Math.max(0, Math.floor(available / itemsPerPage));
 
           cards.forEach((card) => {
-            card.style.width = `${singleCard}px`;
+            card.style.width = singleCard + 'px';
             card.style.flex = '0 0 auto';
           });
 
