@@ -14,54 +14,43 @@
     overflow-x:hidden; width:100%; box-sizing:border-box; position:relative;
   }
 
-  .ai-superfoods-container-{{ ai_gen_id }}{max-width:1200px;margin:0 auto;overflow-x:hidden;box-sizing:border-box;width:100%;}
+  .ai-superfoods-container-{{ ai_gen_id }}{
+    max-width:1200px;margin:0 auto;overflow-x:hidden;box-sizing:border-box;width:100%;
+  }
 
   .ai-superfoods-title-{{ ai_gen_id }}{
-    font-family:{{ block.settings.title_font.family }},serif;font-size:{{ block.settings.title_size }}px;font-weight:bold;color:{{ block.settings.title_color }};
+    font-family:{{ block.settings.title_font.family }},serif;
+    font-size:{{ block.settings.title_size }}px;font-weight:bold;color:{{ block.settings.title_color }};
     margin:0 0 {{ block.settings.title_margin_bottom }}px;line-height:1.2;
   }
   .ai-superfoods-subtitle-{{ ai_gen_id }}{
-    font-family:{{ block.settings.subtitle_font.family }},sans-serif;font-size:{{ block.settings.subtitle_size }}px;color:{{ block.settings.subtitle_color }};
+    font-family:{{ block.settings.subtitle_font.family }},sans-serif;
+    font-size:{{ block.settings.subtitle_size }}px;color:{{ block.settings.subtitle_color }};
     margin:0 0 {{ block.settings.subtitle_margin_bottom }}px;line-height:1.4;
   }
 
   .ai-superfoods-carousel-wrapper-{{ ai_gen_id }}{
-    position:relative; max-width:100%; margin:0 auto; overflow:hidden; 
-    display:block; box-sizing:border-box; width:100%;
+    position:relative; max-width:100%; margin:0 auto; overflow:hidden; contain:layout paint size;
+    display:flex; justify-content:center; box-sizing:border-box; width:100%;
     padding:0 {{ block.settings.mobile_padding }}px;
-    min-height:300px;
-    background-color: rgba(255,255,0,0.1);
-    border: 2px solid orange;
   }
 
   .ai-superfoods-carousel-{{ ai_gen_id }}{
-    display:flex; gap:var(--gap); transition:transform .5s ease; 
+    display:flex; gap:var(--gap); transition:transform .5s ease;
+    /* 💡 critical: give the track a base width on mobile/tablet */
+    width:100%;
+    max-width:100%;
     box-sizing:border-box; will-change:transform;
-    touch-action:pan-y; 
-    min-height:250px;
-    align-items:flex-start;
-    background-color: rgba(0,255,0,0.1);
-    border: 2px solid blue;
+    touch-action:pan-y; padding:0 1px; /* guards against 1px rounding */
   }
 
-  .ai-superfoods-card-{{ ai_gen_id }}{
-    flex:0 0 auto; 
-    text-align:center; 
-    min-width:0; 
-    display:block;
-    width:{{ block.settings.image_size }}px;
-    max-width:100%;
-    background-color: rgba(255,0,0,0.1);
-    border: 2px solid red;
-    margin: 5px;
-  }
+  .ai-superfoods-card-{{ ai_gen_id }}{flex:0 0 auto; text-align:center; min-width:0;}
 
   /* Tablet & Mobile: size cards purely in CSS using vars */
   @media (max-width: 989px){
     .ai-superfoods-card-{{ ai_gen_id }}{
       width: calc( (100% - (var(--gap) * (var(--items) - 1))) / var(--items) );
       max-width:100%;
-      min-width:200px;
     }
   }
 
@@ -76,17 +65,18 @@
   }
 
   .ai-superfoods-image-{{ ai_gen_id }}{width:100%;height:100%;object-fit:cover;display:block;}
-  .ai-superfoods-placeholder-{{ ai_gen_id }}{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background-color:#f3f4f6;border:2px dashed #d1d5db;}
-  .ai-superfoods-placeholder-svg{width:60px;height:60px;opacity:0.5;}
 
   .ai-superfoods-product-name-{{ ai_gen_id }}{
-    font-family:{{ block.settings.product_name_font.family }},serif;font-size:{{ block.settings.product_name_size }}px;font-weight:bold;color:{{ block.settings.product_name_color }};
+    font-family:{{ block.settings.product_name_font.family }},serif;
+    font-size:{{ block.settings.product_name_size }}px;font-weight:bold;color:{{ block.settings.product_name_color }};
     margin:0;line-height:1.3;
   }
 
   .ai-superfoods-nav-arrow-{{ ai_gen_id }}{
-    position:absolute;top:50%;transform:translateY(-50%);width:{{ block.settings.arrow_size }}px;height:{{ block.settings.arrow_size }}px;
-    background-color:{{ block.settings.arrow_background_color }};border:none;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:2;
+    position:absolute;top:50%;transform:translateY(-50%);
+    width:{{ block.settings.arrow_size }}px;height:{{ block.settings.arrow_size }}px;
+    background-color:{{ block.settings.arrow_background_color }};
+    border:none;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:2;
     transition:opacity .3s ease, transform .2s ease; box-shadow:0 2px 8px rgba(0,0,0,.15);
   }
   .ai-superfoods-nav-arrow-{{ ai_gen_id }}:hover{transform:translateY(-50%) scale(1.1);}
@@ -104,6 +94,7 @@
   @media (min-width: 990px){
     .ai-superfoods-carousel-wrapper-{{ ai_gen_id }}{padding:0 {{ block.settings.desktop_padding }}px;}
     .ai-superfoods-card-{{ ai_gen_id }}{width:{{ block.settings.image_size }}px;flex:0 0 auto;}
+    /* override mobile/tablet rule so track shrinks to content */
     .ai-superfoods-carousel-{{ ai_gen_id }}{width:fit-content;max-width:calc({{ block.settings.image_size | times: 3 }}px + {{ block.settings.card_spacing | times: 2 }}px);}
   }
 
@@ -150,20 +141,15 @@
           %}
           <div class="ai-superfoods-card-{{ ai_gen_id }}" data-slide="{{ forloop.index0 }}">
             <div class="ai-superfoods-image-wrapper-{{ ai_gen_id }}">
-              {% if product_image != blank %}
-                {{
-                  product_image
-                  | image_url: width: 600
-                  | image_tag:
-                    width: 600,
-                    height: 600,
-                    alt: product_alt | default: product_name | default: 'Superfood ' | append: i | escape,
-                    class: 'ai-superfoods-image-' | append: ai_gen_id,
-                    loading: 'lazy'
-                }}
+              {% if product_image %}
+                <img
+                  src="{{ product_image | image_url: width: 600 }}"
+                  alt="{{ product_alt | default: product_name | escape }}"
+                  class="ai-superfoods-image-{{ ai_gen_id }}"
+                  loading="lazy" width="600" height="600">
               {% else %}
                 <div class="ai-superfoods-image-{{ ai_gen_id }} ai-superfoods-placeholder-{{ ai_gen_id }}">
-                  {{ 'product-apparel-1' | placeholder_svg_tag: 'ai-superfoods-placeholder-svg' }}
+                  {{ 'product-apparel-1' | placeholder_svg_tag }}
                 </div>
               {% endif %}
             </div>
