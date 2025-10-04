@@ -26,25 +26,42 @@
   }
 
   .ai-superfoods-carousel-wrapper-{{ ai_gen_id }}{
-    position:relative; max-width:100%; margin:0 auto; overflow:hidden; contain:layout paint size;
-    display:flex; justify-content:center; box-sizing:border-box; width:100%;
+    position:relative; max-width:100%; margin:0 auto; overflow:hidden; 
+    display:block; box-sizing:border-box; width:100%;
     padding:0 {{ block.settings.mobile_padding }}px;
-    min-height:300px; /* ensure wrapper has height */
+    min-height:300px;
+    background-color: rgba(255,255,0,0.1);
+    border: 2px solid orange;
   }
 
   .ai-superfoods-carousel-{{ ai_gen_id }}{
-    display:flex; gap:var(--gap); transition:transform .5s ease; max-width:100%; box-sizing:border-box; will-change:transform;
-    touch-action:pan-y; padding:0 1px; /* guards against 1px rounding */
-    min-height:200px; /* ensure carousel has height */
+    display:flex; gap:var(--gap); transition:transform .5s ease; 
+    box-sizing:border-box; will-change:transform;
+    touch-action:pan-y; 
+    min-height:250px;
+    align-items:flex-start;
+    background-color: rgba(0,255,0,0.1);
+    border: 2px solid blue;
   }
 
-  .ai-superfoods-card-{{ ai_gen_id }}{flex:0 0 auto; text-align:center; min-width:0; display:block;}
+  .ai-superfoods-card-{{ ai_gen_id }}{
+    flex:0 0 auto; 
+    text-align:center; 
+    min-width:0; 
+    display:block;
+    width:{{ block.settings.image_size }}px;
+    max-width:100%;
+    background-color: rgba(255,0,0,0.1);
+    border: 2px solid red;
+    margin: 5px;
+  }
 
   /* Tablet & Mobile: size cards purely in CSS using vars */
   @media (max-width: 989px){
     .ai-superfoods-card-{{ ai_gen_id }}{
       width: calc( (100% - (var(--gap) * (var(--items) - 1))) / var(--items) );
       max-width:100%;
+      min-width:200px;
     }
   }
 
@@ -121,7 +138,7 @@
     {% endif %}
 
     <div class="ai-superfoods-carousel-wrapper-{{ ai_gen_id }}">
-      <div class="ai-superfoods-carousel-{{ ai_gen_id }}" data-carousel style="border: 1px solid red; min-height: 250px;">
+      <div class="ai-superfoods-carousel-{{ ai_gen_id }}" data-carousel>
         {% for i in (1..6) %}
           {% liquid
             assign image_key = 'product_image_' | append: i
