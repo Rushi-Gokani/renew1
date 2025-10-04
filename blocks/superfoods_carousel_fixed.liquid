@@ -60,6 +60,7 @@
     line-height: 1.4;
   }
 
+  /* Mobile: Simple structure */
   .superfoods-carousel-wrapper-{{ block_id }} {
     position: relative;
     max-width: 100%;
@@ -70,6 +71,45 @@
     box-sizing: border-box;
     width: 100%;
     padding: 0 {{ block.settings.mobile_padding }}px;
+  }
+
+  /* Show/hide based on screen size */
+  .mobile-only {
+    display: block;
+  }
+  
+  .desktop-only {
+    display: none;
+  }
+
+  @media (min-width: 990px) {
+    .mobile-only {
+      display: none;
+    }
+    
+    .desktop-only {
+      display: block;
+    }
+  }
+
+  /* Desktop: Container structure */
+  @media (min-width: 990px) {
+    .superfoods-carousel-container-{{ block_id }} {
+      position: relative;
+      max-width: 100%;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+      width: 100%;
+      padding: 0 {{ block.settings.desktop_padding }}px;
+    }
+
+    .superfoods-carousel-wrapper-{{ block_id }} {
+      padding: 0;
+      position: relative;
+    }
   }
 
   .superfoods-carousel-{{ block_id }} {
@@ -204,7 +244,6 @@
   /* Desktop: exactly 3 cards visible, centered */
   @media (min-width: 990px) {
     .superfoods-carousel-wrapper-{{ block_id }} {
-      padding: 0 {{ block.settings.desktop_padding }}px;
       overflow: hidden;
       width: calc({{ block.settings.image_size | times: 3 }}px + {{ block.settings.card_spacing | times: 2 }}px + {{ block.settings.border_thickness | times: 6 }}px + 20px);
       max-width: 100%;
@@ -337,7 +376,8 @@
       <p class="superfoods-subtitle-{{ block_id }}">{{ block.settings.subtitle }}</p>
     {% endif %}
 
-    <div class="superfoods-carousel-wrapper-{{ block_id }}">
+    <!-- Mobile: Simple structure -->
+    <div class="superfoods-carousel-wrapper-{{ block_id }} mobile-only">
       <div class="superfoods-carousel-{{ block_id }}" data-carousel>
         {% for i in (1..6) %}
           {% liquid
@@ -387,6 +427,59 @@
       </button>
     </div>
 
+    <!-- Desktop: Container structure -->
+    <div class="superfoods-carousel-container-{{ block_id }} desktop-only">
+      <div class="superfoods-carousel-wrapper-{{ block_id }}">
+        <div class="superfoods-carousel-{{ block_id }}" data-carousel>
+          {% for i in (1..6) %}
+            {% liquid
+              assign image_key = 'product_image_' | append: i
+              assign alt_key = 'product_alt_' | append: i
+              assign name_key = 'product_name_' | append: i
+              assign product_image = block.settings[image_key]
+              assign product_alt = block.settings[alt_key]
+              assign product_name = block.settings[name_key]
+            %}
+            <div class="superfoods-card-{{ block_id }}" data-slide="{{ forloop.index0 }}">
+              <div class="superfoods-image-wrapper-{{ block_id }}">
+                {% if product_image != blank %}
+                  {% assign image_alt = product_alt | default: product_name | default: 'Superfood ' | append: i | escape %}
+                  {% assign image_class = 'superfoods-image-' | append: block_id %}
+                  {{
+                    product_image
+                    | image_url: width: 600
+                    | image_tag:
+                      width: 600,
+                      height: 600,
+                      alt: image_alt,
+                      class: image_class,
+                      loading: 'lazy'
+                  }}
+                {% else %}
+                  <div class="superfoods-image-{{ block_id }} superfoods-placeholder-{{ block_id }}">
+                    {{ 'product-apparel-1' | placeholder_svg_tag: 'superfoods-placeholder-svg' }}
+                  </div>
+                {% endif %}
+              </div>
+              <h3 class="superfoods-product-name-{{ block_id }}">{{ product_name | default: 'Superfood '}}</h3>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <button class="superfoods-nav-arrow-{{ block_id }} superfoods-nav-arrow--prev-{{ block_id }}" data-direction="prev" aria-label="Previous products">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      
+      <button class="superfoods-nav-arrow-{{ block_id }} superfoods-nav-arrow--next-{{ block_id }}" data-direction="next" aria-label="Next products">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+
     <div class="superfoods-pagination-{{ block_id }}" data-pagination></div>
   </div>
 </div>
@@ -402,8 +495,15 @@
     }
 
     init() {
-      this.carousel = document.querySelector('.superfoods-carousel-{{ block_id }}');
-      this.carouselWrapper = document.querySelector('.superfoods-carousel-wrapper-{{ block_id }}');
+      // Get the active carousel based on screen size
+      const isDesktop = window.innerWidth >= 990;
+      const activeWrapper = isDesktop ? 
+        document.querySelector('.desktop-only .superfoods-carousel-wrapper-{{ block_id }}') :
+        document.querySelector('.mobile-only .superfoods-carousel-wrapper-{{ block_id }}');
+      
+      this.carousel = activeWrapper ? activeWrapper.querySelector('.superfoods-carousel-{{ block_id }}') : null;
+      this.carouselWrapper = activeWrapper;
+      this.carouselContainer = document.querySelector('.superfoods-carousel-container-{{ block_id }}');
       this.prevButton = document.querySelector('.superfoods-nav-arrow--prev-{{ block_id }}');
       this.nextButton = document.querySelector('.superfoods-nav-arrow--next-{{ block_id }}');
       this.pagination = document.querySelector('.superfoods-pagination-{{ block_id }}');
@@ -438,8 +538,8 @@
       });
 
       window.addEventListener('resize', () => {
-        this.updateBreakpoints();
-        this.update();
+        // Re-initialize to switch between mobile/desktop versions
+        this.init();
       });
     }
 
