@@ -250,20 +250,22 @@
     }
     
     .superfoods-carousel-{{ block_id }} {
-      overflow: hidden;
-      width: 100%;
+      /* Remove width and overflow constraints for proper flex behavior */
     }
     
     .superfoods-image-wrapper-{{ block_id }} {
-      width: min(85vw, {{ block.settings.image_size | times: 0.9 }}px);
-      height: min(85vw, {{ block.settings.image_size | times: 0.9 }}px);
+      width: min(80vw, {{ block.settings.image_size | times: 0.8 }}px);
+      height: min(80vw, {{ block.settings.image_size | times: 0.8 }}px);
       max-width: 100%;
     }
     
     .superfoods-card-{{ block_id }} {
-      width: 100%;
-      max-width: min(85vw, {{ block.settings.image_size | times: 1.05 }}px);
-      flex: 0 0 100%;
+      width: 100vw;
+      flex: 0 0 100vw;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
     }
     
     .superfoods-title-{{ block_id }} {
@@ -396,7 +398,8 @@
         if (!dragging) return;
         dragging = false;
         const dx = startX - e.changedTouches[0].clientX;
-        if (Math.abs(dx) > 50) this.go(dx > 0 ? 1 : -1);
+        // Reduced threshold for better mobile responsiveness
+        if (Math.abs(dx) > 30) this.go(dx > 0 ? 1 : -1);
       });
 
       window.addEventListener('resize', () => {
@@ -415,6 +418,14 @@
       this.slidesPerView = this.getSlidesPerView();
       this.totalPages = Math.ceil(this.totalSlides / this.slidesPerView);
       this.currentPage = Math.min(this.currentPage, this.totalPages - 1);
+      
+      // Debug logging
+      console.log('Carousel breakpoints updated:', {
+        slidesPerView: this.slidesPerView,
+        totalPages: this.totalPages,
+        currentPage: this.currentPage,
+        screenWidth: window.innerWidth
+      });
     }
 
     createDots() {
@@ -448,16 +459,14 @@
       const gap = {{ block.settings.card_spacing }};
 
       if (this.slidesPerView >= 3) {
-        // Desktop: translate by actual content page width (fixed card width)
+        // Desktop/Tablet: translate by actual content page width (fixed card width)
         const cardW = {{ block.settings.image_size }};
         const pageW = cardW * this.slidesPerView + gap * (this.slidesPerView - 1);
         this.carousel.style.transform = `translate3d(${-this.currentPage * pageW}px,0,0)`;
       } else {
-        // Tablet/Mobile: translate by wrapper width (viewport page)
-        // Ensure we don't exceed the wrapper width to prevent overflow
-        const maxTranslate = Math.max(0, (this.totalSlides - this.slidesPerView) * wrapperW);
-        const translateX = Math.min(this.currentPage * wrapperW, maxTranslate);
-        this.carousel.style.transform = `translate3d(${-translateX}px,0,0)`;
+        // Mobile: translate by viewport width (100vw per card)
+        const viewportW = window.innerWidth;
+        this.carousel.style.transform = `translate3d(${-this.currentPage * viewportW}px,0,0)`;
       }
 
       // Update dots
