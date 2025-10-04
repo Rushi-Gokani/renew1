@@ -269,14 +269,16 @@
           <div class="superfoods-card-{{ block_id }}" data-slide="{{ forloop.index0 }}">
             <div class="superfoods-image-wrapper-{{ block_id }}">
               {% if product_image != blank %}
+                {% assign image_alt = product_alt | default: product_name | default: 'Superfood ' | append: i | escape %}
+                {% assign image_class = 'superfoods-image-' | append: block_id %}
                 {{
                   product_image
                   | image_url: width: 600
                   | image_tag:
                     width: 600,
                     height: 600,
-                    alt: product_alt | default: product_name | default: 'Superfood ' | append: i | escape,
-                    class: 'superfoods-image-' | append: block_id,
+                    alt: image_alt,
+                    class: image_class,
                     loading: 'lazy'
                 }}
               {% else %}
