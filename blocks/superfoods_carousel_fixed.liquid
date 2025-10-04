@@ -201,27 +201,41 @@
     background-color: {{ block.settings.dot_active_color }};
   }
 
-  /* Desktop: fixed card width, centered track */
+  /* Desktop: fixed card width, centered track - exactly 3 cards visible */
   @media (min-width: 990px) {
     .superfoods-carousel-wrapper-{{ block_id }} {
       padding: 0 {{ block.settings.desktop_padding }}px;
+      overflow: hidden;
     }
     
     .superfoods-card-{{ block_id }} {
       width: {{ block.settings.image_size }}px;
-      flex: 0 0 auto;
+      flex: 0 0 {{ block.settings.image_size }}px;
     }
     
     .superfoods-carousel-{{ block_id }} {
-      width: fit-content;
+      width: calc({{ block.settings.image_size | times: 3 }}px + {{ block.settings.card_spacing | times: 2 }}px);
       max-width: calc({{ block.settings.image_size | times: 3 }}px + {{ block.settings.card_spacing | times: 2 }}px);
+      overflow: hidden;
     }
   }
 
-  /* Tablet: 3 cards */
+  /* Tablet: 3 cards - exactly 3 visible, no peek */
   @media (max-width: 989px) and (min-width: 750px) {
+    .superfoods-carousel-wrapper-{{ block_id }} {
+      overflow: hidden;
+    }
+    
+    .superfoods-carousel-{{ block_id }} {
+      overflow: hidden;
+    }
+    
     .superfoods-image-wrapper-{{ block_id }} {
       max-width: {{ block.settings.image_size | times: 0.9 }}px;
+    }
+    
+    .superfoods-card-{{ block_id }} {
+      flex: 0 0 calc((100% - {{ block.settings.card_spacing | times: 2 }}px) / 3);
     }
     
     .superfoods-title-{{ block_id }} {
