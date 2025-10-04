@@ -206,7 +206,7 @@
     .superfoods-carousel-wrapper-{{ block_id }} {
       padding: 0 {{ block.settings.desktop_padding }}px;
       overflow: hidden;
-      width: calc({{ block.settings.image_size | times: 3 }}px + {{ block.settings.card_spacing | times: 2 }}px + {{ block.settings.border_thickness | times: 6 }}px + 40px);
+      width: calc({{ block.settings.image_size | times: 3 }}px + {{ block.settings.card_spacing | times: 2 }}px + {{ block.settings.border_thickness | times: 6 }}px + 80px);
       max-width: 100%;
       margin: 0 auto;
       display: block;
@@ -227,13 +227,26 @@
       will-change: transform;
     }
     
-    /* Ensure only 3 cards are visible with proper masking */
+    /* Hide 4th card with background overlay */
     .superfoods-carousel-wrapper-{{ block_id }}::after {
       content: '';
       position: absolute;
       top: 0;
       right: 0;
-      width: calc({{ block.settings.image_size }}px + {{ block.settings.card_spacing }}px + 20px);
+      width: calc({{ block.settings.image_size }}px + {{ block.settings.card_spacing }}px + 40px);
+      height: 100%;
+      background: {{ block.settings.background_color }};
+      z-index: 10;
+      pointer-events: none;
+    }
+    
+    /* Ensure proper positioning of first card */
+    .superfoods-carousel-wrapper-{{ block_id }}::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 20px;
       height: 100%;
       background: {{ block.settings.background_color }};
       z-index: 10;
