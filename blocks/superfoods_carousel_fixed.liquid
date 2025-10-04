@@ -1,0 +1,860 @@
+{% doc %}
+  @prompt
+    Make a centered section on a light cream background titled "What's Inside" (large bold serif, deep green) with a subtitle below in smaller sans-serif deep green reading "Just 6 superfoods to support your gut. And yes, that's it."; include a three-item horizontal carousel of product cards (desktop: three cards side-by-side, evenly spaced and centered; mobile: single card centered with slight peek of adjacent cards) where each card is a square 220–260px image with 24px rounded corners, a 4–6px bright green border and subtle inner shadow, and a bold serif product name in deep green centered below each image; overlay circular navigation arrows (green circle with white arrow) vertically centered to the left and right of the carousel, and place a row of small pagination dots centered beneath the cards with the active dot green and inactive dots light gray; allow full customization of images, alt text, product titles, border color/thickness, corner radius, fonts (serif for titles, sans-serif for subtitle), spacing, and arrow/dot colors; ensure responsive behavior: on desktop show three columns with generous horizontal padding, on tablet show two columns, on mobile show one centered card with touch swipe enabled and arrows/dots easily tappable; include options to adjust image size, card spacing, and typography scale for small screens.
+{% enddoc %}
+
+{% assign block_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .superfoods-section-{{ block_id }} {
+    background-color: {{ block.settings.background_color }};
+    padding: {{ block.settings.section_padding_top }}px 20px {{ block.settings.section_padding_bottom }}px;
+    text-align: center;
+    overflow-x: hidden;
+    width: 100%;
+    box-sizing: border-box;
+    position: relative;
+  }
+
+  .superfoods-container-{{ block_id }} {
+    max-width: 1200px;
+    margin: 0 auto;
+    overflow-x: hidden;
+    box-sizing: border-box;
+    width: 100%;
+  }
+
+  .superfoods-title-{{ block_id }} {
+    font-family: {{ block.settings.title_font.family }}, serif;
+    font-size: {{ block.settings.title_size }}px;
+    font-weight: bold;
+    color: {{ block.settings.title_color }};
+    margin: 0 0 {{ block.settings.title_margin_bottom }}px;
+    line-height: 1.2;
+  }
+
+  .superfoods-subtitle-{{ block_id }} {
+    font-family: {{ block.settings.subtitle_font.family }}, sans-serif;
+    font-size: {{ block.settings.subtitle_size }}px;
+    color: {{ block.settings.subtitle_color }};
+    margin: 0 0 {{ block.settings.subtitle_margin_bottom }}px;
+    line-height: 1.4;
+  }
+
+  .superfoods-carousel-wrapper-{{ block_id }} {
+    position: relative;
+    max-width: 100%;
+    margin: 0 auto;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 0 {{ block.settings.mobile_padding }}px;
+  }
+
+  .superfoods-carousel-{{ block_id }} {
+    display: flex;
+    gap: {{ block.settings.card_spacing }}px;
+    transition: transform 0.5s ease;
+    max-width: 100%;
+    box-sizing: border-box;
+    will-change: transform;
+    touch-action: pan-y;
+    padding: 0 1px;
+  }
+
+  .superfoods-card-{{ block_id }} {
+    flex: 0 0 auto;
+    text-align: center;
+    min-width: 0;
+    display: block;
+  }
+
+  .superfoods-image-wrapper-{{ block_id }} {
+    width: {{ block.settings.image_size }}px;
+    height: {{ block.settings.image_size }}px;
+    border: {{ block.settings.border_thickness }}px solid {{ block.settings.border_color }};
+    border-radius: {{ block.settings.corner_radius }}px;
+    overflow: hidden;
+    margin: 0 auto {{ block.settings.image_margin_bottom }}px;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+    position: relative;
+  }
+
+  .superfoods-image-{{ block_id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .superfoods-placeholder-{{ block_id }} {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f3f4f6;
+    border: 2px dashed #d1d5db;
+  }
+
+  .superfoods-placeholder-svg {
+    width: 60px;
+    height: 60px;
+    opacity: 0.5;
+  }
+
+  .superfoods-product-name-{{ block_id }} {
+    font-family: {{ block.settings.product_name_font.family }}, serif;
+    font-size: {{ block.settings.product_name_size }}px;
+    font-weight: bold;
+    color: {{ block.settings.product_name_color }};
+    margin: 0;
+    line-height: 1.3;
+  }
+
+  .superfoods-nav-arrow-{{ block_id }} {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: {{ block.settings.arrow_size }}px;
+    height: {{ block.settings.arrow_size }}px;
+    background-color: {{ block.settings.arrow_background_color }};
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    transition: opacity 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+
+  .superfoods-nav-arrow-{{ block_id }}:hover {
+    transform: translateY(-50%) scale(1.1);
+  }
+
+  .superfoods-nav-arrow-{{ block_id }}:active {
+    transform: translateY(-50%) scale(0.95);
+  }
+
+  .superfoods-nav-arrow-{{ block_id }} svg {
+    width: 20px;
+    height: 20px;
+    fill: {{ block.settings.arrow_icon_color }};
+  }
+
+  .superfoods-nav-arrow--prev-{{ block_id }} {
+    left: 12px;
+  }
+
+  .superfoods-nav-arrow--next-{{ block_id }} {
+    right: 12px;
+  }
+
+  .superfoods-pagination-{{ block_id }} {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: {{ block.settings.pagination_margin_top }}px;
+  }
+
+  .superfoods-dot-{{ block_id }} {
+    width: {{ block.settings.dot_size }}px;
+    height: {{ block.settings.dot_size }}px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    background-color: {{ block.settings.dot_inactive_color }};
+  }
+
+  .superfoods-dot-{{ block_id }}:hover {
+    transform: scale(1.2);
+  }
+
+  .superfoods-dot-{{ block_id }}.active {
+    background-color: {{ block.settings.dot_active_color }};
+  }
+
+  /* Desktop: fixed card width, centered track */
+  @media (min-width: 990px) {
+    .superfoods-carousel-wrapper-{{ block_id }} {
+      padding: 0 {{ block.settings.desktop_padding }}px;
+    }
+    
+    .superfoods-card-{{ block_id }} {
+      width: {{ block.settings.image_size }}px;
+      flex: 0 0 auto;
+    }
+    
+    .superfoods-carousel-{{ block_id }} {
+      width: fit-content;
+      max-width: calc({{ block.settings.image_size | times: 3 }}px + {{ block.settings.card_spacing | times: 2 }}px);
+    }
+  }
+
+  /* Tablet: 2 cards */
+  @media (max-width: 989px) and (min-width: 750px) {
+    .superfoods-image-wrapper-{{ block_id }} {
+      max-width: {{ block.settings.image_size | times: 0.9 }}px;
+    }
+    
+    .superfoods-title-{{ block_id }} {
+      font-size: {{ block.settings.title_size | times: 0.9 }}px;
+    }
+    
+    .superfoods-subtitle-{{ block_id }} {
+      font-size: {{ block.settings.subtitle_size | times: 0.9 }}px;
+    }
+    
+    .superfoods-product-name-{{ block_id }} {
+      font-size: {{ block.settings.product_name_size | times: 0.9 }}px;
+    }
+  }
+
+  /* Mobile: 1 card */
+  @media (max-width: 749px) {
+    .superfoods-image-wrapper-{{ block_id }} {
+      max-width: min(90vw, {{ block.settings.image_size | times: 0.95 }}px);
+    }
+    
+    .superfoods-title-{{ block_id }} {
+      font-size: {{ block.settings.title_size | times: 0.85 }}px;
+    }
+    
+    .superfoods-subtitle-{{ block_id }} {
+      font-size: {{ block.settings.subtitle_size | times: 0.85 }}px;
+    }
+    
+    .superfoods-product-name-{{ block_id }} {
+      font-size: {{ block.settings.product_name_size | times: 0.85 }}px;
+    }
+    
+    .superfoods-nav-arrow-{{ block_id }} {
+      width: {{ block.settings.arrow_size | times: 1.2 }}px;
+      height: {{ block.settings.arrow_size | times: 1.2 }}px;
+    }
+    
+    .superfoods-dot-{{ block_id }} {
+      width: {{ block.settings.dot_size | times: 1.2 }}px;
+      height: {{ block.settings.dot_size | times: 1.2 }}px;
+    }
+  }
+{% endstyle %}
+
+<div class="superfoods-section-{{ block_id }}" {{ block.shopify_attributes }}>
+  <div class="superfoods-container-{{ block_id }}">
+    {% if block.settings.title != blank %}
+      <h2 class="superfoods-title-{{ block_id }}">{{ block.settings.title }}</h2>
+    {% endif %}
+    
+    {% if block.settings.subtitle != blank %}
+      <p class="superfoods-subtitle-{{ block_id }}">{{ block.settings.subtitle }}</p>
+    {% endif %}
+
+    <div class="superfoods-carousel-wrapper-{{ block_id }}">
+      <div class="superfoods-carousel-{{ block_id }}" data-carousel>
+        {% for i in (1..6) %}
+          {% liquid
+            assign image_key = 'product_image_' | append: i
+            assign alt_key = 'product_alt_' | append: i
+            assign name_key = 'product_name_' | append: i
+            assign product_image = block.settings[image_key]
+            assign product_alt = block.settings[alt_key]
+            assign product_name = block.settings[name_key]
+          %}
+          <div class="superfoods-card-{{ block_id }}" data-slide="{{ forloop.index0 }}">
+            <div class="superfoods-image-wrapper-{{ block_id }}">
+              {% if product_image != blank %}
+                {{
+                  product_image
+                  | image_url: width: 600
+                  | image_tag:
+                    width: 600,
+                    height: 600,
+                    alt: product_alt | default: product_name | default: 'Superfood ' | append: i | escape,
+                    class: 'superfoods-image-' | append: block_id,
+                    loading: 'lazy'
+                }}
+              {% else %}
+                <div class="superfoods-image-{{ block_id }} superfoods-placeholder-{{ block_id }}">
+                  {{ 'product-apparel-1' | placeholder_svg_tag: 'superfoods-placeholder-svg' }}
+                </div>
+              {% endif %}
+            </div>
+            <h3 class="superfoods-product-name-{{ block_id }}">{{ product_name | default: 'Superfood ' | append: i }}</h3>
+          </div>
+        {% endfor %}
+      </div>
+
+      <button class="superfoods-nav-arrow-{{ block_id }} superfoods-nav-arrow--prev-{{ block_id }}" data-direction="prev" aria-label="Previous products">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      
+      <button class="superfoods-nav-arrow-{{ block_id }} superfoods-nav-arrow--next-{{ block_id }}" data-direction="next" aria-label="Next products">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="superfoods-pagination-{{ block_id }}" data-pagination></div>
+  </div>
+</div>
+
+<script>
+(function() {
+  class SuperfoodsCarousel{{ block_id }} {
+    constructor() {
+      this.totalSlides = 6;
+      this.currentPage = 0;
+      this.slidesPerView = 3;
+      this.totalPages = 2;
+    }
+
+    init() {
+      this.carousel = document.querySelector('.superfoods-carousel-{{ block_id }}');
+      this.carouselWrapper = document.querySelector('.superfoods-carousel-wrapper-{{ block_id }}');
+      this.prevButton = document.querySelector('.superfoods-nav-arrow--prev-{{ block_id }}');
+      this.nextButton = document.querySelector('.superfoods-nav-arrow--next-{{ block_id }}');
+      this.pagination = document.querySelector('.superfoods-pagination-{{ block_id }}');
+
+      if (!this.carousel || !this.carouselWrapper) return;
+
+      this.updateBreakpoints();
+      this.createDots();
+      this.update();
+
+      this.prevButton.addEventListener('click', () => this.go(-1));
+      this.nextButton.addEventListener('click', () => this.go(1));
+
+      // Touch swipe
+      let startX = 0, dragging = false;
+      this.carousel.addEventListener('touchstart', e => {
+        startX = e.touches[0].clientX;
+        dragging = true;
+      }, { passive: true });
+      
+      this.carousel.addEventListener('touchmove', e => {
+        if (!dragging) return;
+        e.preventDefault();
+      }, { passive: false });
+      
+      this.carousel.addEventListener('touchend', e => {
+        if (!dragging) return;
+        dragging = false;
+        const dx = startX - e.changedTouches[0].clientX;
+        if (Math.abs(dx) > 50) this.go(dx > 0 ? 1 : -1);
+      });
+
+      window.addEventListener('resize', () => {
+        this.updateBreakpoints();
+        this.update();
+      });
+    }
+
+    getSlidesPerView() {
+      if (window.innerWidth >= 990) return 3;
+      if (window.innerWidth >= 750) return 2;
+      return 1;
+    }
+
+    updateBreakpoints() {
+      this.slidesPerView = this.getSlidesPerView();
+      this.totalPages = Math.ceil(this.totalSlides / this.slidesPerView);
+      this.currentPage = Math.min(this.currentPage, this.totalPages - 1);
+    }
+
+    createDots() {
+      if (!this.pagination) return;
+      
+      this.pagination.innerHTML = '';
+      for (let i = 0; i < this.totalPages; i++) {
+        const dot = document.createElement('button');
+        dot.className = `superfoods-dot-{{ block_id }} ${i === this.currentPage ? 'active' : ''}`;
+        dot.setAttribute('aria-label', `Go to page ${i + 1}`);
+        dot.addEventListener('click', () => {
+          this.currentPage = i;
+          this.update();
+        });
+        this.pagination.appendChild(dot);
+      }
+    }
+
+    go(dir) {
+      const next = Math.max(0, Math.min(this.currentPage + dir, this.totalPages - 1));
+      if (next !== this.currentPage) {
+        this.currentPage = next;
+        this.update();
+      }
+    }
+
+    update() {
+      if (!this.carousel || !this.carouselWrapper) return;
+
+      const wrapperW = Math.floor(this.carouselWrapper.getBoundingClientRect().width);
+      const gap = {{ block.settings.card_spacing }};
+
+      if (this.slidesPerView >= 3) {
+        // Desktop: translate by actual content page width (fixed card width)
+        const cardW = {{ block.settings.image_size }};
+        const pageW = cardW * this.slidesPerView + gap * (this.slidesPerView - 1);
+        this.carousel.style.transform = `translate3d(${-this.currentPage * pageW}px,0,0)`;
+      } else {
+        // Tablet/Mobile: translate by wrapper width (viewport page)
+        this.carousel.style.transform = `translate3d(${-this.currentPage * wrapperW}px,0,0)`;
+      }
+
+      // Update dots
+      if (this.pagination) {
+        const dots = this.pagination.querySelectorAll('.superfoods-dot-{{ block_id }}');
+        dots.forEach((d, i) => d.classList.toggle('active', i === this.currentPage));
+      }
+
+      // Update arrows
+      if (this.prevButton && this.nextButton) {
+        this.prevButton.disabled = this.currentPage === 0;
+        this.nextButton.disabled = this.currentPage === this.totalPages - 1;
+        this.prevButton.style.opacity = this.prevButton.disabled ? '0.5' : '1';
+        this.nextButton.style.opacity = this.nextButton.disabled ? '0.5' : '1';
+      }
+    }
+  }
+
+  // Initialize when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      new SuperfoodsCarousel{{ block_id }}().init();
+    });
+  } else {
+    new SuperfoodsCarousel{{ block_id }}().init();
+  }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "What's Inside - Fixed",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section content"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "What's Inside"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Just 6 superfoods to support your gut. And yes, that's it."
+    },
+    {
+      "type": "header",
+      "content": "Product 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "product_image_1",
+      "label": "Product image"
+    },
+    {
+      "type": "text",
+      "id": "product_alt_1",
+      "label": "Image alt text"
+    },
+    {
+      "type": "text",
+      "id": "product_name_1",
+      "label": "Product name",
+      "default": "Superfood 1"
+    },
+    {
+      "type": "header",
+      "content": "Product 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "product_image_2",
+      "label": "Product image"
+    },
+    {
+      "type": "text",
+      "id": "product_alt_2",
+      "label": "Image alt text"
+    },
+    {
+      "type": "text",
+      "id": "product_name_2",
+      "label": "Product name",
+      "default": "Superfood 2"
+    },
+    {
+      "type": "header",
+      "content": "Product 3"
+    },
+    {
+      "type": "image_picker",
+      "id": "product_image_3",
+      "label": "Product image"
+    },
+    {
+      "type": "text",
+      "id": "product_alt_3",
+      "label": "Image alt text"
+    },
+    {
+      "type": "text",
+      "id": "product_name_3",
+      "label": "Product name",
+      "default": "Superfood 3"
+    },
+    {
+      "type": "header",
+      "content": "Product 4"
+    },
+    {
+      "type": "image_picker",
+      "id": "product_image_4",
+      "label": "Product image"
+    },
+    {
+      "type": "text",
+      "id": "product_alt_4",
+      "label": "Image alt text"
+    },
+    {
+      "type": "text",
+      "id": "product_name_4",
+      "label": "Product name",
+      "default": "Superfood 4"
+    },
+    {
+      "type": "header",
+      "content": "Product 5"
+    },
+    {
+      "type": "image_picker",
+      "id": "product_image_5",
+      "label": "Product image"
+    },
+    {
+      "type": "text",
+      "id": "product_alt_5",
+      "label": "Image alt text"
+    },
+    {
+      "type": "text",
+      "id": "product_name_5",
+      "label": "Product name",
+      "default": "Superfood 5"
+    },
+    {
+      "type": "header",
+      "content": "Product 6"
+    },
+    {
+      "type": "image_picker",
+      "id": "product_image_6",
+      "label": "Product image"
+    },
+    {
+      "type": "text",
+      "id": "product_alt_6",
+      "label": "Image alt text"
+    },
+    {
+      "type": "text",
+      "id": "product_name_6",
+      "label": "Product name",
+      "default": "Superfood 6"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#f9f8f6"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title color",
+      "default": "#1a5d3a"
+    },
+    {
+      "type": "color",
+      "id": "subtitle_color",
+      "label": "Subtitle color",
+      "default": "#1a5d3a"
+    },
+    {
+      "type": "color",
+      "id": "product_name_color",
+      "label": "Product name color",
+      "default": "#1a5d3a"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Image border color",
+      "default": "#4ade80"
+    },
+    {
+      "type": "color",
+      "id": "arrow_background_color",
+      "label": "Arrow background color",
+      "default": "#1a5d3a"
+    },
+    {
+      "type": "color",
+      "id": "arrow_icon_color",
+      "label": "Arrow icon color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "dot_active_color",
+      "label": "Active dot color",
+      "default": "#1a5d3a"
+    },
+    {
+      "type": "color",
+      "id": "dot_inactive_color",
+      "label": "Inactive dot color",
+      "default": "#d1d5db"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "title_font",
+      "label": "Title font",
+      "default": "serif"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Title size",
+      "min": 24,
+      "max": 72,
+      "step": 2,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "font_picker",
+      "id": "subtitle_font",
+      "label": "Subtitle font",
+      "default": "sans-serif"
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size",
+      "label": "Subtitle size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "font_picker",
+      "id": "product_name_font",
+      "label": "Product name font",
+      "default": "serif"
+    },
+    {
+      "type": "range",
+      "id": "product_name_size",
+      "label": "Product name size",
+      "min": 14,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "image_size",
+      "label": "Image size",
+      "min": 180,
+      "max": 300,
+      "step": 10,
+      "unit": "px",
+      "default": 240
+    },
+    {
+      "type": "range",
+      "id": "border_thickness",
+      "label": "Border thickness",
+      "min": 2,
+      "max": 8,
+      "step": 1,
+      "unit": "px",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "corner_radius",
+      "label": "Corner radius",
+      "min": 12,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "card_spacing",
+      "label": "Card spacing",
+      "min": 20,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "arrow_size",
+      "label": "Arrow size",
+      "min": 40,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "dot_size",
+      "label": "Dot size",
+      "min": 8,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "label": "Section top padding",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "label": "Section bottom padding",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "title_margin_bottom",
+      "label": "Title bottom margin",
+      "min": 10,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "subtitle_margin_bottom",
+      "label": "Subtitle bottom margin",
+      "min": 20,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "image_margin_bottom",
+      "label": "Image bottom margin",
+      "min": 10,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "pagination_margin_top",
+      "label": "Pagination top margin",
+      "min": 20,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "default": 30
+    },
+    {
+      "type": "header",
+      "content": "Responsive padding"
+    },
+    {
+      "type": "range",
+      "id": "desktop_padding",
+      "label": "Desktop horizontal padding",
+      "min": 40,
+      "max": 120,
+      "step": 10,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "tablet_padding",
+      "label": "Tablet horizontal padding",
+      "min": 20,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding",
+      "label": "Mobile horizontal padding",
+      "min": 10,
+      "max": 40,
+      "step": 5,
+      "unit": "px",
+      "default": 20
+    }
+  ],
+  "presets": [
+    {
+      "name": "What's Inside - Fixed"
+    }
+  ]
+}
+{% endschema %}
