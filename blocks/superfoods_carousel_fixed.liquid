@@ -211,21 +211,21 @@
       justify-content: center;
       position: relative;
     }
-    
+
     .superfoods-card-{{ block_id }} {
       width: {{ block.settings.image_size }}px;
       flex: 0 0 {{ block.settings.image_size }}px;
     }
-    
+
     .superfoods-carousel-{{ block_id }} {
       display: flex;
       gap: {{ block.settings.card_spacing }}px;
       transition: transform 0.5s ease;
-      width: calc({{ block.settings.image_size | times: 6 }}px + {{ block.settings.card_spacing | times: 5 }}px);
+      width: calc({{ block.settings.image_size | times: 3 }}px + {{ block.settings.card_spacing | times: 2 }}px);
       overflow: visible;
       will-change: transform;
     }
-    
+
     /* Center the carousel content */
     .superfoods-carousel-{{ block_id }} {
       transform-origin: center;
@@ -484,18 +484,17 @@
       const gap = {{ block.settings.card_spacing }};
 
       if (this.slidesPerView >= 3) {
-        // Desktop/Tablet: center each set of 3 cards
+        // Desktop: center 3 cards at a time
         const cardW = {{ block.settings.image_size }};
-        const pageW = cardW * this.slidesPerView + gap * (this.slidesPerView - 1);
+        const pageW = cardW * 3 + gap * 2; // Width of 3 cards + 2 gaps
         const translateX = -this.currentPage * pageW;
-        
+
         // Center the carousel content
         const wrapperW = this.carouselWrapper.getBoundingClientRect().width;
-        const carouselW = cardW * 6 + gap * 5; // Total width of all 6 cards
         const centerOffset = (wrapperW - pageW) / 2;
-        
+
         this.carousel.style.transform = `translate3d(${translateX + centerOffset}px,0,0)`;
-        
+
         // Debug logging
         console.log('Desktop carousel update:', {
           currentPage: this.currentPage,
