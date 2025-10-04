@@ -206,6 +206,10 @@
     .superfoods-carousel-wrapper-{{ block_id }} {
       padding: 0 {{ block.settings.desktop_padding }}px;
       overflow: hidden;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      position: relative;
     }
     
     .superfoods-card-{{ block_id }} {
@@ -217,6 +221,19 @@
       width: calc({{ block.settings.image_size | times: 6 }}px + {{ block.settings.card_spacing | times: 5 }}px);
       max-width: calc({{ block.settings.image_size | times: 6 }}px + {{ block.settings.card_spacing | times: 5 }}px);
       overflow: visible;
+    }
+    
+    /* Mask to show only 3 cards */
+    .superfoods-carousel-wrapper-{{ block_id }}::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: calc({{ block.settings.image_size }}px + {{ block.settings.card_spacing }}px);
+      height: 100%;
+      background: {{ block.settings.background_color }};
+      z-index: 2;
+      pointer-events: none;
     }
   }
 
