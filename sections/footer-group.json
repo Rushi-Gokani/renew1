@@ -13,15 +13,42 @@
   "sections": {
     "footer": {
       "type": "footer-custom",
+      "blocks": {
+        "copyright": {
+          "type": "_footer-copyright",
+          "static": true,
+          "settings": {
+            "show_powered_by": true,
+            "font_size": "0.75rem",
+            "case": "none"
+          },
+          "blocks": {}
+        },
+        "policy_list": {
+          "type": "_footer-policy-list",
+          "static": true,
+          "settings": {
+            "font_size": "0.75rem",
+            "case": "none"
+          },
+          "blocks": {}
+        },
+        "social_icons": {
+          "type": "_footer-social-icons",
+          "static": true,
+          "settings": {},
+          "blocks": {}
+        }
+      },
       "settings": {
         "section_width": "page-width",
         "color_scheme": "scheme-5",
         "brand_heading": "Stylescape",
         "brand_text": "All items showcased in this store are intended for demonstration purposes. Graciously provided by Bellroy for display only.",
         "about_title": "About",
-        "about_menu": "",
+        "about_menu": "footer",
         "help_title": "Help",
-        "help_menu": "",
+        "help_menu": "main-menu",
         "newsletter_title": "Be in touch with us"
       }
     }
