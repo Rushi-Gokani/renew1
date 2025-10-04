@@ -201,7 +201,7 @@
     background-color: {{ block.settings.dot_active_color }};
   }
 
-  /* Desktop: fixed card width, centered track - exactly 3 cards visible */
+  /* Desktop: exactly 3 cards visible, no peek */
   @media (min-width: 990px) {
     .superfoods-carousel-wrapper-{{ block_id }} {
       padding: 0 {{ block.settings.desktop_padding }}px;
@@ -210,6 +210,19 @@
       display: flex;
       justify-content: center;
       position: relative;
+    }
+    
+    /* Hide 4th card with background overlay */
+    .superfoods-carousel-wrapper-{{ block_id }}::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: calc({{ block.settings.image_size }}px + {{ block.settings.card_spacing }}px);
+      height: 100%;
+      background: {{ block.settings.background_color }};
+      z-index: 10;
+      pointer-events: none;
     }
     
     .superfoods-card-{{ block_id }} {
@@ -221,19 +234,6 @@
       width: calc({{ block.settings.image_size | times: 6 }}px + {{ block.settings.card_spacing | times: 5 }}px);
       max-width: calc({{ block.settings.image_size | times: 6 }}px + {{ block.settings.card_spacing | times: 5 }}px);
       overflow: visible;
-    }
-    
-    /* Mask to show only 3 cards */
-    .superfoods-carousel-wrapper-{{ block_id }}::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: calc({{ block.settings.image_size }}px + {{ block.settings.card_spacing }}px);
-      height: 100%;
-      background: {{ block.settings.background_color }};
-      z-index: 2;
-      pointer-events: none;
     }
   }
 
@@ -486,7 +486,6 @@
     update() {
       if (!this.carousel || !this.carouselWrapper) return;
 
-      const wrapperW = Math.floor(this.carouselWrapper.getBoundingClientRect().width);
       const gap = {{ block.settings.card_spacing }};
 
       if (this.slidesPerView >= 3) {
@@ -495,15 +494,6 @@
         const pageW = cardW * this.slidesPerView + gap * (this.slidesPerView - 1);
         const translateX = -this.currentPage * pageW;
         this.carousel.style.transform = `translate3d(${translateX}px,0,0)`;
-        
-        // Debug logging for desktop
-        console.log('Desktop update:', {
-          currentPage: this.currentPage,
-          cardW: cardW,
-          pageW: pageW,
-          translateX: translateX,
-          totalPages: this.totalPages
-        });
       } else {
         // Mobile: translate by viewport width (100vw per card)
         const viewportW = window.innerWidth;
