@@ -60,18 +60,6 @@
     line-height: 1.4;
   }
 
-  .superfoods-carousel-container-{{ block_id }} {
-    position: relative;
-    max-width: 100%;
-    margin: 0 auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-sizing: border-box;
-    width: 100%;
-    padding: 0 {{ block.settings.mobile_padding }}px;
-  }
-
   .superfoods-carousel-wrapper-{{ block_id }} {
     position: relative;
     max-width: 100%;
@@ -81,6 +69,7 @@
     justify-content: center;
     box-sizing: border-box;
     width: 100%;
+    padding: 0 {{ block.settings.mobile_padding }}px;
   }
 
   .superfoods-carousel-{{ block_id }} {
@@ -112,7 +101,6 @@
     overflow: hidden;
     margin: 0 auto {{ block.settings.image_margin_bottom }}px;
     box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
-    box-sizing: border-box;
     position: relative;
   }
 
@@ -180,21 +168,12 @@
     fill: {{ block.settings.arrow_icon_color }};
   }
 
-@media (max-width: 767px) {
   .superfoods-nav-arrow--prev-{{ block_id }} {
-    left: 12px !important;
+    left: 12px;
   }
 
   .superfoods-nav-arrow--next-{{ block_id }} {
-    right: 12px !important ;
-  }
-}
-  .superfoods-nav-arrow--prev-{{ block_id }} {
-    left: -70px;
-  }
-
-  .superfoods-nav-arrow--next-{{ block_id }} {
-    right: -70px;
+    right: 12px;
   }
 
   .superfoods-pagination-{{ block_id }} {
@@ -224,19 +203,10 @@
 
   /* Desktop: exactly 3 cards visible, centered */
   @media (min-width: 990px) {
-    .superfoods-container-{{ block_id }} {
-      padding: 0 {{ block.settings.desktop_padding }}px;
-    }
-
-    .superfoods-carousel-container-{{ block_id }} {
-      padding: 0;
-      position: relative;
-    }
-
     .superfoods-carousel-wrapper-{{ block_id }} {
-      padding: 0;
+      padding: 0 {{ block.settings.desktop_padding }}px;
       overflow: hidden;
-      width: calc({{ block.settings.image_size | times: 3 }}px + {{ block.settings.card_spacing | times: 2 }}px + {{ block.settings.border_thickness | times: 6 }}px);
+      width: calc({{ block.settings.image_size | times: 3 }}px + {{ block.settings.card_spacing | times: 2 }}px + {{ block.settings.border_thickness | times: 6 }}px + 20px);
       max-width: 100%;
       margin: 0 auto;
       display: block;
@@ -252,8 +222,22 @@
       display: flex;
       gap: {{ block.settings.card_spacing }}px;
       transition: transform 0.5s ease;
+      width: calc({{ block.settings.image_size | times: 6 }}px + {{ block.settings.card_spacing | times: 5 }}px);
       overflow: visible;
       will-change: transform;
+    }
+    
+    /* Hide 4th card with background overlay */
+    .superfoods-carousel-wrapper-{{ block_id }}::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: calc({{ block.settings.image_size }}px + {{ block.settings.card_spacing }}px + 10px);
+      height: 100%;
+      background: {{ block.settings.background_color }};
+      z-index: 10;
+      pointer-events: none;
     }
   }
 
@@ -353,43 +337,41 @@
       <p class="superfoods-subtitle-{{ block_id }}">{{ block.settings.subtitle }}</p>
     {% endif %}
 
-    <div class="superfoods-carousel-container-{{ block_id }}">
-      <div class="superfoods-carousel-wrapper-{{ block_id }}">
-        <div class="superfoods-carousel-{{ block_id }}" data-carousel>
-          {% for i in (1..6) %}
-            {% liquid
-              assign image_key = 'product_image_' | append: i
-              assign alt_key = 'product_alt_' | append: i
-              assign name_key = 'product_name_' | append: i
-              assign product_image = block.settings[image_key]
-              assign product_alt = block.settings[alt_key]
-              assign product_name = block.settings[name_key]
-            %}
-            <div class="superfoods-card-{{ block_id }}" data-slide="{{ forloop.index0 }}">
-              <div class="superfoods-image-wrapper-{{ block_id }}">
-                {% if product_image != blank %}
-                  {% assign image_alt = product_alt | default: product_name | default: 'Superfood ' | append: i | escape %}
-                  {% assign image_class = 'superfoods-image-' | append: block_id %}
-                  {{
-                    product_image
-                    | image_url: width: 600
-                    | image_tag:
-                      width: 600,
-                      height: 600,
-                      alt: image_alt,
-                      class: image_class,
-                      loading: 'lazy'
-                  }}
-                {% else %}
-                  <div class="superfoods-image-{{ block_id }} superfoods-placeholder-{{ block_id }}">
-                    {{ 'product-apparel-1' | placeholder_svg_tag: 'superfoods-placeholder-svg' }}
-                  </div>
-                {% endif %}
-              </div>
-              <h3 class="superfoods-product-name-{{ block_id }}">{{ product_name | default: 'Superfood '}}</h3>
+    <div class="superfoods-carousel-wrapper-{{ block_id }}">
+      <div class="superfoods-carousel-{{ block_id }}" data-carousel>
+        {% for i in (1..6) %}
+          {% liquid
+            assign image_key = 'product_image_' | append: i
+            assign alt_key = 'product_alt_' | append: i
+            assign name_key = 'product_name_' | append: i
+            assign product_image = block.settings[image_key]
+            assign product_alt = block.settings[alt_key]
+            assign product_name = block.settings[name_key]
+          %}
+          <div class="superfoods-card-{{ block_id }}" data-slide="{{ forloop.index0 }}">
+            <div class="superfoods-image-wrapper-{{ block_id }}">
+              {% if product_image != blank %}
+                {% assign image_alt = product_alt | default: product_name | default: 'Superfood ' | append: i | escape %}
+                {% assign image_class = 'superfoods-image-' | append: block_id %}
+                {{
+                  product_image
+                  | image_url: width: 600
+                  | image_tag:
+                    width: 600,
+                    height: 600,
+                    alt: image_alt,
+                    class: image_class,
+                    loading: 'lazy'
+                }}
+              {% else %}
+                <div class="superfoods-image-{{ block_id }} superfoods-placeholder-{{ block_id }}">
+                  {{ 'product-apparel-1' | placeholder_svg_tag: 'superfoods-placeholder-svg' }}
+                </div>
+              {% endif %}
             </div>
-          {% endfor %}
-        </div>
+            <h3 class="superfoods-product-name-{{ block_id }}">{{ product_name | default: 'Superfood '}}</h3>
+          </div>
+        {% endfor %}
       </div>
 
       <button class="superfoods-nav-arrow-{{ block_id }} superfoods-nav-arrow--prev-{{ block_id }}" data-direction="prev" aria-label="Previous products">
@@ -422,12 +404,11 @@
     init() {
       this.carousel = document.querySelector('.superfoods-carousel-{{ block_id }}');
       this.carouselWrapper = document.querySelector('.superfoods-carousel-wrapper-{{ block_id }}');
-      this.carouselContainer = document.querySelector('.superfoods-carousel-container-{{ block_id }}');
       this.prevButton = document.querySelector('.superfoods-nav-arrow--prev-{{ block_id }}');
       this.nextButton = document.querySelector('.superfoods-nav-arrow--next-{{ block_id }}');
       this.pagination = document.querySelector('.superfoods-pagination-{{ block_id }}');
 
-      if (!this.carousel || !this.carouselWrapper || !this.carouselContainer) return;
+      if (!this.carousel || !this.carouselWrapper) return;
 
       this.updateBreakpoints();
       this.createDots();
@@ -507,40 +488,27 @@
     }
 
     update() {
-      if (!this.carousel || !this.carouselWrapper || !this.carouselContainer) return;
+      if (!this.carousel || !this.carouselWrapper) return;
 
-      const firstCard = this.carousel.querySelector('[data-slide]');
-      const carouselStyles = window.getComputedStyle(this.carousel);
-      const fallbackGap = {{ block.settings.card_spacing }};
-      const gapRaw = carouselStyles.columnGap || carouselStyles.gap || `${fallbackGap}px`;
-      const gap = parseFloat(gapRaw) || fallbackGap;
-      const cardRect = firstCard ? firstCard.getBoundingClientRect() : null;
-      const cardWidth = cardRect ? cardRect.width : {{ block.settings.image_size }};
-      const isDesktop = window.innerWidth >= 990;
+      const gap = {{ block.settings.card_spacing }};
 
       if (this.slidesPerView >= 3) {
-        const visibleWidth = cardWidth * this.slidesPerView + gap * (this.slidesPerView - 1);
-        const translateX = -this.currentPage * visibleWidth;
-
-        if (isDesktop) {
-          this.carouselWrapper.style.width = `${visibleWidth}px`;
-        } else {
-          this.carouselWrapper.style.removeProperty('width');
-        }
-
+        // Desktop: translate by actual content page width (fixed card width)
+        const cardW = {{ block.settings.image_size }};
+        const pageW = cardW * 3 + gap * 2; // Width of 3 cards + 2 gaps
+        const translateX = -this.currentPage * pageW;
         this.carousel.style.transform = `translate3d(${translateX}px,0,0)`;
 
         // Debug logging
         console.log('Desktop carousel update:', {
           currentPage: this.currentPage,
-          cardWidth,
-          gap,
-          visibleWidth,
-          translateX,
+          cardW: cardW,
+          pageW: pageW,
+          translateX: translateX,
           totalPages: this.totalPages
         });
       } else {
-        this.carouselWrapper.style.removeProperty('width');
+        // Mobile: translate by viewport width (100vw per card)
         const viewportW = window.innerWidth;
         this.carousel.style.transform = `translate3d(${-this.currentPage * viewportW}px,0,0)`;
       }
