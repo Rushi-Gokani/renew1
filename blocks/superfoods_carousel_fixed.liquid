@@ -214,9 +214,9 @@
     }
     
     .superfoods-carousel-{{ block_id }} {
-      width: calc({{ block.settings.image_size | times: 3 }}px + {{ block.settings.card_spacing | times: 2 }}px);
-      max-width: calc({{ block.settings.image_size | times: 3 }}px + {{ block.settings.card_spacing | times: 2 }}px);
-      overflow: hidden;
+      width: calc({{ block.settings.image_size | times: 6 }}px + {{ block.settings.card_spacing | times: 5 }}px);
+      max-width: calc({{ block.settings.image_size | times: 6 }}px + {{ block.settings.card_spacing | times: 5 }}px);
+      overflow: visible;
     }
   }
 
@@ -476,7 +476,17 @@
         // Desktop/Tablet: translate by actual content page width (fixed card width)
         const cardW = {{ block.settings.image_size }};
         const pageW = cardW * this.slidesPerView + gap * (this.slidesPerView - 1);
-        this.carousel.style.transform = `translate3d(${-this.currentPage * pageW}px,0,0)`;
+        const translateX = -this.currentPage * pageW;
+        this.carousel.style.transform = `translate3d(${translateX}px,0,0)`;
+        
+        // Debug logging for desktop
+        console.log('Desktop update:', {
+          currentPage: this.currentPage,
+          cardW: cardW,
+          pageW: pageW,
+          translateX: translateX,
+          totalPages: this.totalPages
+        });
       } else {
         // Mobile: translate by viewport width (100vw per card)
         const viewportW = window.innerWidth;
