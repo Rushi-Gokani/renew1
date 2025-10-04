@@ -218,7 +218,7 @@
     }
   }
 
-  /* Tablet: 2 cards */
+  /* Tablet: 3 cards */
   @media (max-width: 989px) and (min-width: 750px) {
     .superfoods-image-wrapper-{{ block_id }} {
       max-width: {{ block.settings.image_size | times: 0.9 }}px;
@@ -237,7 +237,7 @@
     }
   }
 
-  /* Mobile: 1 card */
+  /* Mobile: 1 card only - no peek */
   @media (max-width: 749px) {
     .superfoods-container-{{ block_id }} {
       padding: 0 10px;
@@ -245,17 +245,25 @@
     
     .superfoods-carousel-wrapper-{{ block_id }} {
       padding: 0 {{ block.settings.mobile_padding | divided_by: 2 }}px;
+      overflow: hidden;
+      width: 100%;
+    }
+    
+    .superfoods-carousel-{{ block_id }} {
+      overflow: hidden;
+      width: 100%;
     }
     
     .superfoods-image-wrapper-{{ block_id }} {
-      width: min(90vw, {{ block.settings.image_size | times: 0.95 }}px);
-      height: min(90vw, {{ block.settings.image_size | times: 0.95 }}px);
+      width: min(85vw, {{ block.settings.image_size | times: 0.9 }}px);
+      height: min(85vw, {{ block.settings.image_size | times: 0.9 }}px);
       max-width: 100%;
     }
     
     .superfoods-card-{{ block_id }} {
       width: 100%;
-      max-width: min(90vw, {{ block.settings.image_size | times: 1.1 }}px);
+      max-width: min(85vw, {{ block.settings.image_size | times: 1.05 }}px);
+      flex: 0 0 100%;
     }
     
     .superfoods-title-{{ block_id }} {
@@ -398,9 +406,9 @@
     }
 
     getSlidesPerView() {
-      if (window.innerWidth >= 990) return 3;
-      if (window.innerWidth >= 750) return 2;
-      return 1;
+      if (window.innerWidth >= 990) return 3;  // Desktop: 3 cards
+      if (window.innerWidth >= 750) return 3;  // Tablet: 3 cards
+      return 1;  // Mobile: 1 card only
     }
 
     updateBreakpoints() {
