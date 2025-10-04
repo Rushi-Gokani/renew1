@@ -13,7 +13,13 @@
       "type": "product-simple",
       "settings": {
         "show_vendor": false,
-        "show_sku": false
+        "show_sku": false,
+        "accordion_1_title": "Product Details",
+        "accordion_1_content": "{{ product.description }}",
+        "accordion_1_text": "",
+        "accordion_2_title": "Shipping & Returns",
+        "accordion_2_content": "",
+        "accordion_2_text": ""
       }
     },
     "section_NxmTDF": {
