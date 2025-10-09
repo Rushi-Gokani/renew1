@@ -1223,12 +1223,19 @@
 
     function scrollToTarget(raw) {
       const el = findTargetEl(raw);
-      if (el) {
-        const y = el.getBoundingClientRect().top + window.pageYOffset - 80;
-        window.scrollTo({ top: y, behavior: 'smooth' });
-        return true;
+      if (!el) return false;
+      const headerOffset = 80;
+      const targetY = el.getBoundingClientRect().top + (window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop) - headerOffset;
+      // Multiple strategies for maximum reliability
+      if ('scrollBehavior' in document.documentElement.style) {
+        window.scrollTo({ top: targetY, behavior: 'smooth' });
+      } else {
+        window.scrollTo(0, targetY);
       }
-      return false;
+      // Also adjust the scrollingElement for Safari quirks
+      const se = document.scrollingElement || document.documentElement;
+      if (se) se.scrollTop = targetY;
+      return true;
     }
 
     document.querySelectorAll('.product-simple-section .accordion-item.link-only .accordion-header').forEach(btn => {
@@ -1240,7 +1247,7 @@
         try { window.location.hash = '#' + cleaned; } catch(_) {}
         if (!scrollToTarget(targetId)) {
           // Retry a few times in case the target renders late
-          let retries = 10;
+          let retries = 20;
           const interval = setInterval(() => {
             if (scrollToTarget(targetId) || --retries <= 0) {
               clearInterval(interval);
@@ -1249,6 +1256,12 @@
           }, 150);
         }
       });
+    });
+
+    // If user navigates via hash manually, try to smooth scroll as well
+    window.addEventListener('hashchange', () => {
+      const h = window.location.hash;
+      if (h) scrollToTarget(h);
     });
       });
     });
