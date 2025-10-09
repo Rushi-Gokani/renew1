@@ -1225,16 +1225,17 @@
       const el = findTargetEl(raw);
       if (!el) return false;
       const headerOffset = 80;
-      const targetY = el.getBoundingClientRect().top + (window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop) - headerOffset;
-      // Multiple strategies for maximum reliability
-      if ('scrollBehavior' in document.documentElement.style) {
-        window.scrollTo({ top: targetY, behavior: 'smooth' });
-      } else {
-        window.scrollTo(0, targetY);
-      }
-      // Also adjust the scrollingElement for Safari quirks
-      const se = document.scrollingElement || document.documentElement;
-      if (se) se.scrollTop = targetY;
+      try { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch(_) {}
+      try {
+        const targetY = el.getBoundingClientRect().top + (window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop) - headerOffset;
+        if ('scrollBehavior' in document.documentElement.style) {
+          window.scrollTo({ top: targetY, behavior: 'smooth' });
+        } else {
+          window.scrollTo(0, targetY);
+        }
+        const se = document.scrollingElement || document.documentElement;
+        if (se) se.scrollTop = targetY;
+      } catch(_) {}
       return true;
     }
 
@@ -1246,14 +1247,21 @@
         // Set hash immediately so browser native anchor jump works even if JS fails
         try { window.location.hash = '#' + cleaned; } catch(_) {}
         if (!scrollToTarget(targetId)) {
-          // Retry a few times in case the target renders late
-          let retries = 20;
+          // Retry and also observe DOM for late renders (up to ~10s)
+          let retries = 60;
           const interval = setInterval(() => {
             if (scrollToTarget(targetId) || --retries <= 0) {
               clearInterval(interval);
-              // nothing else
             }
           }, 150);
+          try {
+            const mo = new MutationObserver(() => {
+              const ok = scrollToTarget(targetId);
+              if (ok) mo.disconnect();
+            });
+            mo.observe(document.body, { childList: true, subtree: true });
+            setTimeout(() => mo.disconnect(), 10000);
+          } catch(_) {}
         }
       });
     });
