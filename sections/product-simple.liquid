@@ -1216,10 +1216,13 @@
         const targetId = btn.getAttribute('data-scroll-target');
         if (targetId) {
           const cleaned = targetId.replace(/^#/, '');
-          const el = document.getElementById(cleaned) || document.querySelector('#' + cleaned) || document.querySelector(targetId);
+          const el = document.getElementById(cleaned) || document.querySelector('#' + cleaned) || document.querySelector(targetId) || document.querySelector("[id='" + cleaned + "']");
           if (el) {
             const y = el.getBoundingClientRect().top + window.pageYOffset - 80; // offset for sticky header
             window.scrollTo({ top: y, behavior: 'smooth' });
+          } else {
+            // Fallback: set the hash so browser jumps if dynamically loaded later
+            try { window.location.hash = '#' + cleaned; } catch(_) {}
           }
         }
       });
