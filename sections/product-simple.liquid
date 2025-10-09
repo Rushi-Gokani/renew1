@@ -68,6 +68,9 @@
 
       <div class="product-price">
         <span class="price" data-price="{{ product.selected_or_first_available_variant.price }}">{{ product.selected_or_first_available_variant.price | money }}</span>
+        {% if section.settings.price_note != blank %}
+          <span class="price-note">{{ section.settings.price_note }}</span>
+        {% endif %}
         {% assign cap = product.selected_or_first_available_variant.compare_at_price %}
         {% if cap and cap > product.selected_or_first_available_variant.price %}
           <span class="compare-price" data-compare="{{ cap }}">{{ cap | money }}</span>
@@ -118,13 +121,14 @@
           {% assign group = product.selling_plan_groups | first %}
           {% assign first_plan = group.selling_plans | first %}
           <div class="purchase-options" data-has-subscription data-first-plan-id="{{ first_plan.id }}">
-            <div class="option-card">
+            <div class="option-card onetime">
               <label class="option-row">
                 <input type="radio" name="purchase_option" value="onetime" checked>
                 <div class="option-content">
                   <div class="option-title">{{ section.settings.onetime_label | default: 'One-time purchase' }}</div>
                   <div class="option-price"><span class="onetime-price">{{ product.selected_or_first_available_variant.price | money }}</span></div>
                 </div>
+                <span class="option-indicator" aria-hidden="true"></span>
               </label>
             </div>
             <div class="option-card">
@@ -135,6 +139,7 @@
                   <div class="option-subcopy">{{ section.settings.subscription_subcopy | default: 'Save 20% + FREE gift' }}</div>
                   <div class="option-price"><span class="subscription-price" data-discount="{{ first_plan.price_adjustments | first | map: 'value' | first }}">{{ product.selected_or_first_available_variant.price | money }}</span></div>
                 </div>
+                <span class="option-indicator" aria-hidden="true"></span>
               </label>
               <input type="hidden" name="selling_plan" id="selling_plan_input" value="">
             </div>
@@ -506,6 +511,8 @@
     font-size: 24px;
     margin-bottom: 20px;
   }
+  .product-price .price { font-weight: 800; }
+  .product-price .price-note { color:#7e8a7a; margin-left:10px; font-size:14px; }
 
   .compare-price {
     text-decoration: line-through;
@@ -531,21 +538,24 @@
 
   .variant-selector { margin-bottom: 16px; }
   .selector-label { font-weight: 700; margin-bottom: 8px; }
-  .variant-pills { display: flex; gap: 10px; flex-wrap: wrap; }
-  .variant-pill { display: inline-flex; align-items: center; gap: 8px; border: 1px solid #ddd; background:#fff; padding: 8px 10px; border-radius: 999px; cursor: pointer; transition: border-color .2s, box-shadow .2s; }
+  .variant-pills { display: flex; gap: 12px; flex-wrap: wrap; }
+  .variant-pill { display: inline-flex; align-items: center; gap: 8px; border: 2px solid #d7dcd2; background:#fff; padding: 8px 12px; border-radius: 999px; cursor: pointer; transition: border-color .2s, box-shadow .2s; }
   .variant-pill img { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; }
-  .variant-pill.active { border-color: #000; box-shadow: 0 0 0 2px #000 inset; }
+  .variant-pill.active { border-color: #1d1f1a; box-shadow: 0 0 0 2px #1d1f1a inset; }
   .variant-pill[disabled] { opacity: .5; cursor: not-allowed; }
   .sr-only-hidden { position: absolute; left: -9999px; width:1px; height:1px; }
 
-  .purchase-options { margin: 14px 0 12px 0; border:1px solid #e6e6e6; border-radius: 10px; padding: 8px; background:#f7faf6; }
-  .option-card { background:#fff; border:1px solid #e6e6e6; border-radius: 10px; margin: 8px; }
-  .option-row { display:flex; gap:12px; align-items:flex-start; padding: 12px; width:100%; cursor:pointer; }
+  .purchase-options { margin: 14px 0 12px 0; border:1px solid #e6e6e6; border-radius: 12px; padding: 10px; background:#f2f7ee; }
+  .option-card { background:#fff; border:1px solid #e6e6e6; border-radius: 12px; margin: 8px; position:relative; }
+  .option-card.selected { border-color:#98c28b; box-shadow: 0 0 0 3px rgba(152,194,139,.35); background:#f7fbf4; }
+  .option-row { display:flex; gap:12px; align-items:flex-start; padding: 14px; width:100%; cursor:pointer; }
   .option-row input { margin-top: 2px; }
   .option-content { display:flex; flex-direction:column; gap:4px; }
   .option-title { font-weight:700; }
   .option-subcopy { font-size: 12px; color:#3a4; font-weight:600; }
   .option-price { font-weight:700; }
+  .option-indicator { position:absolute; right:12px; top:50%; transform:translateY(-50%); width:18px; height:18px; border:2px solid #9fbf92; border-radius:50%; background:#fff; }
+  .option-card.selected .option-indicator { background:#2e7d32; border-color:#2e7d32; box-shadow: inset 0 0 0 4px #fff; }
   .benefits { list-style: none; padding: 8px 16px 12px 32px; margin: 0; }
   .benefits li { position: relative; margin: 6px 0; font-size: 13px; }
   .benefits li:before { content: '✓'; position: absolute; left: -18px; color:#2e7d32; }
@@ -722,7 +732,7 @@
     width: 100%;
     padding: 0 16px;
     height: 44px;
-    background: #000;
+    background: #1e3d2b;
     color: #fff;
     border: none;
     border-radius: 8px;
@@ -733,7 +743,7 @@
   }
 
   .add-to-cart-btn:hover:not(:disabled) {
-    background: #333;
+    background: #274a35;
   }
 
   .add-to-cart-btn:disabled {
@@ -1104,6 +1114,17 @@
     });
 
     // Purchase option toggle
+    const optionCards = document.querySelectorAll('.product-simple-section .option-card');
+    function reflectSelectedCard() {
+      const selected = document.querySelector('.product-simple-section input[name="purchase_option"]:checked');
+      optionCards.forEach(c => c.classList.remove('selected'));
+      if (selected) optionCards.forEach(c => {
+        const isSub = selected.value === 'subscription';
+        if (isSub && c.querySelector('input[value="subscription"]')) c.classList.add('selected');
+        if (!isSub && c.querySelector('input[value="onetime"]')) c.classList.add('selected');
+      });
+    }
+
     purchaseRadios.forEach(r => {
       r.addEventListener('change', () => {
         if (r.value === 'subscription' && r.checked) {
@@ -1114,8 +1135,10 @@
         } else if (r.value === 'onetime' && r.checked) {
           if (sellingPlanInput) sellingPlanInput.value = '';
         }
+        reflectSelectedCard();
       });
     });
+    reflectSelectedCard();
 
     // Render press logos if configured
     const mediaCol = document.querySelector('.product-simple-media');
@@ -1258,6 +1281,12 @@
       "id": "cta_label",
       "label": "CTA button label",
       "default": "Buy Now ⚡"
+    },
+    {
+      "type": "text",
+      "id": "price_note",
+      "label": "Price note (e.g., £/per serving)",
+      "default": "£/ per serving (30 servings)"
     },
     {
       "type": "header",
