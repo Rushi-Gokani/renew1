@@ -243,6 +243,15 @@
             </div>
           </div>
         {% endif %}
+
+        {% if section.settings.accordion_3_title != blank %}
+          <div class="accordion-item link-only">
+            <button class="accordion-header" type="button" aria-expanded="false" data-scroll-target="{{ section.settings.accordion_3_target_id | escape }}">
+              <span class="accordion-title">{{ section.settings.accordion_3_title }}</span>
+              <span class="accordion-icon">+</span>
+            </button>
+          </div>
+        {% endif %}
       </div>
     </div>
   </div>
@@ -1159,6 +1168,18 @@
           if (sellingPlanInput) sellingPlanInput.value = '';
         }
         reflectSelectedCard();
+
+    // Accordion 3: link-only behavior - scroll to target instead of opening
+    document.querySelectorAll('.product-simple-section .accordion-item.link-only .accordion-header').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetId = btn.getAttribute('data-scroll-target');
+        if (targetId) {
+          const el = document.getElementById(targetId.replace('#','')) || document.querySelector(targetId);
+          if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
       });
     });
     reflectSelectedCard();
@@ -1344,6 +1365,22 @@
       "label": "Accordion 2 Title",
       "default": "Shipping & Returns",
       "info": "Leave blank to hide this accordion"
+    },
+    {
+      "type": "header",
+      "content": "Accordion 3 Settings (Link-only)"
+    },
+    {
+      "type": "text",
+      "id": "accordion_3_title",
+      "label": "Accordion 3 Title (Heading only)",
+      "default": "FAQs"
+    },
+    {
+      "type": "text",
+      "id": "accordion_3_target_id",
+      "label": "Scroll target id or selector (e.g., faq, #faq)",
+      "info": "Provide the id of the FAQ section to scroll to."
     },
     {
       "type": "richtext",
