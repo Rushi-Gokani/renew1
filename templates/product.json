@@ -476,6 +476,7 @@
         "superfoods_carousel_fixed_NnHrBU",
         "ai_gen_block_3c4f444_VwmWc4"
       ],
+      "disabled": true,
       "settings": {
         "content_direction": "column",
         "vertical_on_mobile": true,
@@ -577,62 +578,6 @@
         "section_height": "small",
         "section_height_custom": 50,
         "color_scheme": "scheme-1",
-        "background_media": "none",
-        "video_position": "cover",
-        "background_image_position": "cover",
-        "border": "none",
-        "border_width": 1,
-        "border_opacity": 100,
-        "border_radius": 0,
-        "toggle_overlay": false,
-        "overlay_color": "#00000026",
-        "overlay_style": "solid",
-        "gradient_direction": "to top",
-        "padding-block-start": 0,
-        "padding-block-end": 0
-      }
-    },
-    "section_LDwPit": {
-      "type": "section",
-      "blocks": {
-        "reel1_GkK4Wx": {
-          "type": "reel1",
-          "name": "Video carousel",
-          "settings": {
-            "padding_top": 40,
-            "padding_bottom": 40,
-            "cards_per_row": 3,
-            "video_height": 500,
-            "card_spacing": 20,
-            "border_radius": 8,
-            "show_mobile_arrows": true,
-            "show_mobile_dots": true,
-            "card_background": "#ffffff",
-            "accent_color": "#000000",
-            "video_1": "shopify://files/videos/864c3956-7d2a-48c6-8003-d3ad0114e63b.mp4",
-            "video_2": "shopify://files/videos/3f9707cb-75d1-4c87-84f7-5fca0adb87c0.mp4",
-            "video_3": "shopify://files/videos/Moringa_Powder_Lifestyle_Video_Generation.mp4"
-          },
-          "blocks": {}
-        }
-      },
-      "block_order": [
-        "reel1_GkK4Wx"
-      ],
-      "name": "t:names.custom_section",
-      "settings": {
-        "content_direction": "column",
-        "vertical_on_mobile": true,
-        "horizontal_alignment": "flex-start",
-        "vertical_alignment": "center",
-        "align_baseline": false,
-        "horizontal_alignment_flex_direction_column": "flex-start",
-        "vertical_alignment_flex_direction_column": "center",
-        "gap": 12,
-        "section_width": "page-width",
-        "section_height": "small",
-        "section_height_custom": 50,
-        "color_scheme": "",
         "background_media": "none",
         "video_position": "cover",
         "background_image_position": "cover",
@@ -834,6 +779,61 @@
         "padding-block-end": 0
       }
     },
+    "how_it_works_wHxepr": {
+      "type": "how-it-works",
+      "blocks": {
+        "step_38bUJ6": {
+          "type": "step",
+          "settings": {
+            "image_alt": "",
+            "badge": "One",
+            "title": "Scoop",
+            "text": "Add one heaped teaspoon to 250–300ml of cold water, juice, or your favourite smoothie.",
+            "link_label": "",
+            "link_url": "",
+            "link_new_tab": false
+          }
+        },
+        "step_Jre4Uk": {
+          "type": "step",
+          "settings": {
+            "image_alt": "",
+            "badge": "Two",
+            "title": "Mix",
+            "text": "Blend with a shaker or stir well to create a smooth, refreshing drink.",
+            "link_label": "",
+            "link_url": "",
+            "link_new_tab": false
+          }
+        },
+        "step_DBFN6M": {
+          "type": "step",
+          "settings": {
+            "image_alt": "",
+            "badge": "Three",
+            "title": "Enjoy Daily",
+            "text": "Enjoy first thing in the morning or as a midday pick‑me‑up.",
+            "link_label": "",
+            "link_url": "",
+            "link_new_tab": false
+          }
+        }
+      },
+      "block_order": [
+        "step_38bUJ6",
+        "step_Jre4Uk",
+        "step_DBFN6M"
+      ],
+      "name": "How it works (3 steps)",
+      "settings": {
+        "heading": "Ready to go, in 3 simple steps.",
+        "subheading": "",
+        "tip_enable": true,
+        "tip_icon": true,
+        "tip_label": "Pro Tip:",
+        "tip_text": "Add a squeeze of lemon or a splash of coconut water for extra flavour and hydration!"
+      }
+    },
     "blocks_QiNVir": {
       "type": "_blocks",
       "blocks": {
@@ -889,61 +889,6 @@
         "gradient_direction": "to top",
         "padding-block-start": 0,
         "padding-block-end": 0
-      }
-    },
-    "how_it_works_wHxepr": {
-      "type": "how-it-works",
-      "blocks": {
-        "step_38bUJ6": {
-          "type": "step",
-          "settings": {
-            "image_alt": "",
-            "badge": "One",
-            "title": "Scoop",
-            "text": "Add one heaped teaspoon to 250–300ml of cold water, juice, or your favourite smoothie.",
-            "link_label": "",
-            "link_url": "",
-            "link_new_tab": false
-          }
-        },
-        "step_Jre4Uk": {
-          "type": "step",
-          "settings": {
-            "image_alt": "",
-            "badge": "Two",
-            "title": "Mix",
-            "text": "Blend with a shaker or stir well to create a smooth, refreshing drink.",
-            "link_label": "",
-            "link_url": "",
-            "link_new_tab": false
-          }
-        },
-        "step_DBFN6M": {
-          "type": "step",
-          "settings": {
-            "image_alt": "",
-            "badge": "Three",
-            "title": "Enjoy Daily",
-            "text": "Enjoy first thing in the morning or as a midday pick‑me‑up.",
-            "link_label": "",
-            "link_url": "",
-            "link_new_tab": false
-          }
-        }
-      },
-      "block_order": [
-        "step_38bUJ6",
-        "step_Jre4Uk",
-        "step_DBFN6M"
-      ],
-      "name": "How it works (3 steps)",
-      "settings": {
-        "heading": "Ready to go, in 3 simple steps.",
-        "subheading": "",
-        "tip_enable": true,
-        "tip_icon": true,
-        "tip_label": "Pro Tip:",
-        "tip_text": "Add a squeeze of lemon or a splash of coconut water for extra flavour and hydration!"
       }
     },
     "blocks_Ar8jDR": {
@@ -1054,6 +999,62 @@
         "padding-block-start": 0,
         "padding-block-end": 0
       }
+    },
+    "section_LDwPit": {
+      "type": "section",
+      "blocks": {
+        "reel1_GkK4Wx": {
+          "type": "reel1",
+          "name": "Video carousel",
+          "settings": {
+            "padding_top": 40,
+            "padding_bottom": 40,
+            "cards_per_row": 3,
+            "video_height": 500,
+            "card_spacing": 20,
+            "border_radius": 8,
+            "show_mobile_arrows": true,
+            "show_mobile_dots": true,
+            "card_background": "#ffffff",
+            "accent_color": "#000000",
+            "video_1": "shopify://files/videos/864c3956-7d2a-48c6-8003-d3ad0114e63b.mp4",
+            "video_2": "shopify://files/videos/3f9707cb-75d1-4c87-84f7-5fca0adb87c0.mp4",
+            "video_3": "shopify://files/videos/Moringa_Powder_Lifestyle_Video_Generation.mp4"
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "reel1_GkK4Wx"
+      ],
+      "name": "t:names.custom_section",
+      "settings": {
+        "content_direction": "column",
+        "vertical_on_mobile": true,
+        "horizontal_alignment": "flex-start",
+        "vertical_alignment": "center",
+        "align_baseline": false,
+        "horizontal_alignment_flex_direction_column": "flex-start",
+        "vertical_alignment_flex_direction_column": "center",
+        "gap": 12,
+        "section_width": "page-width",
+        "section_height": "small",
+        "section_height_custom": 50,
+        "color_scheme": "",
+        "background_media": "none",
+        "video_position": "cover",
+        "background_image_position": "cover",
+        "border": "none",
+        "border_width": 1,
+        "border_opacity": 100,
+        "border_radius": 0,
+        "toggle_overlay": false,
+        "overlay_color": "#00000026",
+        "overlay_style": "solid",
+        "gradient_direction": "to top",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
     }
   },
   "order": [
@@ -1062,11 +1063,11 @@
     "product-recommendations",
     "1759500040941b94e3",
     "section_7Kj4KD",
-    "section_LDwPit",
     "featured_product_iADrzq",
     "blocks_yTXAwA",
-    "blocks_QiNVir",
     "how_it_works_wHxepr",
-    "blocks_Ar8jDR"
+    "blocks_QiNVir",
+    "blocks_Ar8jDR",
+    "section_LDwPit"
   ]
 }
