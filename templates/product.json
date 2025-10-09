@@ -24,6 +24,38 @@
             "text": "Free shipping on first subscription"
           }
         },
+        "blog_image_GVMXMU": {
+          "type": "blog_image",
+          "settings": {
+            "image": "shopify://shop_images/Gemini_Generatjhghked_Image_y1p2ily1p2ily1p2.png",
+            "alt": "",
+            "link": ""
+          }
+        },
+        "blog_image_D3Bybh": {
+          "type": "blog_image",
+          "settings": {
+            "image": "shopify://shop_images/Generated_Image_October_04_2025_-_6_23PM.png",
+            "alt": "",
+            "link": ""
+          }
+        },
+        "blog_image_WAgqah": {
+          "type": "blog_image",
+          "settings": {
+            "image": "shopify://shop_images/Gemini_Generated_Image_3yasdsawzc3ywzc3ywzc3.png",
+            "alt": "",
+            "link": ""
+          }
+        },
+        "blog_image_riwDFF": {
+          "type": "blog_image",
+          "settings": {
+            "image": "shopify://shop_images/Gemini_Generated_Image_k45f8yk45f8yk45f.png",
+            "alt": "",
+            "link": ""
+          }
+        },
         "press_logo_JNXziM": {
           "type": "press_logo",
           "disabled": true,
@@ -36,6 +68,10 @@
       "block_order": [
         "benefit_yd9dxC",
         "benefit_TU78UJ",
+        "blog_image_GVMXMU",
+        "blog_image_D3Bybh",
+        "blog_image_WAgqah",
+        "blog_image_riwDFF",
         "press_logo_JNXziM"
       ],
       "settings": {
