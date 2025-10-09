@@ -11,14 +11,40 @@
   "sections": {
     "main": {
       "type": "product-simple",
+      "blocks": {
+        "benefit_yd9dxC": {
+          "type": "benefit",
+          "settings": {
+            "text": "Free shipping on first subscription"
+          }
+        },
+        "benefit_TU78UJ": {
+          "type": "benefit",
+          "settings": {
+            "text": "Free shipping on first subscription"
+          }
+        }
+      },
+      "block_order": [
+        "benefit_yd9dxC",
+        "benefit_TU78UJ"
+      ],
       "settings": {
         "show_vendor": false,
         "show_sku": false,
+        "rating_text": "Join 300,000+ Happy Women",
+        "excerpt": "",
+        "variant_label": "Choose your flavour",
+        "onetime_label": "One-time purchase",
+        "subscription_label": "Subscribe and save",
+        "subscription_subcopy": "Save 20% + FREE gift",
+        "enable_subscription": true,
+        "cta_label": "Buy Now ⚡",
         "accordion_1_title": "Key Benifits",
-        "accordion_1_content": "{{ product.metafields.custom.key_benifits | metafield_tag }}",
+        "accordion_1_content": "<p>{{ product.metafields.custom.key_benifits | metafield_tag }}</p>",
         "accordion_1_text": "",
         "accordion_2_title": "Product Details",
-        "accordion_2_content": "{{ product.metafields.custom.product_details | metafield_tag }}",
+        "accordion_2_content": "<p>{{ product.metafields.custom.product_details | metafield_tag }}</p>",
         "accordion_2_text": ""
       }
     },
