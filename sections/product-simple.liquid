@@ -319,14 +319,9 @@
 
   /* Desktop: keep right column in view and scroll its content until left finishes */
   @media (min-width: 769px) {
-    .product-simple-info {
-      position: sticky;
-      top: 80px; /* adjust if your header height differs */
-      align-self: start;
-      max-height: calc(100vh - 80px);
-      overflow: auto;
-      -webkit-overflow-scrolling: touch;
-    }
+    .product-simple-info { align-self: start; }
+    .product-info-fixed { position: fixed; top: 80px; max-height: calc(100vh - 80px); overflow:auto; -webkit-overflow-scrolling: touch; z-index: 1; }
+    .product-info-absolute-bottom { position: absolute; bottom: 0; }
     .product-simple-info::-webkit-scrollbar { width: 8px; }
     .product-simple-info::-webkit-scrollbar-thumb { background: rgba(0,0,0,.15); border-radius: 4px; }
   }
@@ -1080,18 +1075,38 @@
 
   // Initialize when DOM is ready
   document.addEventListener('DOMContentLoaded', function() {
-    // If sticky right column is shorter than viewport, ensure content can scroll by focusing it on wheel
+    // Fixed-right behavior: pin right column while left scrolls, then release at bottom
+    const grid = document.querySelector('.product-simple-grid');
+    const mediaCol = document.querySelector('.product-simple-media');
     const infoCol = document.querySelector('.product-simple-info');
-    if (infoCol) {
-      infoCol.addEventListener('wheel', (e) => {
-        // keep scroll within the column to avoid page jump
-        if ((e.deltaY < 0 && infoCol.scrollTop > 0) || (e.deltaY > 0 && infoCol.scrollTop + infoCol.clientHeight < infoCol.scrollHeight)) {
-          // allow native
-        } else {
-          // otherwise let page scroll
-        }
-      }, { passive: true });
+    function updatePinnedLayout() {
+      if (!grid || !mediaCol || !infoCol || window.innerWidth < 769) return;
+      const gridRect = grid.getBoundingClientRect();
+      const mediaRect = mediaCol.getBoundingClientRect();
+      const infoRect = infoCol.getBoundingClientRect();
+      const topOffset = 80; // header offset
+      const start = mediaRect.top + window.pageYOffset - topOffset;
+      const end = mediaRect.bottom + window.pageYOffset - (infoRect.height);
+      const current = window.pageYOffset;
+      // Set width to prevent reflow when fixed
+      const infoWidth = infoCol.offsetWidth + 'px';
+      if (current >= start && current < end) {
+        infoCol.style.width = infoWidth;
+        infoCol.classList.add('product-info-fixed');
+        infoCol.classList.remove('product-info-absolute-bottom');
+      } else if (current >= end) {
+        infoCol.classList.remove('product-info-fixed');
+        infoCol.classList.add('product-info-absolute-bottom');
+        infoCol.style.width = '';
+      } else {
+        infoCol.classList.remove('product-info-fixed');
+        infoCol.classList.remove('product-info-absolute-bottom');
+        infoCol.style.width = '';
+      }
     }
+    window.addEventListener('scroll', updatePinnedLayout, { passive: true });
+    window.addEventListener('resize', updatePinnedLayout);
+    updatePinnedLayout();
     // Initialize slider
     const slider = document.querySelector('.product-simple-section .slider-container');
     if (slider) {
