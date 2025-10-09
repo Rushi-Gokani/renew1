@@ -1235,15 +1235,16 @@
       btn.addEventListener('click', (e) => {
         e.preventDefault();
         const targetId = btn.getAttribute('data-scroll-target') || 'button1';
+        const cleaned = String(targetId).replace(/^#/, '');
+        // Set hash immediately so browser native anchor jump works even if JS fails
+        try { window.location.hash = '#' + cleaned; } catch(_) {}
         if (!scrollToTarget(targetId)) {
           // Retry a few times in case the target renders late
           let retries = 10;
           const interval = setInterval(() => {
             if (scrollToTarget(targetId) || --retries <= 0) {
               clearInterval(interval);
-              if (retries <= 0) {
-                try { window.location.hash = '#' + String(targetId).replace(/^#/, ''); } catch(_) {}
-              }
+              // nothing else
             }
           }, 150);
         }
