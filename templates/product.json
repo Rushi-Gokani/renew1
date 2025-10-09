@@ -49,16 +49,16 @@
           "settings": {
             "icon": "shopify://shop_images/heart.png",
             "icon_alt": "",
-            "title": "New & ImprovedFormula",
+            "title": "Naturally Energizing",
             "subtitle": ""
           }
         },
         "feature_card_dV7kBW": {
           "type": "feature_card",
           "settings": {
-            "icon": "shopify://shop_images/heart.png",
+            "icon": "shopify://shop_images/vitamins.png",
             "icon_alt": "",
-            "title": "New & ImprovedFormula",
+            "title": "Feel the Green Power",
             "subtitle": ""
           }
         },
@@ -67,7 +67,7 @@
           "settings": {
             "icon": "shopify://shop_images/immunity.png",
             "icon_alt": "",
-            "title": "New & ImprovedFormula",
+            "title": "From Nature to You",
             "subtitle": ""
           }
         },
