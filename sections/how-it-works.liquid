@@ -1,0 +1,136 @@
+{% comment %}
+  How It Works / Steps Section
+  - Customizable cards (blocks) for a 3-step (or more) process
+  - Best practices: accessible markup, semantic elements, lazy-loaded images,
+    presets, and theme editor controls. Scoped styles to avoid leaking.
+{% endcomment %}
+
+<section class="how-it-works" aria-labelledby="how-it-works-heading">
+  <div class="how-it-works__container">
+    {% if section.settings.heading != blank %}
+      <h2 id="how-it-works-heading" class="how-it-works__heading">{{ section.settings.heading | escape }}</h2>
+    {% endif %}
+
+    {% if section.settings.subheading != blank %}
+      <p class="how-it-works__subheading">{{ section.settings.subheading | escape }}</p>
+    {% endif %}
+
+    <div class="how-it-works__grid">
+      {%- for block in section.blocks -%}
+        {%- assign img = block.settings.image -%}
+        <article class="how-it-works__card" {{ block.shopify_attributes }}>
+          <div class="how-it-works__media">
+            {% if img != blank %}
+              {{ img | image_url: width: 1200 | image_tag: alt: (block.settings.image_alt | escape), loading: 'lazy', decoding: 'async', class: 'how-it-works__image', sizes: '(min-width: 1200px) 384px, (min-width: 768px) 33vw, 90vw' }}
+            {% else %}
+              {{ 'image' | placeholder_svg_tag: 'placeholder-svg how-it-works__placeholder' }}
+            {% endif %}
+            {% if block.settings.badge != blank %}
+              <span class="how-it-works__badge">{{ block.settings.badge | escape }}</span>
+            {% endif %}
+          </div>
+          <div class="how-it-works__content">
+            {% if block.settings.title != blank %}
+              <h3 class="how-it-works__title">{{ block.settings.title | escape }}</h3>
+            {% endif %}
+            {% if block.settings.text != blank %}
+              <p class="how-it-works__text rte">{{ block.settings.text }}</p>
+            {% endif %}
+            {% if block.settings.link_label != blank and block.settings.link_url != blank %}
+              <a class="how-it-works__link" href="{{ block.settings.link_url }}"{% if block.settings.link_new_tab %} target="_blank" rel="noopener noreferrer"{% endif %}>{{ block.settings.link_label | escape }}</a>
+            {% endif %}
+          </div>
+        </article>
+      {%- endfor -%}
+    </div>
+
+    {% if section.settings.tip_enable and section.settings.tip_text != blank %}
+      <div class="how-it-works__tip" role="note">
+        {% if section.settings.tip_icon %}
+          <span class="how-it-works__tip-icon" aria-hidden="true">💡</span>
+        {% endif %}
+        <span class="how-it-works__tip-label">{{ section.settings.tip_label | default: 'Pro Tip:' }}</span>
+        <span class="how-it-works__tip-text">{{ section.settings.tip_text }}</span>
+      </div>
+    {% endif %}
+  </div>
+
+  <style>
+    /* Scoped styles to this section only */
+    .how-it-works { padding: 48px 0; }
+    .how-it-works__container { max-width: 1200px; margin: 0 auto; padding: 0 16px; }
+    .how-it-works__heading { text-align: center; margin: 0 0 8px; }
+    .how-it-works__subheading { text-align: center; color: rgb(99, 107, 111); margin: 0 0 24px; }
+
+    .how-it-works__grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+    @media (min-width: 700px) { .how-it-works__grid { grid-template-columns: repeat(3, 1fr); gap: 24px; } }
+
+    .how-it-works__card { background: #fff; border: 1px solid rgba(0,0,0,0.08); border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; height: 100%; }
+
+    .how-it-works__media { position: relative; aspect-ratio: 4 / 3; background: #fafafa; }
+    .how-it-works__image { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .how-it-works__placeholder { width: 100%; height: 100%; display: block; }
+    .how-it-works__badge { position: absolute; top: 12px; left: 12px; background: #fff; color: #1c1c1c; border-radius: 999px; padding: 6px 10px; font-size: 13px; border: 1px solid rgba(0,0,0,0.08); }
+
+    .how-it-works__content { padding: 16px; text-align: center; }
+    .how-it-works__title { margin: 0 0 8px; font-size: 18px; }
+    .how-it-works__text { margin: 0 0 12px; color: rgb(71, 79, 83); }
+    .how-it-works__link { color: inherit; text-decoration: underline; }
+
+    .how-it-works__tip { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 16px; color: rgb(71, 79, 83); }
+    .how-it-works__tip-label { font-weight: 600; }
+  </style>
+</section>
+
+{% schema %}
+{
+  "name": "How it works",
+  "tag": "section",
+  "class": "section how-it-works-section",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Ready to go, in 3 simple steps." },
+    { "type": "text", "id": "subheading", "label": "Subheading", "default": "" },
+
+    { "type": "checkbox", "id": "tip_enable", "label": "Show tip", "default": true },
+    { "type": "checkbox", "id": "tip_icon", "label": "Show tip icon", "default": true },
+    { "type": "text", "id": "tip_label", "label": "Tip label", "default": "Pro Tip:" },
+    { "type": "inline_richtext", "id": "tip_text", "label": "Tip text", "default": "Add a squeeze of lemon or a splash of coconut water for extra flavour and hydration!" }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Step card",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "text", "id": "image_alt", "label": "Image alt text" },
+        { "type": "text", "id": "badge", "label": "Badge text (e.g., One, Two)" },
+        { "type": "text", "id": "title", "label": "Title", "default": "Step title" },
+        { "type": "inline_richtext", "id": "text", "label": "Description", "default": "Describe this step." },
+        { "type": "text", "id": "link_label", "label": "Link label" },
+        { "type": "url", "id": "link_url", "label": "Link URL" },
+        { "type": "checkbox", "id": "link_new_tab", "label": "Open link in new tab", "default": false }
+      ]
+    }
+  ],
+  "max_blocks": 9,
+  "presets": [
+    {
+      "name": "How it works (3 steps)",
+      "category": "Text",
+      "blocks": [
+        { "type": "step", "settings": { "badge": "One", "title": "Scoop", "text": "Add one heaped teaspoon to 250–300ml of cold water, juice, or your favourite smoothie." } },
+        { "type": "step", "settings": { "badge": "Two", "title": "Mix", "text": "Blend with a shaker or stir well to create a smooth, refreshing drink." } },
+        { "type": "step", "settings": { "badge": "Three", "title": "Enjoy Daily", "text": "Enjoy first thing in the morning or as a midday pick‑me‑up." } }
+      ]
+    }
+  ]
+}
+{% endschema %}
+
+{% stylesheet %}
+/* Intentionally left empty; styles are inline-scoped above for portability. */
+{% endstylesheet %}
+
+{% javascript %}
+/* No JS required; leverage native images and CSS. */
+{% endjavascript %}
