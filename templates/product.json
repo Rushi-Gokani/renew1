@@ -55,9 +55,17 @@
         },
         "feature_card_dV7kBW": {
           "type": "feature_card",
-          "disabled": true,
           "settings": {
             "icon": "shopify://shop_images/heart.png",
+            "icon_alt": "",
+            "title": "New & ImprovedFormula",
+            "subtitle": ""
+          }
+        },
+        "feature_card_jmFpwe": {
+          "type": "feature_card",
+          "settings": {
+            "icon": "shopify://shop_images/immunity.png",
             "icon_alt": "",
             "title": "New & ImprovedFormula",
             "subtitle": ""
@@ -70,7 +78,8 @@
         "blog_image_WAgqah",
         "blog_image_riwDFF",
         "feature_card_6YpyVm",
-        "feature_card_dV7kBW"
+        "feature_card_dV7kBW",
+        "feature_card_jmFpwe"
       ],
       "settings": {
         "show_vendor": false,
