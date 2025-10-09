@@ -209,12 +209,12 @@
       <!-- Product Accordions -->
       <div class="product-accordions">
         {% if section.settings.accordion_1_title != blank %}
-          <div class="accordion-item">
-            <button class="accordion-header" type="button" aria-expanded="false">
+          <div class="accordion-item active">
+            <button class="accordion-header" type="button" aria-expanded="true">
               <span class="accordion-title">{{ section.settings.accordion_1_title }}</span>
               <span class="accordion-icon">+</span>
             </button>
-            <div class="accordion-content">
+            <div class="accordion-content" style="max-height: 500px;">
               <div class="accordion-body">
                 {% if section.settings.accordion_1_content != blank %}
                   {{ section.settings.accordion_1_content }}
@@ -447,12 +447,7 @@
 
   /* Thumbnail Styles */
   .thumbnail-list {
-    display: flex;
-    gap: 10px;
-    margin-top: 20px;
-    overflow-x: auto;
-    padding: 10px 0;
-    width: 100%;
+    display: none; /* hidden per request */
   }
 
   /* Optional press logos row */
