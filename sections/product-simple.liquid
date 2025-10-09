@@ -1210,20 +1210,42 @@
         reflectSelectedCard();
 
     // Accordion 3: link-only behavior - scroll to target instead of opening
+    function findTargetEl(raw) {
+      if (!raw) return null;
+      const cleaned = String(raw).replace(/^#/, '');
+      return (
+        document.getElementById(cleaned) ||
+        document.querySelector('#' + cleaned) ||
+        document.querySelector(raw) ||
+        document.querySelector("[id='" + cleaned + "']")
+      );
+    }
+
+    function scrollToTarget(raw) {
+      const el = findTargetEl(raw);
+      if (el) {
+        const y = el.getBoundingClientRect().top + window.pageYOffset - 80;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+        return true;
+      }
+      return false;
+    }
+
     document.querySelectorAll('.product-simple-section .accordion-item.link-only .accordion-header').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.preventDefault();
-        const targetId = btn.getAttribute('data-scroll-target');
-        if (targetId) {
-          const cleaned = targetId.replace(/^#/, '');
-          const el = document.getElementById(cleaned) || document.querySelector('#' + cleaned) || document.querySelector(targetId) || document.querySelector("[id='" + cleaned + "']");
-          if (el) {
-            const y = el.getBoundingClientRect().top + window.pageYOffset - 80; // offset for sticky header
-            window.scrollTo({ top: y, behavior: 'smooth' });
-          } else {
-            // Fallback: set the hash so browser jumps if dynamically loaded later
-            try { window.location.hash = '#' + cleaned; } catch(_) {}
-          }
+        const targetId = btn.getAttribute('data-scroll-target') || 'button1';
+        if (!scrollToTarget(targetId)) {
+          // Retry a few times in case the target renders late
+          let retries = 10;
+          const interval = setInterval(() => {
+            if (scrollToTarget(targetId) || --retries <= 0) {
+              clearInterval(interval);
+              if (retries <= 0) {
+                try { window.location.hash = '#' + String(targetId).replace(/^#/, ''); } catch(_) {}
+              }
+            }
+          }, 150);
         }
       });
     });
