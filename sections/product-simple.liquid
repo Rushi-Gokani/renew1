@@ -1215,8 +1215,12 @@
         e.preventDefault();
         const targetId = btn.getAttribute('data-scroll-target');
         if (targetId) {
-          const el = document.getElementById(targetId.replace('#','')) || document.querySelector(targetId);
-          if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          const cleaned = targetId.replace(/^#/, '');
+          const el = document.getElementById(cleaned) || document.querySelector('#' + cleaned) || document.querySelector(targetId);
+          if (el) {
+            const y = el.getBoundingClientRect().top + window.pageYOffset - 80; // offset for sticky header
+            window.scrollTo({ top: y, behavior: 'smooth' });
+          }
         }
       });
     });
@@ -1252,6 +1256,11 @@
     const accordionHeaders = document.querySelectorAll('.product-simple-section .accordion-header');
     
     accordionHeaders.forEach(header => {
+      // Skip link-only accordion items; they are handled separately
+      const parentItem = header.closest('.accordion-item');
+      if (parentItem && parentItem.classList.contains('link-only')) {
+        return;
+      }
       header.addEventListener('click', function() {
         const accordionItem = this.closest('.accordion-item');
         const isActive = accordionItem.classList.contains('active');
