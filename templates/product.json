@@ -12,20 +12,6 @@
     "main": {
       "type": "product-simple",
       "blocks": {
-        "benefit_yd9dxC": {
-          "type": "benefit",
-          "disabled": true,
-          "settings": {
-            "text": "Free shipping on first subscription"
-          }
-        },
-        "benefit_TU78UJ": {
-          "type": "benefit",
-          "disabled": true,
-          "settings": {
-            "text": "Free shipping on first subscription"
-          }
-        },
         "blog_image_GVMXMU": {
           "type": "blog_image",
           "settings": {
@@ -57,24 +43,13 @@
             "alt": "",
             "link": ""
           }
-        },
-        "press_logo_JNXziM": {
-          "type": "press_logo",
-          "disabled": true,
-          "settings": {
-            "image": "shopify://shop_images/Gemini_Generated_Image_3yasdsawzc3ywzc3ywzc3.png",
-            "alt": "xxc"
-          }
         }
       },
       "block_order": [
-        "benefit_yd9dxC",
-        "benefit_TU78UJ",
         "blog_image_GVMXMU",
         "blog_image_D3Bybh",
         "blog_image_WAgqah",
-        "blog_image_riwDFF",
-        "press_logo_JNXziM"
+        "blog_image_riwDFF"
       ],
       "settings": {
         "show_vendor": false,
