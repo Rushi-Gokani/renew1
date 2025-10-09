@@ -41,18 +41,30 @@
 
     <!-- Product Information -->
     <div class="product-simple-info">
-      <h1 class="product-title">{{ product.title }}</h1>
+      <div class="product-meta">
+        <div class="rating-and-count">
+          <div class="stars" aria-hidden="true">★★★★★</div>
+          <a class="reviews-link" href="#shopify-product-reviews" aria-label="Read reviews">Join 300,000+ Happy Women</a>
+        </div>
+        <h1 class="product-title">{{ product.title }}</h1>
+        <div class="feature-badges">
+          <span class="badge">30 Servings</span>
+          <span class="badge">Vegan</span>
+          <span class="badge">Gluten-free</span>
+        </div>
+      </div>
 
       <div class="product-price">
-        <span class="price">{{ product.price | money }}</span>
-        {% if product.compare_at_price > product.price %}
-          <span class="compare-price">{{ product.compare_at_price | money }}</span>
+        <span class="price" data-price="{{ product.selected_or_first_available_variant.price }}">{{ product.selected_or_first_available_variant.price | money }}</span>
+        {% assign cap = product.selected_or_first_available_variant.compare_at_price %}
+        {% if cap and cap > product.selected_or_first_available_variant.price %}
+          <span class="compare-price" data-compare="{{ cap }}">{{ cap | money }}</span>
         {% endif %}
       </div>
 
       {% if product.description != blank %}
-        <div class="product-description">
-          {{ product.description }}
+        <div class="product-description excerpt">
+          {{ product.description | strip_html | truncate: 240 }}
         </div>
       {% endif %}
 
@@ -62,17 +74,65 @@
           <input type="hidden" name="id" value="{{ product.first_available_variant.id }}">
         {% else %}
           <div class="variant-selector">
-            <label for="productVariant">Choose Option:</label>
-            <select name="id" id="productVariant">
+            <div class="selector-label">Choose your flavour</div>
+            <div class="variant-pills" role="radiogroup" aria-label="Choose your flavour">
+              {% for v in product.variants %}
+                {% assign img = v.featured_image | default: product.featured_image %}
+                <button type="button"
+                        class="variant-pill {% if v == product.selected_or_first_available_variant %}active{% endif %}"
+                        role="radio"
+                        aria-checked="{% if v == product.selected_or_first_available_variant %}true{% else %}false{% endif %}"
+                        data-variant-id="{{ v.id }}"
+                        data-price="{{ v.price }}"
+                        data-compare="{{ v.compare_at_price }}"
+                        {% unless v.available %}disabled aria-disabled="true"{% endunless %}>
+                  {% if img %}
+                    <img src="{{ img | image_url: width: 64 }}" alt="{{ v.title | escape }}">
+                  {% endif %}
+                  <span class="variant-pill-text">{{ v.title }}</span>
+                </button>
+              {% endfor %}
+            </div>
+            <!-- Keep a native select for form compatibility and accessibility -->
+            <select name="id" id="productVariant" class="sr-only-hidden">
               {% for variant in product.variants %}
-                <option value="{{ variant.id }}"
-                        {% if variant == product.selected_or_first_available_variant %}selected{% endif %}
-                        {% unless variant.available %}disabled{% endunless %}>
-                  {{ variant.title }} - {{ variant.price | money }}
-                  {% unless variant.available %}(Sold Out){% endunless %}
-                </option>
+                <option value="{{ variant.id }}" {% if variant == product.selected_or_first_available_variant %}selected{% endif %} {% unless variant.available %}disabled{% endunless %}>{{ variant.title }}</option>
               {% endfor %}
             </select>
+          </div>
+        {% endif %}
+
+        {% if product.selling_plan_groups.size > 0 %}
+          <div class="purchase-options" data-has-subscription>
+            <div class="option-card">
+              <label class="option-row">
+                <input type="radio" name="purchase_option" value="onetime" checked>
+                <div class="option-content">
+                  <div class="option-title">One-time purchase</div>
+                  <div class="option-price"><span class="onetime-price">{{ product.selected_or_first_available_variant.price | money }}</span></div>
+                </div>
+              </label>
+            </div>
+            {% assign group = product.selling_plan_groups | first %}
+            {% assign first_plan = group.selling_plans | first %}
+            <div class="option-card">
+              <label class="option-row">
+                <input type="radio" name="purchase_option" value="subscription">
+                <div class="option-content">
+                  <div class="option-title">Subscribe and save</div>
+                  <div class="option-subcopy">Save {{ first_plan.price_adjustments | first | map: 'value' | first }}% + FREE gift</div>
+                  <div class="option-price"><span class="subscription-price" data-discount="{{ first_plan.price_adjustments | first | map: 'value' | first }}">{{ product.selected_or_first_available_variant.price | money }}</span></div>
+                </div>
+              </label>
+              <input type="hidden" name="selling_plan" id="selling_plan_input" value="">
+            </div>
+            <ul class="benefits">
+              <li>Free gift on first order</li>
+              <li>20% off every month</li>
+              <li>Free shipping on first subscription</li>
+              <li>Edit or cancel anytime</li>
+              <li>Delivery every 4 weeks</li>
+            </ul>
           </div>
         {% endif %}
 
@@ -100,7 +160,7 @@
 
         <button type="submit" class="add-to-cart-btn" {% unless product.available %}disabled{% endunless %}>
           {% if product.available %}
-            Add to Cart
+            Buy Now ⚡
           {% else %}
             Sold Out
           {% endif %}
@@ -409,6 +469,13 @@
     line-height: 1.2;
   }
 
+  .product-meta { margin-bottom: 10px; }
+  .rating-and-count { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; color: #2e7d32; font-weight: 600; }
+  .rating-and-count .stars { color: #2e7d32; letter-spacing: 1px; }
+  .reviews-link { color: #2e7d32; text-decoration: underline; font-size: 13px; }
+  .feature-badges { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0 14px 0; }
+  .badge { background: #f3f5ef; color: #2c3a27; padding: 6px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+
   .product-price {
     font-size: 24px;
     margin-bottom: 20px;
@@ -436,9 +503,26 @@
     align-items: center;
   }
 
-  .variant-selector {
-    margin-bottom: 20px;
-  }
+  .variant-selector { margin-bottom: 16px; }
+  .selector-label { font-weight: 700; margin-bottom: 8px; }
+  .variant-pills { display: flex; gap: 10px; flex-wrap: wrap; }
+  .variant-pill { display: inline-flex; align-items: center; gap: 8px; border: 1px solid #ddd; background:#fff; padding: 8px 10px; border-radius: 999px; cursor: pointer; transition: border-color .2s, box-shadow .2s; }
+  .variant-pill img { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; }
+  .variant-pill.active { border-color: #000; box-shadow: 0 0 0 2px #000 inset; }
+  .variant-pill[disabled] { opacity: .5; cursor: not-allowed; }
+  .sr-only-hidden { position: absolute; left: -9999px; width:1px; height:1px; }
+
+  .purchase-options { margin: 14px 0 12px 0; border:1px solid #e6e6e6; border-radius: 10px; padding: 8px; background:#f7faf6; }
+  .option-card { background:#fff; border:1px solid #e6e6e6; border-radius: 10px; margin: 8px; }
+  .option-row { display:flex; gap:12px; align-items:flex-start; padding: 12px; width:100%; cursor:pointer; }
+  .option-row input { margin-top: 2px; }
+  .option-content { display:flex; flex-direction:column; gap:4px; }
+  .option-title { font-weight:700; }
+  .option-subcopy { font-size: 12px; color:#3a4; font-weight:600; }
+  .option-price { font-weight:700; }
+  .benefits { list-style: none; padding: 8px 16px 12px 32px; margin: 0; }
+  .benefits li { position: relative; margin: 6px 0; font-size: 13px; }
+  .benefits li:before { content: '✓'; position: absolute; left: -18px; color:#2e7d32; }
 
   .variant-selector label,
   .quantity-selector label {
@@ -941,6 +1025,71 @@
 
     // Initialize accordions
     initializeAccordions();
+
+    // Variant pill syncing
+    const pills = document.querySelectorAll('.product-simple-section .variant-pill');
+    const selectEl = document.getElementById('productVariant');
+    const priceEl = document.querySelector('.product-simple-section .price');
+    const compareEl = document.querySelector('.product-simple-section .compare-price');
+    const onetimePrice = document.querySelector('.product-simple-section .onetime-price');
+    const subscriptionPrice = document.querySelector('.product-simple-section .subscription-price');
+    const purchaseRadios = document.querySelectorAll('.product-simple-section input[name="purchase_option"]');
+    const sellingPlanInput = document.getElementById('selling_plan_input');
+
+    function formatMoney(cents) {
+      try { return Shopify.formatMoney(cents); } catch(e) { return (cents/100).toLocaleString(undefined,{style:'currency',currency:Shopify.currency.active||'GBP'}); }
+    }
+
+    function setActivePill(targetId) {
+      pills.forEach(p => {
+        const isActive = p.getAttribute('data-variant-id') === String(targetId);
+        p.classList.toggle('active', isActive);
+        p.setAttribute('aria-checked', isActive ? 'true' : 'false');
+      });
+    }
+
+    function updatePricesFromVariant(variantPrice, variantCompare) {
+      if (priceEl) priceEl.textContent = formatMoney(variantPrice);
+      if (onetimePrice) onetimePrice.textContent = formatMoney(variantPrice);
+      if (subscriptionPrice) {
+        const discount = Number(subscriptionPrice.getAttribute('data-discount')) || 0;
+        const discounted = Math.round(variantPrice * (100 - discount) / 100);
+        subscriptionPrice.textContent = formatMoney(discounted);
+      }
+      if (compareEl) {
+        if (variantCompare && Number(variantCompare) > Number(variantPrice)) {
+          compareEl.textContent = formatMoney(variantCompare);
+          compareEl.style.display = '';
+        } else {
+          compareEl.style.display = 'none';
+        }
+      }
+    }
+
+    pills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        const id = pill.getAttribute('data-variant-id');
+        const price = Number(pill.getAttribute('data-price'));
+        const compare = Number(pill.getAttribute('data-compare'));
+        if (selectEl) selectEl.value = id;
+        setActivePill(id);
+        updatePricesFromVariant(price, compare);
+      });
+    });
+
+    // Purchase option toggle
+    purchaseRadios.forEach(r => {
+      r.addEventListener('change', () => {
+        if (r.value === 'subscription' && r.checked) {
+          // auto-pick the first plan id if present from dataset on container
+          const groupEl = document.querySelector('.product-simple-section .purchase-options');
+          const firstPlanId = (groupEl && groupEl.getAttribute('data-first-plan-id')) || (typeof window.__firstSellingPlanId !== 'undefined' ? window.__firstSellingPlanId : '');
+          if (sellingPlanInput) sellingPlanInput.value = firstPlanId;
+        } else if (r.value === 'onetime' && r.checked) {
+          if (sellingPlanInput) sellingPlanInput.value = '';
+        }
+      });
+    });
   });
 
   // Accordion functionality
