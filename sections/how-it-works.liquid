@@ -21,7 +21,8 @@
         <article class="how-it-works__card" {{ block.shopify_attributes }}>
           <div class="how-it-works__media">
             {% if img != blank %}
-              {{ img | image_url: width: 1200 | image_tag: alt: (block.settings.image_alt | escape), loading: 'lazy', decoding: 'async', class: 'how-it-works__image', sizes: '(min-width: 1200px) 384px, (min-width: 768px) 33vw, 90vw' }}
+              {%- assign alt_text = block.settings.image_alt -%}
+              {{ img | image_url: width: 1200 | image_tag: alt: alt_text, loading: 'lazy', decoding: 'async', class: 'how-it-works__image', sizes: '(min-width: 1200px) 384px, (min-width: 768px) 33vw, 90vw' }}
             {% else %}
               {{ 'image' | placeholder_svg_tag: 'placeholder-svg how-it-works__placeholder' }}
             {% endif %}
