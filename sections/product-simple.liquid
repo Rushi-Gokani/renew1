@@ -277,11 +277,16 @@
         {% endif %}
 
         {% if section.settings.accordion_3_title != blank %}
+          {% assign target_clean = section.settings.accordion_3_target_id | default: 'button1' %}
           <div class="accordion-item link-only">
-            <button class="accordion-header" type="button" aria-expanded="false" data-scroll-target="{{ section.settings.accordion_3_target_id | escape }}">
+            <a class="accordion-header"
+               href="#{{ target_clean | remove: '#' }}"
+               role="button"
+               data-scroll-target="{{ target_clean | escape }}"
+               aria-expanded="false">
               <span class="accordion-title">{{ section.settings.accordion_3_title }}</span>
               <span class="accordion-icon">+</span>
-            </button>
+            </a>
           </div>
         {% endif %}
       </div>
@@ -1241,11 +1246,11 @@
 
     document.querySelectorAll('.product-simple-section .accordion-item.link-only .accordion-header').forEach(btn => {
       btn.addEventListener('click', (e) => {
-        e.preventDefault();
+        // Let anchor default behavior set the hash; we'll enhance with smooth scroll
         const targetId = btn.getAttribute('data-scroll-target') || 'button1';
         const cleaned = String(targetId).replace(/^#/, '');
-        // Set hash immediately so browser native anchor jump works even if JS fails
-        try { window.location.hash = '#' + cleaned; } catch(_) {}
+        // Ensure the href has the hash for native fallback
+        try { if (btn.tagName === 'A') btn.setAttribute('href', '#' + cleaned); } catch(_) {}
         if (!scrollToTarget(targetId)) {
           // Retry and also observe DOM for late renders (up to ~10s)
           let retries = 60;
