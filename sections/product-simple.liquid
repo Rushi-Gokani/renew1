@@ -37,6 +37,15 @@
           {% endfor %}
         </div>
       {% endif %}
+      {%- comment -%}
+        Render press logo placeholders for JS to pick up and draw a row between
+        media and grid, while keeping markup clean and optional.
+      {%- endcomment -%}
+      {% for b in section.blocks %}
+        {% if b.type == 'press_logo' and b.settings.image != blank %}
+          <span class="__press_logo" data-src="{{ b.settings.image | image_url: width: 200 }}" data-alt="{{ b.settings.alt | escape }}"></span>
+        {% endif %}
+      {% endfor %}
     </div>
 
     <!-- Product Information -->
@@ -44,7 +53,8 @@
       <div class="product-meta">
         <div class="rating-and-count">
           <div class="stars" aria-hidden="true">★★★★★</div>
-          <a class="reviews-link" href="#shopify-product-reviews" aria-label="Read reviews">Join 300,000+ Happy Women</a>
+          {% assign rating_line = section.settings.rating_text | default: 'Join 300,000+ Happy Women' %}
+          <a class="reviews-link" href="#shopify-product-reviews" aria-label="Read reviews">{{ rating_line }}</a>
         </div>
         <h1 class="product-title">{{ product.title }}</h1>
         <div class="feature-badges">
@@ -64,10 +74,10 @@
         {% endif %}
       </div>
 
-      {% if product.description != blank %}
-        <div class="product-description excerpt">
-          {{ product.description | strip_html | truncate: 240 }}
-        </div>
+      {% if section.settings.excerpt != blank %}
+        <div class="product-description excerpt">{{ section.settings.excerpt }}</div>
+      {% elsif product.description != blank %}
+        <div class="product-description excerpt">{{ product.description | strip_html | truncate: 240 }}</div>
       {% endif %}
 
       <!-- Add to Cart Form -->
@@ -76,7 +86,7 @@
           <input type="hidden" name="id" value="{{ product.first_available_variant.id }}">
         {% else %}
           <div class="variant-selector">
-            <div class="selector-label">Choose your flavour</div>
+            <div class="selector-label">{{ section.settings.variant_label | default: 'Choose your flavour' }}</div>
             <div class="variant-pills" role="radiogroup" aria-label="Choose your flavour">
               {% for v in product.variants %}
                 {% assign img = v.featured_image | default: product.featured_image %}
@@ -104,36 +114,46 @@
           </div>
         {% endif %}
 
-        {% if product.selling_plan_groups.size > 0 %}
-          <div class="purchase-options" data-has-subscription>
+        {% if product.selling_plan_groups.size > 0 and section.settings.enable_subscription %}
+          {% assign group = product.selling_plan_groups | first %}
+          {% assign first_plan = group.selling_plans | first %}
+          <div class="purchase-options" data-has-subscription data-first-plan-id="{{ first_plan.id }}">
             <div class="option-card">
               <label class="option-row">
                 <input type="radio" name="purchase_option" value="onetime" checked>
                 <div class="option-content">
-                  <div class="option-title">One-time purchase</div>
+                  <div class="option-title">{{ section.settings.onetime_label | default: 'One-time purchase' }}</div>
                   <div class="option-price"><span class="onetime-price">{{ product.selected_or_first_available_variant.price | money }}</span></div>
                 </div>
               </label>
             </div>
-            {% assign group = product.selling_plan_groups | first %}
-            {% assign first_plan = group.selling_plans | first %}
             <div class="option-card">
               <label class="option-row">
                 <input type="radio" name="purchase_option" value="subscription">
                 <div class="option-content">
-                  <div class="option-title">Subscribe and save</div>
-                  <div class="option-subcopy">Save {{ first_plan.price_adjustments | first | map: 'value' | first }}% + FREE gift</div>
+                  <div class="option-title">{{ section.settings.subscription_label | default: 'Subscribe and save' }}</div>
+                  <div class="option-subcopy">{{ section.settings.subscription_subcopy | default: 'Save 20% + FREE gift' }}</div>
                   <div class="option-price"><span class="subscription-price" data-discount="{{ first_plan.price_adjustments | first | map: 'value' | first }}">{{ product.selected_or_first_available_variant.price | money }}</span></div>
                 </div>
               </label>
               <input type="hidden" name="selling_plan" id="selling_plan_input" value="">
             </div>
+            {% assign has_benefits = false %}
+            {% for b in section.blocks %}
+              {% if b.type == 'benefit' %}{% assign has_benefits = true %}{% break %}{% endif %}
+            {% endfor %}
             <ul class="benefits">
-              <li>Free gift on first order</li>
-              <li>20% off every month</li>
-              <li>Free shipping on first subscription</li>
-              <li>Edit or cancel anytime</li>
-              <li>Delivery every 4 weeks</li>
+              {% if has_benefits %}
+                {% for b in section.blocks %}
+                  {% if b.type == 'benefit' %}<li>{{ b.settings.text }}</li>{% endif %}
+                {% endfor %}
+              {% else %}
+                <li>Free gift on first order</li>
+                <li>20% off every month</li>
+                <li>Free Shipping on first subscription purchase</li>
+                <li>Edit or cancel anytime</li>
+                <li>Delivery every 4 weeks</li>
+              {% endif %}
             </ul>
           </div>
         {% endif %}
@@ -162,7 +182,7 @@
 
         <button type="submit" class="add-to-cart-btn" {% unless product.available %}disabled{% endunless %}>
           {% if product.available %}
-            Buy Now ⚡
+            {{ section.settings.cta_label | default: 'Buy Now ⚡' }}
           {% else %}
             Sold Out
           {% endif %}
@@ -417,6 +437,10 @@
     padding: 10px 0;
     width: 100%;
   }
+
+  /* Optional press logos row */
+  .press-logos { display:flex; gap:28px; align-items:center; opacity:.7; margin:18px 0; flex-wrap:wrap; }
+  .press-logos img { height: 18px; width:auto; object-fit:contain; filter: grayscale(100%); }
 
   .thumbnail-list::-webkit-scrollbar {
     height: 6px;
@@ -1092,6 +1116,28 @@
         }
       });
     });
+
+    // Render press logos if configured
+    const mediaCol = document.querySelector('.product-simple-media');
+    if (mediaCol) {
+      const logos = [];
+      // Liquid will render <span class="__press_logo" data-src="..." data-alt="..."></span> placeholders below which JS picks up.
+      document.querySelectorAll('.product-simple-section .__press_logo').forEach(pl => {
+        const src = pl.getAttribute('data-src');
+        if (src) logos.push({src, alt: pl.getAttribute('data-alt') || ''});
+        pl.remove();
+      });
+      if (logos.length) {
+        const row = document.createElement('div');
+        row.className = 'press-logos';
+        logos.forEach(l => {
+          const img = document.createElement('img');
+          img.src = l.src; img.alt = l.alt;
+          row.appendChild(img);
+        });
+        mediaCol.parentNode.insertBefore(row, mediaCol.nextSibling);
+      }
+    }
   });
 
   // Accordion functionality
@@ -1166,6 +1212,54 @@
       "default": false
     },
     {
+      "type": "text",
+      "id": "rating_text",
+      "label": "Rating line text",
+      "default": "Join 300,000+ Happy Women"
+    },
+    {
+      "type": "textarea",
+      "id": "excerpt",
+      "label": "Description excerpt override",
+      "info": "If set, replaces the auto truncated product description"
+    },
+    {
+      "type": "text",
+      "id": "variant_label",
+      "label": "Variant selector label",
+      "default": "Choose your flavour"
+    },
+    {
+      "type": "text",
+      "id": "onetime_label",
+      "label": "One-time option label",
+      "default": "One-time purchase"
+    },
+    {
+      "type": "text",
+      "id": "subscription_label",
+      "label": "Subscription option label",
+      "default": "Subscribe and save"
+    },
+    {
+      "type": "text",
+      "id": "subscription_subcopy",
+      "label": "Subscription subcopy",
+      "default": "Save 20% + FREE gift"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_subscription",
+      "label": "Show subscription block (if selling plans exist)",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "CTA button label",
+      "default": "Buy Now ⚡"
+    },
+    {
       "type": "header",
       "content": "Accordion 1 Settings"
     },
@@ -1212,6 +1306,33 @@
       "info": "Use this for simple text content (only used if Rich Text is empty)"
     }
   ],
+  "blocks": [
+    {
+      "type": "badge",
+      "name": "Feature badge",
+      "limit": 6,
+      "settings": [
+        { "type": "text", "id": "text", "label": "Text", "default": "30 Servings" }
+      ]
+    },
+    {
+      "type": "benefit",
+      "name": "Subscription benefit",
+      "limit": 8,
+      "settings": [
+        { "type": "text", "id": "text", "label": "Text", "default": "Free shipping on first subscription" }
+      ]
+    },
+    {
+      "type": "press_logo",
+      "name": "Press logo image",
+      "limit": 6,
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Logo image" },
+        { "type": "text", "id": "alt", "label": "Alt text" }
+      ]
+    }
+  ],
   "presets": [
     {
       "name": "Simple Product",
@@ -1219,8 +1340,22 @@
         "accordion_1_title": "Product Details",
         "accordion_1_text": "Learn more about this product's features, materials, and specifications.",
         "accordion_2_title": "Shipping & Returns",
-        "accordion_2_text": "Free shipping on orders over $50. 30-day return policy. Contact us for more information."
-      }
+        "accordion_2_text": "Free shipping on orders over $50. 30-day return policy. Contact us for more information.",
+        "rating_text": "Join 300,000+ Happy Women",
+        "variant_label": "Choose your flavour",
+        "cta_label": "Buy Now ⚡",
+        "enable_subscription": true
+      },
+      "blocks": [
+        { "type": "badge", "settings": { "text": "30 Servings" } },
+        { "type": "badge", "settings": { "text": "Vegan" } },
+        { "type": "badge", "settings": { "text": "Gluten-free" } },
+        { "type": "benefit", "settings": { "text": "FREE Sip Cup gift worth £9.99" } },
+        { "type": "benefit", "settings": { "text": "20% off every month" } },
+        { "type": "benefit", "settings": { "text": "Free Shipping on first subscription purchase" } },
+        { "type": "benefit", "settings": { "text": "Edit or cancel anytime" } },
+        { "type": "benefit", "settings": { "text": "Delivery every 4 weeks" } }
+      ]
     }
   ]
 }
