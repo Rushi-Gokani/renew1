@@ -137,7 +137,7 @@
   }
 {% endstyle %}
 
-<accordion-section-{{ ai_gen_id }} class="ai-accordion-container-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+<accordion-section-{{ ai_gen_id }} id="button1" class="ai-accordion-container-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
   {% if block.settings.heading != blank %}
     <h2 class="ai-accordion-heading-{{ ai_gen_id }}">{{ block.settings.heading }}</h2>
   {% endif %}
@@ -155,7 +155,7 @@
       %}
 
       {% if title != blank %}
-        <div class="ai-accordion-item-{{ ai_gen_id }} {% if is_open %}active{% endif %}" data-accordion-item="{{ i }}">
+        <div class="ai-accordion-item-{{ ai_gen_id }} {% if is_open %}active{% endif %}" data-accordion-item="{{ i }}" >
           <button 
             class="ai-accordion-header-{{ ai_gen_id }}"
             aria-expanded="{% if is_open %}true{% else %}false{% endif %}"
