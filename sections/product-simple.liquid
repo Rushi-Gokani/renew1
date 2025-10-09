@@ -26,6 +26,38 @@
 
       {%- comment -%} Thumbnails removed by request {%- endcomment -%}
 
+      {%- assign feature_card_count = 0 -%}
+      {%- for b in section.blocks -%}
+        {%- if b.type == 'feature_card' -%}
+          {%- assign feature_card_count = feature_card_count | plus: 1 -%}
+        {%- endif -%}
+      {%- endfor -%}
+      {% if feature_card_count > 0 %}
+        <div class="media-feature-cards">
+          {% assign rendered = 0 %}
+          {% for b in section.blocks %}
+            {% if b.type == 'feature_card' %}
+              {% assign rendered = rendered | plus: 1 %}
+              {% if rendered <= 3 %}
+                <div class="feature-card">
+                  <div class="feature-card-inner">
+                    {% if b.settings.icon != blank %}
+                      <img class="feature-card-icon" src="{{ b.settings.icon | image_url: width: 96 }}" alt="{{ b.settings.icon_alt | escape }}" loading="lazy">
+                    {% endif %}
+                    {% if b.settings.title != blank %}
+                      <div class="feature-card-title">{{ b.settings.title }}</div>
+                    {% endif %}
+                    {% if b.settings.subtitle != blank %}
+                      <div class="feature-card-sub">{{ b.settings.subtitle }}</div>
+                    {% endif %}
+                  </div>
+                </div>
+              {% endif %}
+            {% endif %}
+          {% endfor %}
+        </div>
+      {% endif %}
+
       {%- assign have_blog_images = false -%}
       {%- for b in section.blocks -%}
         {%- if b.type == 'blog_image' -%}{%- assign have_blog_images = true -%}{%- break -%}{%- endif -%}
@@ -485,6 +517,14 @@
   .media-blog-grid { display:grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
   .media-blog-item, .media-blog-placeholder { position: relative; width: 100%; padding-top: 100%; border-radius: 8px; overflow: hidden; background:#f2f2f2; display:block; }
   .media-blog-item img { position:absolute; top:0; left:0; width:100%; height:100%; object-fit: cover; }
+
+  /* Feature cards stack (replaces thumbnails) */
+  .media-feature-cards { display:grid; grid-template-columns: 1fr; gap: 14px; margin-top: 16px; }
+  .feature-card { border-radius: 10px; background:#c7da3a; color:#0a4b3f; }
+  .feature-card-inner { display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding: 16px 12px; min-height: 120px; }
+  .feature-card-icon { width: 40px; height: 40px; object-fit: contain; margin-bottom: 10px; }
+  .feature-card-title { font-weight:800; font-size: 20px; line-height: 1.2; }
+  .feature-card-sub { font-size: 13px; font-weight:600; margin-top: 4px; }
 
   .thumbnail {
     flex-shrink: 0;
@@ -1419,6 +1459,17 @@
       "settings": [
         { "type": "image_picker", "id": "image", "label": "Logo image" },
         { "type": "text", "id": "alt", "label": "Alt text" }
+      ]
+    },
+    {
+      "type": "feature_card",
+      "name": "Feature card (left column)",
+      "limit": 3,
+      "settings": [
+        { "type": "image_picker", "id": "icon", "label": "Icon" },
+        { "type": "text", "id": "icon_alt", "label": "Icon alt" },
+        { "type": "text", "id": "title", "label": "Title", "default": "New & Improved\nFormula" },
+        { "type": "text", "id": "subtitle", "label": "Subtitle" }
       ]
     },
     {
