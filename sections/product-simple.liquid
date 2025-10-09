@@ -24,19 +24,7 @@
         {% endif %}
       </div>
 
-      {% if product.images.size > 1 %}
-        <div class="thumbnail-list">
-          {% for image in product.images %}
-            <div class="thumbnail {% if forloop.first %}active{% endif %}"
-                 onclick="goToSlide({{ forloop.index0 }})"
-                 data-thumb-index="{{ forloop.index0 }}">
-              <img src="{{ image | image_url: width: 100 }}"
-                   alt="{{ product.title | escape }} - Thumbnail {{ forloop.index }}"
-                   loading="lazy">
-            </div>
-          {% endfor %}
-        </div>
-      {% endif %}
+      {%- comment -%} Thumbnails removed by request {%- endcomment -%}
 
       {%- assign have_blog_images = false -%}
       {%- for b in section.blocks -%}
@@ -1090,6 +1078,17 @@
 
     // Initialize accordions
     initializeAccordions();
+    // Open first accordion by default (right side)
+    const firstAccordion = document.querySelector('.product-simple-section .product-accordions .accordion-item');
+    if (firstAccordion) {
+      firstAccordion.classList.add('active');
+      const content = firstAccordion.querySelector('.accordion-content');
+      const header = firstAccordion.querySelector('.accordion-header');
+      if (content && header) {
+        content.style.maxHeight = content.scrollHeight + 'px';
+        header.setAttribute('aria-expanded', 'true');
+      }
+    }
 
     // Variant pill syncing
     const pills = document.querySelectorAll('.product-simple-section .variant-pill');
