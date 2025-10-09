@@ -14,12 +14,14 @@
       "blocks": {
         "benefit_yd9dxC": {
           "type": "benefit",
+          "disabled": true,
           "settings": {
             "text": "Free shipping on first subscription"
           }
         },
         "benefit_TU78UJ": {
           "type": "benefit",
+          "disabled": true,
           "settings": {
             "text": "Free shipping on first subscription"
           }
