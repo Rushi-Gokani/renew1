@@ -50,8 +50,10 @@
         </div>
         <h1 class="product-title">{{ product.title }}</h1>
         <div class="feature-badges">
-          {% for b in section.blocks where b.type == 'badge' %}
-            <span class="badge">{{ b.settings.text }}</span>
+          {% for b in section.blocks %}
+            {% if b.type == 'badge' %}
+              <span class="badge">{{ b.settings.text }}</span>
+            {% endif %}
           {% endfor %}
         </div>
       </div>
