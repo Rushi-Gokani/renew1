@@ -23,11 +23,20 @@
           "settings": {
             "text": "Free shipping on first subscription"
           }
+        },
+        "press_logo_JNXziM": {
+          "type": "press_logo",
+          "disabled": true,
+          "settings": {
+            "image": "shopify://shop_images/Gemini_Generated_Image_3yasdsawzc3ywzc3ywzc3.png",
+            "alt": "xxc"
+          }
         }
       },
       "block_order": [
         "benefit_yd9dxC",
-        "benefit_TU78UJ"
+        "benefit_TU78UJ",
+        "press_logo_JNXziM"
       ],
       "settings": {
         "show_vendor": false,
@@ -39,7 +48,7 @@
         "subscription_label": "Subscribe and save",
         "subscription_subcopy": "Save 20% + FREE gift",
         "enable_subscription": false,
-        "cta_label": "Buy Now ⚡",
+        "cta_label": "Buy Now",
         "price_note": "£/ per serving (30 servings)",
         "accordion_1_title": "Key Benifits",
         "accordion_1_content": "<p>{{ product.metafields.custom.key_benifits | metafield_tag }}</p>",
