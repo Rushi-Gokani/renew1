@@ -49,16 +49,16 @@
           "settings": {
             "icon": "shopify://shop_images/heart.png",
             "icon_alt": "",
-            "title": "New & ImprovedFormula",
+            "title": "Naturally Energizing",
             "subtitle": ""
           }
         },
         "feature_card_dV7kBW": {
           "type": "feature_card",
           "settings": {
-            "icon": "shopify://shop_images/heart.png",
+            "icon": "shopify://shop_images/vitamins.png",
             "icon_alt": "",
-            "title": "New & ImprovedFormula",
+            "title": "Feel the Green Power",
             "subtitle": ""
           }
         },
@@ -67,8 +67,26 @@
           "settings": {
             "icon": "shopify://shop_images/immunity.png",
             "icon_alt": "",
-            "title": "New & ImprovedFormula",
+            "title": "From Nature to You",
             "subtitle": ""
+          }
+        },
+        "badge_7aMpWC": {
+          "type": "badge",
+          "settings": {
+            "text": "100% Pure Moringa"
+          }
+        },
+        "badge_9bPBAw": {
+          "type": "badge",
+          "settings": {
+            "text": "Immunity Support"
+          }
+        },
+        "badge_mhVc6D": {
+          "type": "badge",
+          "settings": {
+            "text": "Superfood Power"
           }
         }
       },
@@ -79,7 +97,10 @@
         "blog_image_riwDFF",
         "feature_card_6YpyVm",
         "feature_card_dV7kBW",
-        "feature_card_jmFpwe"
+        "feature_card_jmFpwe",
+        "badge_7aMpWC",
+        "badge_9bPBAw",
+        "badge_mhVc6D"
       ],
       "settings": {
         "show_vendor": false,
@@ -792,6 +813,7 @@
         "step_38bUJ6": {
           "type": "step",
           "settings": {
+            "image": "shopify://shop_images/Gemini_Generatjhghked_Image_y1p2ily1p2ily1p2.png",
             "image_alt": "",
             "badge": "One",
             "title": "Scoop",
@@ -804,6 +826,7 @@
         "step_Jre4Uk": {
           "type": "step",
           "settings": {
+            "image": "shopify://shop_images/Gemini_Generatjhghked_Image_y1p2ily1p2ily1p2.png",
             "image_alt": "",
             "badge": "Two",
             "title": "Mix",
@@ -816,6 +839,7 @@
         "step_DBFN6M": {
           "type": "step",
           "settings": {
+            "image": "shopify://shop_images/Gemini_Generatjhghked_Image_y1p2ily1p2ily1p2.png",
             "image_alt": "",
             "badge": "Three",
             "title": "Enjoy Daily",
