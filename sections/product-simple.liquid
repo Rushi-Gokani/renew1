@@ -316,6 +316,18 @@
     min-width: 0;
   }
 
+  /* Desktop: keep right column in view and scroll its content until left finishes */
+  @media (min-width: 769px) {
+    .product-simple-info {
+      position: sticky;
+      top: 80px; /* adjust if your header height differs */
+      align-self: start;
+      max-height: calc(100vh - 80px);
+      overflow: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+  }
+
   @media (max-width: 768px) {
     .product-simple-grid {
       grid-template-columns: 1fr;
