@@ -816,6 +816,61 @@
         "padding-block-start": 0,
         "padding-block-end": 0
       }
+    },
+    "how_it_works_wHxepr": {
+      "type": "how-it-works",
+      "blocks": {
+        "step_38bUJ6": {
+          "type": "step",
+          "settings": {
+            "image_alt": "",
+            "badge": "One",
+            "title": "Scoop",
+            "text": "Add one heaped teaspoon to 250–300ml of cold water, juice, or your favourite smoothie.",
+            "link_label": "",
+            "link_url": "",
+            "link_new_tab": false
+          }
+        },
+        "step_Jre4Uk": {
+          "type": "step",
+          "settings": {
+            "image_alt": "",
+            "badge": "Two",
+            "title": "Mix",
+            "text": "Blend with a shaker or stir well to create a smooth, refreshing drink.",
+            "link_label": "",
+            "link_url": "",
+            "link_new_tab": false
+          }
+        },
+        "step_DBFN6M": {
+          "type": "step",
+          "settings": {
+            "image_alt": "",
+            "badge": "Three",
+            "title": "Enjoy Daily",
+            "text": "Enjoy first thing in the morning or as a midday pick‑me‑up.",
+            "link_label": "",
+            "link_url": "",
+            "link_new_tab": false
+          }
+        }
+      },
+      "block_order": [
+        "step_38bUJ6",
+        "step_Jre4Uk",
+        "step_DBFN6M"
+      ],
+      "name": "How it works (3 steps)",
+      "settings": {
+        "heading": "Ready to go, in 3 simple steps.",
+        "subheading": "",
+        "tip_enable": true,
+        "tip_icon": true,
+        "tip_label": "Pro Tip:",
+        "tip_text": "Add a squeeze of lemon or a splash of coconut water for extra flavour and hydration!"
+      }
     }
   },
   "order": [
@@ -827,6 +882,7 @@
     "section_LDwPit",
     "featured_product_iADrzq",
     "blocks_yTXAwA",
-    "blocks_QiNVir"
+    "blocks_QiNVir",
+    "how_it_works_wHxepr"
   ]
 }

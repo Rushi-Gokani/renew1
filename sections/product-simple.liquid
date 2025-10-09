@@ -44,15 +44,13 @@
       <div class="product-meta">
         <div class="rating-and-count">
           <div class="stars" aria-hidden="true">★★★★★</div>
-          {% if section.settings.rating_text != blank %}
-            <a class="reviews-link" href="#shopify-product-reviews" aria-label="Read reviews">{{ section.settings.rating_text }}</a>
-          {% endif %}
+          <a class="reviews-link" href="#shopify-product-reviews" aria-label="Read reviews">Join 300,000+ Happy Women</a>
         </div>
         <h1 class="product-title">{{ product.title }}</h1>
         <div class="feature-badges">
-          {% for b in section.blocks where b.type == 'badge' %}
-            <span class="badge">{{ b.settings.text }}</span>
-          {% endfor %}
+          <span class="badge">30 Servings</span>
+          <span class="badge">Vegan</span>
+          <span class="badge">Gluten-free</span>
         </div>
       </div>
 
@@ -64,10 +62,10 @@
         {% endif %}
       </div>
 
-      {% if section.settings.excerpt != blank %}
-        <div class="product-description excerpt">{{ section.settings.excerpt }}</div>
-      {% elsif product.description != blank %}
-        <div class="product-description excerpt">{{ product.description | strip_html | truncate: 240 }}</div>
+      {% if product.description != blank %}
+        <div class="product-description excerpt">
+          {{ product.description | strip_html | truncate: 240 }}
+        </div>
       {% endif %}
 
       <!-- Add to Cart Form -->
@@ -76,7 +74,7 @@
           <input type="hidden" name="id" value="{{ product.first_available_variant.id }}">
         {% else %}
           <div class="variant-selector">
-            <div class="selector-label">{{ section.settings.variant_label | default: 'Choose your flavour' }}</div>
+            <div class="selector-label">Choose your flavour</div>
             <div class="variant-pills" role="radiogroup" aria-label="Choose your flavour">
               {% for v in product.variants %}
                 {% assign img = v.featured_image | default: product.featured_image %}
@@ -104,39 +102,37 @@
           </div>
         {% endif %}
 
-        {% if product.selling_plan_groups.size > 0 and section.settings.enable_subscription %}
-          {% assign group = product.selling_plan_groups | first %}
-          {% assign first_plan = group.selling_plans | first %}
-          <div class="purchase-options" data-has-subscription data-first-plan-id="{{ first_plan.id }}">
+        {% if product.selling_plan_groups.size > 0 %}
+          <div class="purchase-options" data-has-subscription>
             <div class="option-card">
               <label class="option-row">
                 <input type="radio" name="purchase_option" value="onetime" checked>
                 <div class="option-content">
-                  <div class="option-title">{{ section.settings.onetime_label | default: 'One-time purchase' }}</div>
+                  <div class="option-title">One-time purchase</div>
                   <div class="option-price"><span class="onetime-price">{{ product.selected_or_first_available_variant.price | money }}</span></div>
                 </div>
               </label>
             </div>
+            {% assign group = product.selling_plan_groups | first %}
+            {% assign first_plan = group.selling_plans | first %}
             <div class="option-card">
               <label class="option-row">
                 <input type="radio" name="purchase_option" value="subscription">
                 <div class="option-content">
-                  <div class="option-title">{{ section.settings.subscription_label | default: 'Subscribe and save' }}</div>
-                  <div class="option-subcopy">{{ section.settings.subscription_subcopy | default: 'Save 20% + FREE gift' }}</div>
+                  <div class="option-title">Subscribe and save</div>
+                  <div class="option-subcopy">Save {{ first_plan.price_adjustments | first | map: 'value' | first }}% + FREE gift</div>
                   <div class="option-price"><span class="subscription-price" data-discount="{{ first_plan.price_adjustments | first | map: 'value' | first }}">{{ product.selected_or_first_available_variant.price | money }}</span></div>
                 </div>
               </label>
               <input type="hidden" name="selling_plan" id="selling_plan_input" value="">
             </div>
-            {% if section.blocks.size > 0 %}
-              <ul class="benefits">
-                {% for b in section.blocks %}
-                  {% if b.type == 'benefit' %}
-                    <li>{{ b.settings.text }}</li>
-                  {% endif %}
-                {% endfor %}
-              </ul>
-            {% endif %}
+            <ul class="benefits">
+              <li>Free gift on first order</li>
+              <li>20% off every month</li>
+              <li>Free shipping on first subscription</li>
+              <li>Edit or cancel anytime</li>
+              <li>Delivery every 4 weeks</li>
+            </ul>
           </div>
         {% endif %}
 
@@ -164,7 +160,7 @@
 
         <button type="submit" class="add-to-cart-btn" {% unless product.available %}disabled{% endunless %}>
           {% if product.available %}
-            {{ section.settings.cta_label | default: 'Buy Now ⚡' }}
+            Buy Now ⚡
           {% else %}
             Sold Out
           {% endif %}
@@ -1168,54 +1164,6 @@
       "default": false
     },
     {
-      "type": "text",
-      "id": "rating_text",
-      "label": "Rating line text",
-      "default": "Join 300,000+ Happy Women"
-    },
-    {
-      "type": "textarea",
-      "id": "excerpt",
-      "label": "Description excerpt override",
-      "info": "If set, replaces the auto truncated product description"
-    },
-    {
-      "type": "text",
-      "id": "variant_label",
-      "label": "Variant selector label",
-      "default": "Choose your flavour"
-    },
-    {
-      "type": "text",
-      "id": "onetime_label",
-      "label": "One-time option label",
-      "default": "One-time purchase"
-    },
-    {
-      "type": "text",
-      "id": "subscription_label",
-      "label": "Subscription option label",
-      "default": "Subscribe and save"
-    },
-    {
-      "type": "text",
-      "id": "subscription_subcopy",
-      "label": "Subscription subcopy",
-      "default": "Save 20% + FREE gift"
-    },
-    {
-      "type": "checkbox",
-      "id": "enable_subscription",
-      "label": "Show subscription block (if selling plans exist)",
-      "default": true
-    },
-    {
-      "type": "text",
-      "id": "cta_label",
-      "label": "CTA button label",
-      "default": "Buy Now ⚡"
-    },
-    {
       "type": "header",
       "content": "Accordion 1 Settings"
     },
@@ -1262,24 +1210,6 @@
       "info": "Use this for simple text content (only used if Rich Text is empty)"
     }
   ],
-  "blocks": [
-    {
-      "type": "badge",
-      "name": "Feature badge",
-      "limit": 6,
-      "settings": [
-        { "type": "text", "id": "text", "label": "Text", "default": "30 Servings" }
-      ]
-    },
-    {
-      "type": "benefit",
-      "name": "Subscription benefit",
-      "limit": 8,
-      "settings": [
-        { "type": "text", "id": "text", "label": "Text", "default": "Free shipping on first subscription" }
-      ]
-    }
-  ],
   "presets": [
     {
       "name": "Simple Product",
@@ -1287,22 +1217,8 @@
         "accordion_1_title": "Product Details",
         "accordion_1_text": "Learn more about this product's features, materials, and specifications.",
         "accordion_2_title": "Shipping & Returns",
-        "accordion_2_text": "Free shipping on orders over $50. 30-day return policy. Contact us for more information.",
-        "rating_text": "Join 300,000+ Happy Women",
-        "variant_label": "Choose your flavour",
-        "cta_label": "Buy Now ⚡",
-        "enable_subscription": true
-      },
-      "blocks": [
-        { "type": "badge", "settings": { "text": "30 Servings" } },
-        { "type": "badge", "settings": { "text": "Vegan" } },
-        { "type": "badge", "settings": { "text": "Gluten-free" } },
-        { "type": "benefit", "settings": { "text": "FREE Sip Cup gift worth £9.99" } },
-        { "type": "benefit", "settings": { "text": "20% off every month" } },
-        { "type": "benefit", "settings": { "text": "Free Shipping on first subscription purchase" } },
-        { "type": "benefit", "settings": { "text": "Edit or cancel anytime" } },
-        { "type": "benefit", "settings": { "text": "Delivery every 4 weeks" } }
-      ]
+        "accordion_2_text": "Free shipping on orders over $50. 30-day return policy. Contact us for more information."
+      }
     }
   ]
 }
