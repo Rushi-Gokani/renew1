@@ -319,6 +319,7 @@
 
   /* Desktop: keep right column in view and scroll its content until left finishes */
   @media (min-width: 769px) {
+    .product-simple-grid { position: relative; }
     .product-simple-info { align-self: start; }
     .product-info-fixed { position: fixed; top: 80px; max-height: calc(100vh - 80px); overflow:auto; -webkit-overflow-scrolling: touch; z-index: 1; }
     .product-info-absolute-bottom { position: absolute; bottom: 0; }
@@ -1090,18 +1091,24 @@
       const current = window.pageYOffset;
       // Set width to prevent reflow when fixed
       const infoWidth = infoCol.offsetWidth + 'px';
+      // Compute horizontal offsets for fixed and absolute states
+      const columnLeftViewport = infoRect.left; // distance from viewport left
+      const columnLeftWithinGrid = infoRect.left - gridRect.left; // distance from grid's left edge
       if (current >= start && current < end) {
         infoCol.style.width = infoWidth;
+        infoCol.style.left = columnLeftViewport + 'px';
         infoCol.classList.add('product-info-fixed');
         infoCol.classList.remove('product-info-absolute-bottom');
       } else if (current >= end) {
         infoCol.classList.remove('product-info-fixed');
         infoCol.classList.add('product-info-absolute-bottom');
-        infoCol.style.width = '';
+        infoCol.style.width = infoWidth;
+        infoCol.style.left = columnLeftWithinGrid + 'px';
       } else {
         infoCol.classList.remove('product-info-fixed');
         infoCol.classList.remove('product-info-absolute-bottom');
         infoCol.style.width = '';
+        infoCol.style.left = '';
       }
     }
     window.addEventListener('scroll', updatePinnedLayout, { passive: true });
