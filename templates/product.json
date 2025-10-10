@@ -15,7 +15,7 @@
         "blog_image_GVMXMU": {
           "type": "blog_image",
           "settings": {
-            "image": "shopify://shop_images/Gemini_Generatjhghked_Image_y1p2ily1p2ily1p2.png",
+            "image": "shopify://shop_images/Generated_Image_October_10_2025_-_4_02PM.png",
             "alt": "",
             "link": ""
           }
@@ -23,7 +23,7 @@
         "blog_image_D3Bybh": {
           "type": "blog_image",
           "settings": {
-            "image": "shopify://shop_images/Generated_Image_October_04_2025_-_6_23PM.png",
+            "image": "shopify://shop_images/Generated_Image_October_10_2025_-_3_56PM.png",
             "alt": "",
             "link": ""
           }
@@ -115,12 +115,12 @@
         "cta_label": "Buy Now",
         "price_note": "£/ per serving (30 servings)",
         "accordion_1_title": "Key Benifits",
-        "accordion_1_content": "<p>{{ product.metafields.custom.key_benifits | metafield_tag }}</p>",
+        "accordion_1_content": "{{ product.metafields.custom.key_benifits | metafield_tag }}",
         "accordion_1_text": "",
         "accordion_2_title": "Product Details",
         "accordion_3_title": "FAQs",
         "accordion_3_target_id": "button1",
-        "accordion_2_content": "<p>{{ product.metafields.custom.product_details | metafield_tag }}</p>",
+        "accordion_2_content": "{{ product.metafields.custom.product_details | metafield_tag }}",
         "accordion_2_text": ""
       }
     },
@@ -131,7 +131,7 @@
           "type": "reel",
           "name": "Social video showcase",
           "settings": {
-            "video": "https://cdn.shopify.com/videos/c/o/v/3acdfae59c134e04b77b25049c0edacf.mp4",
+            "video": "https://cdn.shopify.com/videos/c/o/v/53f4f9a76681410d8247639c3f776dba.mp4",
             "heading": "Our Superfoods Are The Rheal Deal",
             "subheading": "Discover the power of nature with our premium superfood blends, crafted for your health and wellness journey.",
             "review_1": "Amazing taste! 🔥",
@@ -859,8 +859,8 @@
       "settings": {
         "heading": "Ready to go, in 3 simple steps.",
         "subheading": "",
-        "tip_enable": true,
-        "tip_icon": true,
+        "tip_enable": false,
+        "tip_icon": false,
         "tip_label": "Pro Tip:",
         "tip_text": ""
       }
@@ -875,7 +875,7 @@
             "description": "Packed with essential vitamins, minerals, and antioxidants, Moringa powder boosts energy, strengthens immunity, and supports overall wellness naturally.",
             "button_label": "Buy Now",
             "button_link": "shopify://products/reneuw-moringa-powder",
-            "image": "shopify://shop_images/u3765694457_macro_shot_of_matcha_powder_zoomed_in_--ar_43_--raw_4782c1bf-a3c6-4cfd-adac-251f0629bedb.png",
+            "image": "shopify://shop_images/Generated_Image_October_10_2025_-_4_01PM.png",
             "heading_size": 48,
             "text_size": 18,
             "text_color": "#000000",
