@@ -115,12 +115,12 @@
         "cta_label": "Buy Now",
         "price_note": "£/ per serving (30 servings)",
         "accordion_1_title": "Key Benifits",
-        "accordion_1_content": "{{ product.metafields.custom.key_benifits | metafield_tag }}",
+        "accordion_1_content": "<p>{{ product.metafields.custom.key_benifits | metafield_tag }}</p>",
         "accordion_1_text": "",
         "accordion_2_title": "Product Details",
         "accordion_3_title": "FAQs",
         "accordion_3_target_id": "button1",
-        "accordion_2_content": "{{ product.metafields.custom.product_details | metafield_tag }}",
+        "accordion_2_content": "<p>{{ product.metafields.custom.product_details | metafield_tag }}</p>",
         "accordion_2_text": ""
       }
     },
@@ -813,7 +813,7 @@
         "step_38bUJ6": {
           "type": "step",
           "settings": {
-            "image": "shopify://shop_images/Gemini_Generatjhghked_Image_y1p2ily1p2ily1p2.png",
+            "image": "shopify://shop_images/Generated_Image_October_10_2025_-_3_14PM.png",
             "image_alt": "",
             "badge": "One",
             "title": "Scoop",
@@ -826,7 +826,7 @@
         "step_Jre4Uk": {
           "type": "step",
           "settings": {
-            "image": "shopify://shop_images/Gemini_Generatjhghked_Image_y1p2ily1p2ily1p2.png",
+            "image": "shopify://shop_images/Generated_Image_October_10_2025_-_3_15PM.png",
             "image_alt": "",
             "badge": "Two",
             "title": "Mix",
@@ -839,7 +839,7 @@
         "step_DBFN6M": {
           "type": "step",
           "settings": {
-            "image": "shopify://shop_images/Gemini_Generatjhghked_Image_y1p2ily1p2ily1p2.png",
+            "image": "shopify://shop_images/Generated_Image_October_10_2025_-_3_16PM.png",
             "image_alt": "",
             "badge": "Three",
             "title": "Enjoy Daily",
@@ -862,7 +862,7 @@
         "tip_enable": true,
         "tip_icon": true,
         "tip_label": "Pro Tip:",
-        "tip_text": "Add a squeeze of lemon or a splash of coconut water for extra flavour and hydration!"
+        "tip_text": ""
       }
     },
     "blocks_QiNVir": {
