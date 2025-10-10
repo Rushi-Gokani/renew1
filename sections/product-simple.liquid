@@ -1110,6 +1110,19 @@
     // Initialize slider
     const slider = document.querySelector('.product-simple-section .slider-container');
     if (slider) {
+      // Sync currentSlide with initially active slide
+      try {
+        const initialSlides = document.querySelectorAll('.product-simple-section .slide');
+        initialSlides.forEach((s, idx) => { if (s.classList.contains('active')) currentSlide = idx; });
+        showSlide(currentSlide);
+      } catch(_) {}
+
+      // Attach click handlers to nav buttons (avoid inline onclick reliance/CSP issues)
+      const prevBtn = document.querySelector('.product-simple-section .slider-nav.prev');
+      const nextBtn = document.querySelector('.product-simple-section .slider-nav.next');
+      if (prevBtn) prevBtn.addEventListener('click', (e) => { e.preventDefault(); changeSlide(-1); });
+      if (nextBtn) nextBtn.addEventListener('click', (e) => { e.preventDefault(); changeSlide(1); });
+
       let touchStartX = 0;
       let touchEndX = 0;
 
@@ -1323,8 +1336,8 @@
     reflectSelectedCard();
 
     // Render press logos if configured
-    const mediaCol = document.querySelector('.product-simple-media');
-    if (mediaCol) {
+    const mediaCol2 = document.querySelector('.product-simple-media');
+    if (mediaCol2) {
       const logos = [];
       // Liquid will render <span class="__press_logo" data-src="..." data-alt="..."></span> placeholders below which JS picks up.
       document.querySelectorAll('.product-simple-section .__press_logo').forEach(pl => {
@@ -1340,7 +1353,7 @@
           img.src = l.src; img.alt = l.alt;
           row.appendChild(img);
         });
-        mediaCol.parentNode.insertBefore(row, mediaCol.nextSibling);
+        mediaCol2.parentNode.insertBefore(row, mediaCol2.nextSibling);
       }
     }
   });
