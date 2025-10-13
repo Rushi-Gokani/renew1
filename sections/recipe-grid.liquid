@@ -1,0 +1,223 @@
+{%- comment -%}
+  Recipe Grid Section
+
+  Features
+  - Optional heading and subheading
+  - Search input to filter by title/description
+  - Tag filters (chips) generated from block tags
+  - Responsive grid with image, title, excerpt, and time badge
+  - Fully customizable via schema settings and blocks
+
+  Best practices
+  - Namespaced classes to avoid collisions
+  - No global JS; all scoped with data attributes
+  - Accessible labels and buttons
+  - Uses "image" picker for performance and proper sizes
+{%- endcomment -%}
+
+{%- liquid
+  assign section_id = section.id
+  assign heading = section.settings.heading
+  assign subheading = section.settings.subheading
+  assign show_search = section.settings.show_search
+  assign show_tags = section.settings.show_tags
+  assign cards_per_row_desktop = section.settings.cards_per_row_desktop
+  assign cards_per_row_mobile = section.settings.cards_per_row_mobile
+  assign enable_time_badge = section.settings.enable_time_badge
+  assign enable_equal_heights = section.settings.enable_equal_heights
+-%}
+
+<section class="recipe-grid" id="recipe-grid-{{ section_id }}" data-section-id="{{ section_id }}">
+  <div class="recipe-grid__container page-width">
+    {%- if heading != blank -%}
+      <h2 class="recipe-grid__heading h1">{{ heading }}</h2>
+    {%- endif -%}
+    {%- if subheading != blank -%}
+      <p class="recipe-grid__subheading subtitle">{{ subheading }}</p>
+    {%- endif -%}
+
+    {%- if show_search or show_tags -%}
+      <div class="recipe-grid__controls" data-controls>
+        {%- if show_search -%}
+          <div class="recipe-grid__search">
+            <label class="visually-hidden" for="recipe-search-{{ section_id }}">{{ 'general.search.search' | t }}</label>
+            <input id="recipe-search-{{ section_id }}" type="search" class="field__input" placeholder="{{ section.settings.search_placeholder | default: 'Search recipes (e.g. smoothie, pasta)' }}" data-search-input>
+          </div>
+        {%- endif -%}
+
+        {%- if show_tags -%}
+          {%- assign all_tags = '' -%}
+          {%- for block in section.blocks -%}
+            {%- if block.settings.tags != blank -%}
+              {%- assign tags = block.settings.tags | split: ',' -%}
+              {%- for tag in tags -%}
+                {%- assign tag_trim = tag | strip -%}
+                {%- unless all_tags contains tag_trim -%}
+                  {%- assign all_tags = all_tags | append: tag_trim | append: '|' -%}
+                {%- endunless -%}
+              {%- endfor -%}
+            {%- endif -%}
+          {%- endfor -%}
+          {%- assign tag_list = all_tags | split: '|' | uniq | sort -%}
+
+          <div class="recipe-grid__tags" role="tablist" aria-label="Recipe filters" data-tag-list>
+            <button class="recipe-grid__tag is-active" data-tag="all" aria-selected="true">{{ section.settings.all_label | default: 'All' }}</button>
+            {%- for tag in tag_list -%}
+              {%- if tag != blank -%}
+                <button class="recipe-grid__tag" data-tag="{{ tag | escape }}" aria-selected="false">{{ tag }}</button>
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <ul class="recipe-grid__list" data-grid style="--columns-desktop: {{ cards_per_row_desktop }}; --columns-mobile: {{ cards_per_row_mobile }};">
+      {%- for block in section.blocks -%}
+        {%- assign block_tags = block.settings.tags | default: '' | split: ',' -%}
+        {%- assign tag_attr = '' -%}
+        {%- for tag in block_tags -%}
+          {%- assign tag_attr = tag_attr | append: tag | strip | handle | append: ' ' -%}
+        {%- endfor -%}
+        <li class="recipe-card" data-recipe data-tags="{{ tag_attr | strip }}" {{ block.shopify_attributes }}>
+          {%- if block.settings.image != blank -%}
+            <a href="{{ block.settings.link | default: '#' }}" class="recipe-card__image-link" aria-label="{{ block.settings.title | escape }}">
+              {{ block.settings.image | image_url: width: 800 | image_tag: loading: 'lazy', class: 'recipe-card__image', widths: '400,600,800', sizes: '(min-width: 990px) 33vw, 100vw', alt: block.settings.image.alt | default: block.settings.title }}
+              {%- if enable_time_badge and block.settings.time != blank -%}
+                <span class="recipe-card__time" aria-label="{{ block.settings.time | escape }}">⏱ {{ block.settings.time }}</span>
+              {%- endif -%}
+            </a>
+          {%- endif -%}
+          <div class="recipe-card__content" style="{%- if enable_equal_heights -%}min-height:6rem;{%- endif -%}">
+            {%- if block.settings.title != blank -%}
+              <h3 class="recipe-card__title">
+                <a href="{{ block.settings.link | default: '#' }}">{{ block.settings.title }}</a>
+              </h3>
+            {%- endif -%}
+            {%- if block.settings.excerpt != blank -%}
+              <p class="recipe-card__excerpt">{{ block.settings.excerpt }}</p>
+            {%- endif -%}
+          </div>
+        </li>
+      {%- endfor -%}
+    </ul>
+  </div>
+
+  <style>
+    #recipe-grid-{{ section_id }} .recipe-grid__heading{margin:0 0 .25rem}
+    #recipe-grid-{{ section_id }} .recipe-grid__subheading{margin:0 0 1rem;color:rgb(var(--color-foreground),.75)}
+    #recipe-grid-{{ section_id }} .recipe-grid__controls{display:flex;gap:.75rem;flex-wrap:wrap;align-items:center;margin-block:1rem}
+    #recipe-grid-{{ section_id }} .recipe-grid__search{flex:1 1 280px}
+    #recipe-grid-{{ section_id }} .recipe-grid__tags{display:flex;gap:.5rem;flex-wrap:wrap}
+    #recipe-grid-{{ section_id }} .recipe-grid__tag{border-radius:999px;border:1px solid rgb(var(--color-border));padding:.5rem .8rem;background:var(--color-background);cursor:pointer}
+    #recipe-grid-{{ section_id }} .recipe-grid__tag.is-active{background:rgb(var(--color-background));border-color:rgb(var(--color-foreground));box-shadow:inset 0 0 0 1px rgb(var(--color-foreground))}
+    #recipe-grid-{{ section_id }} [data-grid]{display:grid;gap:1rem;grid-template-columns:repeat(var(--columns-mobile),minmax(0,1fr))}
+    @media screen and (min-width: 990px){#recipe-grid-{{ section_id }} [data-grid]{grid-template-columns:repeat(var(--columns-desktop),minmax(0,1fr))}}
+    #recipe-grid-{{ section_id }} .recipe-card{list-style:none;border:1px solid rgb(var(--color-border));border-radius:.75rem;overflow:hidden;background:var(--color-background)}
+    #recipe-grid-{{ section_id }} .recipe-card__image{width:100%;height:auto;display:block}
+    #recipe-grid-{{ section_id }} .recipe-card__time{position:absolute;top:.6rem;right:.6rem;background:#fff;border-radius:999px;padding:.25rem .5rem;font-size:.8rem;border:1px solid rgb(var(--color-border))}
+    #recipe-grid-{{ section_id }} .recipe-card__image-link{position:relative;display:block}
+    #recipe-grid-{{ section_id }} .recipe-card__content{padding:1rem}
+    #recipe-grid-{{ section_id }} .recipe-card__title{margin:0 0 .25rem;font-size:1rem}
+    #recipe-grid-{{ section_id }} .recipe-card__excerpt{margin:0;color:rgb(var(--color-foreground),.8);font-size:.95rem}
+  </style>
+
+  <script>
+    (function(){
+      var root = document.getElementById('recipe-grid-{{ section_id }}');
+      if(!root) return;
+      var input = root.querySelector('[data-search-input]');
+      var tagList = root.querySelector('[data-tag-list]');
+      var grid = root.querySelector('[data-grid]');
+      var cards = grid ? Array.prototype.slice.call(grid.querySelectorAll('[data-recipe]')) : [];
+      var activeTag = 'all';
+
+      function normalize(text){return (text||'').toString().toLowerCase()}
+
+      function applyFilters(){
+        var q = normalize(input && input.value);
+        cards.forEach(function(card){
+          var title = normalize(card.querySelector('.recipe-card__title')?.textContent);
+          var excerpt = normalize(card.querySelector('.recipe-card__excerpt')?.textContent);
+          var tags = normalize(card.getAttribute('data-tags'));
+          var textMatch = !q || title.indexOf(q) > -1 || excerpt.indexOf(q) > -1;
+          var tagMatch = activeTag === 'all' || (tags && tags.indexOf(normalize(activeTag)) > -1);
+          card.style.display = (textMatch && tagMatch) ? '' : 'none';
+        });
+      }
+
+      if(input){ input.addEventListener('input', applyFilters); }
+
+      if(tagList){
+        tagList.addEventListener('click', function(e){
+          var btn = e.target.closest('button[data-tag]');
+          if(!btn) return;
+          activeTag = btn.getAttribute('data-tag');
+          Array.prototype.forEach.call(tagList.querySelectorAll('button[data-tag]'), function(el){
+            el.classList.toggle('is-active', el === btn);
+            el.setAttribute('aria-selected', el === btn ? 'true' : 'false');
+          });
+          applyFilters();
+        });
+      }
+
+      // initial
+      applyFilters();
+    })();
+  </script>
+</section>
+
+{% schema %}
+{
+  "name": "Recipe grid",
+  "class": "section-recipe-grid",
+  "settings": [
+    {"type":"text","id":"heading","label":"Heading","default":"Discover Our Recipes"},
+    {"type":"textarea","id":"subheading","label":"Subheading","default":"Explore our collection of delicious and nutritious recipes."},
+    {"type":"checkbox","id":"show_search","label":"Enable search","default":true},
+    {"type":"text","id":"search_placeholder","label":"Search placeholder","default":"Search for recipes like 'smoothie' or 'pasta'"},
+    {"type":"checkbox","id":"show_tags","label":"Enable tag filters","default":true},
+    {"type":"text","id":"all_label","label":"All label","default":"All"},
+    {"type":"range","id":"cards_per_row_desktop","label":"Cards per row (desktop)","min":2,"max":4,"step":1,"default":3},
+    {"type":"range","id":"cards_per_row_mobile","label":"Cards per row (mobile)","min":1,"max":3,"step":1,"default":1},
+    {"type":"checkbox","id":"enable_time_badge","label":"Show time badge","default":true},
+    {"type":"checkbox","id":"enable_equal_heights","label":"Equalize card content heights","default":false}
+  ],
+  "blocks": [
+    {
+      "type": "recipe",
+      "name": "Recipe",
+      "settings": [
+        {"type":"image_picker","id":"image","label":"Image"},
+        {"type":"text","id":"title","label":"Title","default":"Recipe title"},
+        {"type":"textarea","id":"excerpt","label":"Short description","default":"Write a short and enticing description."},
+        {"type":"text","id":"time","label":"Time badge (e.g., 15 mins)"},
+        {"type":"url","id":"link","label":"Link"},
+        {"type":"text","id":"tags","label":"Tags (comma separated)","info":"Used for filters, e.g., Smoothies, Baking, Savory Dishes"}
+      ]
+    }
+  ],
+  "max_blocks": 24,
+  "presets": [
+    {
+      "name": "Recipe grid",
+      "category": "Content",
+      "blocks": [
+        {"type":"recipe","settings":{"title":"Tropical Moringa Smoothie","time":"10 mins","tags":"Smoothies"}},
+        {"type":"recipe","settings":{"title":"Moringa Energy Bites","time":"15 mins","tags":"Baking"}},
+        {"type":"recipe","settings":{"title":"Moringa Pesto Pasta","time":"25 mins","tags":"Savory Dishes"}}
+      ]
+    }
+  ]
+}
+{% endschema %}
+
+{% stylesheet %}
+/* Intentionally left blank; styles are inlined per-section to scope */
+{% endstylesheet %}
+
+{% javascript %}
+/* Intentionally left blank; JS is inlined above to keep scope to this section */
+{% endjavascript %}
+
+
