@@ -5,7 +5,7 @@
 }
 
 h1,h2,h3{
-  font-family:var(--ff-header1) !important;
+  font-family:var(--font-h3--family) !important;
 }
 * {
   box-sizing: border-box;
