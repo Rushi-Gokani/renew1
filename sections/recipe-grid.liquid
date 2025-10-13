@@ -93,24 +93,24 @@
             {%- endfor -%}
           {%- endif -%}
           <li class="recipe-card" data-recipe data-tags="{{ tag_attr | strip }}">
-            {%- if article.image != blank -%}
-              <a href="{{ article.url }}" class="recipe-card__image-link" aria-label="{{ article.title | escape }}">
-                {{ article.image | image_url: width: 1200 | image_tag: loading: 'lazy', class: 'recipe-card__image', widths: '600,900,1200', sizes: '(min-width: 990px) 33vw, 100vw', alt: article.image.alt | default: article.title }}
-                {%- if enable_time_badge and time_text != '' -%}
-                  <span class="recipe-card__time" aria-label="{{ time_text | escape }}">⏱ {{ time_text }}</span>
-                {%- endif -%}
-              </a>
-            {%- endif -%}
-            <div class="recipe-card__content" style="{%- if enable_equal_heights -%}min-height:6rem;{%- endif -%}">
-              <h3 class="recipe-card__title">
-                <a href="{{ article.url }}">{{ article.title }}</a>
-              </h3>
-              <p class="recipe-card__excerpt">{{ article.excerpt | default: article.excerpt_or_content | strip_html | truncate: 140 }}</p>
-            </div>
+            <a href="{{ article.url }}" class="recipe-card__link" aria-label="{{ article.title | escape }}">
+              {%- if article.image != blank -%}
+                <span class="recipe-card__image-link">
+                  {{ article.image | image_url: width: 1200 | image_tag: loading: 'lazy', class: 'recipe-card__image', widths: '600,900,1200', sizes: '(min-width: 990px) 33vw, 100vw', alt: article.image.alt | default: article.title }}
+                  {%- if enable_time_badge and time_text != '' -%}
+                    <span class="recipe-card__time" aria-label="{{ time_text | escape }}">⏱ {{ time_text }}</span>
+                  {%- endif -%}
+                </span>
+              {%- endif -%}
+              <div class="recipe-card__content" style="{%- if enable_equal_heights -%}min-height:6rem;{%- endif -%}">
+                <h3 class="recipe-card__title">{{ article.title }}</h3>
+                <p class="recipe-card__excerpt">{{ article.excerpt | default: article.excerpt_or_content | strip_html | truncate: 140 }}</p>
+              </div>
+            </a>
           </li>
         {%- endfor -%}
       {%- else -%}
-        <li class="recipe-card" aria-live="polite">{{ 'blog.general.no_articles' | t }}</li>
+        <li class="recipe-card" aria-live="polite">No articles found.</li>
       {%- endif -%}
     </ul>
   </div>
@@ -127,6 +127,7 @@
     #recipe-grid-{{ section_id }} [data-grid]{display:grid;gap:1rem;grid-template-columns:repeat(var(--columns-mobile),minmax(0,1fr));margin-top:1rem}
     @media screen and (min-width: 990px){#recipe-grid-{{ section_id }} [data-grid]{grid-template-columns:repeat(var(--columns-desktop),minmax(0,1fr))}}
     #recipe-grid-{{ section_id }} .recipe-card{list-style:none;border:1px solid rgb(var(--color-border));border-radius:.75rem;overflow:hidden;background:#fff;box-shadow:0 1px 0 rgba(0,0,0,.04)}
+    #recipe-grid-{{ section_id }} .recipe-card__link{display:block;color:inherit;text-decoration:none}
     #recipe-grid-{{ section_id }} .recipe-card__image-link{position:relative;display:block;aspect-ratio:16/9}
     #recipe-grid-{{ section_id }} .recipe-card__image{width:100%;height:100%;object-fit:cover;display:block}
     #recipe-grid-{{ section_id }} .recipe-card__time{position:absolute;top:.6rem;right:.6rem;background:rgba(0,0,0,.6);border-radius:999px;padding:.25rem .5rem;font-size:.8rem;color:#fff;border:1px solid rgba(255,255,255,.2)}
