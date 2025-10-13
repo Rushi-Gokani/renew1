@@ -79,9 +79,11 @@
     position: absolute;
     inset: 0;
     display: flex;
-    align-items: flex-end;
+    align-items: center;
     padding: clamp(16px, 5vw, 40px);
     background: linear-gradient(to bottom, rgb(0 0 0 / 0) 40%, rgb(0 0 0 / .45));
+    color: #fff;
+    border-radius:16px;
   }
 
   .blog-post-hero__overlay h1,
@@ -91,6 +93,10 @@
     color: white;
     text-shadow: 0 1px 2px rgb(0 0 0 / .4);
     margin: 0;
+  }
+
+  .blog-post-hero__overlay a {
+    color: #fff;
   }
 
   .blog-post-comments-container {
