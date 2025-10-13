@@ -158,7 +158,7 @@
             "card_shadow_opacity": 10,
             "heading": "What We’re Looking For",
             "heading_color": "#000000",
-            "heading_size": 36,
+            "heading_size": 40,
             "heading_margin_bottom": 16,
             "subheading": "",
             "subheading_color": "#666666",
@@ -673,7 +673,7 @@
       "name": "CTA - Get Started",
       "settings": {
         "heading": "Ready to Join?",
-        "heading_size": 40,
+        "heading_size": 48,
         "subheading": "<p>Apply now and start earning 30% commission for sharing wellness with your world.<br/></p>",
         "subheading_size": 18,
         "subtext_opacity": 80,
