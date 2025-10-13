@@ -1,11 +1,11 @@
 
 :root{
   /* display / decorative font */
-  --ff-header1: "Anek Tamil", Georgia, "Times New Roman", serif;
+  /* --ff-header1: "Anek Tamil", Georgia, "Times New Roman", serif; */
 }
 
 h1,h2,h3{
-  font-family:var(--ff-header1) !important;
+  font-family:var(--ff-header) !important;
 }
 * {
   box-sizing: border-box;
