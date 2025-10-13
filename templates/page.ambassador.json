@@ -583,6 +583,58 @@
         "padding-block-start": 48,
         "padding-block-end": 48
       }
+    },
+    "cta_get_started_VcLF6r": {
+      "type": "cta-get-started",
+      "name": "CTA - Get Started",
+      "settings": {
+        "heading": "Why Join RENEÜW?",
+        "heading_size": 40,
+        "subheading": "<p>You’re not just promoting a product — you’re helping people renew their energy, body, and mind through clean, plant-based superfoods. Together, we’re building a brand that inspires healthier living, naturally.<br/></p>",
+        "subheading_size": 18,
+        "subtext_opacity": 80,
+        "button_label": "",
+        "button_link": "",
+        "button_bg": "#10B981",
+        "button_text_color": "#ffffff",
+        "button_radius": 28,
+        "button_padding_x": 28,
+        "button_padding_y": 14,
+        "button_shadow": true,
+        "alignment": "center",
+        "bg_color": "#f6faf8",
+        "text_color": "#101828",
+        "subtext_color": "#3F4C5C",
+        "max_width": 760,
+        "padding_top": 64,
+        "padding_bottom": 64
+      }
+    },
+    "cta_get_started_8WdNJ4": {
+      "type": "cta-get-started",
+      "name": "CTA - Get Started",
+      "settings": {
+        "heading": "Ready to Join?",
+        "heading_size": 40,
+        "subheading": "<p>Apply now and start earning 30% commission for sharing wellness with your world.<br/></p>",
+        "subheading_size": 18,
+        "subtext_opacity": 80,
+        "button_label": "Apply Now",
+        "button_link": "",
+        "button_bg": "#00593b",
+        "button_text_color": "#ffffff",
+        "button_radius": 8,
+        "button_padding_x": 28,
+        "button_padding_y": 14,
+        "button_shadow": true,
+        "alignment": "center",
+        "bg_color": "#f6faf8",
+        "text_color": "#101828",
+        "subtext_color": "#3F4C5C",
+        "max_width": 760,
+        "padding_top": 64,
+        "padding_bottom": 64
+      }
     }
   },
   "order": [
@@ -592,6 +644,8 @@
     "1759493467f0ffb129",
     "main",
     "blocks_YFyWEJ",
-    "benifits_dVKbHL"
+    "benifits_dVKbHL",
+    "cta_get_started_VcLF6r",
+    "cta_get_started_8WdNJ4"
   ]
 }
