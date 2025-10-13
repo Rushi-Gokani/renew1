@@ -67,6 +67,95 @@
         "padding-block-end": 0
       }
     },
+    "175948296688e5495d": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_afb54b6_9B8Ui3": {
+          "type": "ai_gen_block_afb54b6",
+          "settings": {
+            "background_color": "#f9f8f6",
+            "section_padding_top": 60,
+            "section_padding_bottom": 60,
+            "column_gap": 60,
+            "mobile_gap": 40,
+            "image": "shopify://shop_images/Gemini_Generated_Image_3yasdsawzc3ywzc3ywzc3.png",
+            "image_border_radius": 8,
+            "card_background_color": "#ffffff",
+            "card_border_color": "#e6e6e6",
+            "card_border_width": 1,
+            "card_border_radius": 12,
+            "card_padding": 20,
+            "card_shadow_blur": 8,
+            "card_shadow_spread": 0,
+            "card_shadow_opacity": 10,
+            "heading": "What We’re Looking For",
+            "heading_color": "#000000",
+            "heading_size": 36,
+            "heading_margin_bottom": 16,
+            "subheading": "",
+            "subheading_color": "#666666",
+            "subheading_size": 18,
+            "subheading_margin_bottom": 24,
+            "list_item_1": "A genuine interest in wellness, nutrition, and mindful living.",
+            "list_item_2": "Based in the UK or Europe.",
+            "list_item_3": "Active on Instagram, TikTok, or YouTube (min. 1,000 followers combined).",
+            "list_item_4": "Willing to post at least once a week featuring RENEÜW products.",
+            "list_item_5": "Passionate about authentic storytelling and community engagement.",
+            "list_text_color": "#333333",
+            "list_text_size": 16,
+            "list_item_spacing": 12,
+            "list_margin_bottom": 32,
+            "check_icon_color": "#00b894",
+            "check_icon_size": 20,
+            "button_text": "Join Now",
+            "button_link": "",
+            "button_background_color": "#00593b",
+            "button_text_color": "#ffffff",
+            "button_border_color": "#000000",
+            "button_hover_background_color": "#333333",
+            "button_hover_text_color": "#ffffff",
+            "button_hover_border_color": "#333333",
+            "button_text_size": 16,
+            "button_padding_vertical": 16,
+            "button_padding_horizontal": 32,
+            "button_border_width": 0,
+            "button_border_radius": 8,
+            "button_min_width": 180
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_afb54b6_9B8Ui3"
+      ],
+      "settings": {
+        "content_direction": "column",
+        "vertical_on_mobile": true,
+        "horizontal_alignment": "flex-start",
+        "vertical_alignment": "center",
+        "align_baseline": false,
+        "horizontal_alignment_flex_direction_column": "flex-start",
+        "vertical_alignment_flex_direction_column": "center",
+        "gap": 12,
+        "section_width": "page-width",
+        "section_height": "",
+        "section_height_custom": 50,
+        "color_scheme": "",
+        "background_media": "none",
+        "video_position": "cover",
+        "background_image_position": "cover",
+        "border": "none",
+        "border_width": 1,
+        "border_opacity": 100,
+        "border_radius": 0,
+        "toggle_overlay": false,
+        "overlay_color": "#00000026",
+        "overlay_style": "solid",
+        "gradient_direction": "to top",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    },
     "1759495584c718ab55": {
       "type": "_blocks",
       "blocks": {
@@ -317,95 +406,6 @@
         "padding-block-end": 80
       }
     },
-    "175948296688e5495d": {
-      "type": "_blocks",
-      "blocks": {
-        "ai_gen_block_afb54b6_9B8Ui3": {
-          "type": "ai_gen_block_afb54b6",
-          "settings": {
-            "background_color": "#f9f8f6",
-            "section_padding_top": 60,
-            "section_padding_bottom": 60,
-            "column_gap": 60,
-            "mobile_gap": 40,
-            "image": "shopify://shop_images/Gemini_Generated_Image_3yasdsawzc3ywzc3ywzc3.png",
-            "image_border_radius": 8,
-            "card_background_color": "#ffffff",
-            "card_border_color": "#e6e6e6",
-            "card_border_width": 1,
-            "card_border_radius": 12,
-            "card_padding": 20,
-            "card_shadow_blur": 8,
-            "card_shadow_spread": 0,
-            "card_shadow_opacity": 10,
-            "heading": "What We’re Looking For",
-            "heading_color": "#000000",
-            "heading_size": 36,
-            "heading_margin_bottom": 16,
-            "subheading": "",
-            "subheading_color": "#666666",
-            "subheading_size": 18,
-            "subheading_margin_bottom": 24,
-            "list_item_1": "A genuine interest in wellness, nutrition, and mindful living.",
-            "list_item_2": "Based in the UK or Europe.",
-            "list_item_3": "Active on Instagram, TikTok, or YouTube (min. 1,000 followers combined).",
-            "list_item_4": "Willing to post at least once a week featuring RENEÜW products.",
-            "list_item_5": "Passionate about authentic storytelling and community engagement.",
-            "list_text_color": "#333333",
-            "list_text_size": 16,
-            "list_item_spacing": 12,
-            "list_margin_bottom": 32,
-            "check_icon_color": "#00b894",
-            "check_icon_size": 20,
-            "button_text": "Join Now",
-            "button_link": "",
-            "button_background_color": "#00593b",
-            "button_text_color": "#ffffff",
-            "button_border_color": "#000000",
-            "button_hover_background_color": "#333333",
-            "button_hover_text_color": "#ffffff",
-            "button_hover_border_color": "#333333",
-            "button_text_size": 16,
-            "button_padding_vertical": 16,
-            "button_padding_horizontal": 32,
-            "button_border_width": 0,
-            "button_border_radius": 8,
-            "button_min_width": 180
-          },
-          "blocks": {}
-        }
-      },
-      "block_order": [
-        "ai_gen_block_afb54b6_9B8Ui3"
-      ],
-      "settings": {
-        "content_direction": "column",
-        "vertical_on_mobile": true,
-        "horizontal_alignment": "flex-start",
-        "vertical_alignment": "center",
-        "align_baseline": false,
-        "horizontal_alignment_flex_direction_column": "flex-start",
-        "vertical_alignment_flex_direction_column": "center",
-        "gap": 12,
-        "section_width": "page-width",
-        "section_height": "",
-        "section_height_custom": 50,
-        "color_scheme": "",
-        "background_media": "none",
-        "video_position": "cover",
-        "background_image_position": "cover",
-        "border": "none",
-        "border_width": 1,
-        "border_opacity": 100,
-        "border_radius": 0,
-        "toggle_overlay": false,
-        "overlay_color": "#00000026",
-        "overlay_style": "solid",
-        "gradient_direction": "to top",
-        "padding-block-start": 0,
-        "padding-block-end": 0
-      }
-    },
     "blocks_YFyWEJ": {
       "type": "_blocks",
       "blocks": {
@@ -515,6 +515,73 @@
         "padding-block-start": 0,
         "padding-block-end": 0
       }
+    },
+    "benifits_dVKbHL": {
+      "type": "benifits",
+      "blocks": {
+        "benefit_xQEiYR": {
+          "type": "benefit",
+          "settings": {
+            "title": "Competitive Commission",
+            "text": "Earn a generous commission on every sale made through your unique affiliate link."
+          }
+        },
+        "benefit_Bh7mtK": {
+          "type": "benefit",
+          "settings": {
+            "title": "Exclusive Discounts",
+            "text": "Enjoy exclusive discounts on all products for your personal use."
+          }
+        },
+        "benefit_CDhiUB": {
+          "type": "benefit",
+          "settings": {
+            "title": "Early Access",
+            "text": "Get early access to new product launches and special promotions."
+          }
+        },
+        "benefit_D4Qj4E": {
+          "type": "benefit",
+          "settings": {
+            "title": "Content Spotlights",
+            "text": "Gain visibility through spotlights on our social media and website."
+          }
+        },
+        "benefit_8a3BRG": {
+          "type": "benefit",
+          "settings": {
+            "title": "Personal Support",
+            "text": "Receive dedicated support from our affiliate team to help you succeed."
+          }
+        },
+        "benefit_93V8Lg": {
+          "type": "benefit",
+          "settings": {
+            "title": "Performance Tracking",
+            "text": "Access a personalized dashboard to track your clicks, sales, and commissions in real-time."
+          }
+        }
+      },
+      "block_order": [
+        "benefit_xQEiYR",
+        "benefit_Bh7mtK",
+        "benefit_CDhiUB",
+        "benefit_D4Qj4E",
+        "benefit_8a3BRG",
+        "benefit_93V8Lg"
+      ],
+      "name": "Benefits grid",
+      "settings": {
+        "heading": "What You'll Gain",
+        "subheading": "<p>As a Wellness Co. affiliate, you'll enjoy a range of benefits designed to help you grow your audience and maximize your earnings. We're committed to supporting our partners every step of the way.</p>",
+        "section_width": "page-width",
+        "color_scheme": "",
+        "grid_gap": 16,
+        "columns_desktop": 3,
+        "columns_mobile": "2",
+        "padding-block-start": 48,
+        "padding-block-end": 48
+      }
     }
   },
   "order": [
@@ -523,6 +590,7 @@
     "1759495584c718ab55",
     "1759493467f0ffb129",
     "main",
-    "blocks_YFyWEJ"
+    "blocks_YFyWEJ",
+    "benifits_dVKbHL"
   ]
 }
