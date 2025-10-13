@@ -133,6 +133,9 @@
       "settings": {
         "heading": "Discover Our Recipes",
         "subheading": "Explore our collection of delicious and nutritious recipes.",
+        "heading_size": 50,
+        "padding_top": 64,
+        "padding_bottom": 56,
         "show_search": false,
         "search_placeholder": "Search for recipes like 'smoothie' or 'pasta'",
         "source_blog": "news",
