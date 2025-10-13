@@ -86,7 +86,14 @@
     border-radius: var(--radius-300, 16px);
     padding: 24px;
     text-align: left;
-    box-shadow: 0 1px 0 rgb(var(--color-foreground) / 0.06), 0 2px 8px rgb(var(--color-foreground) / 0.04);
+    border: 1px solid rgb(var(--color-foreground) / 0.08);
+    box-shadow: 0 2px 6px rgb(var(--color-foreground) / 0.06), 0 6px 20px rgb(var(--color-foreground) / 0.05);
+    transition: box-shadow 150ms ease, transform 150ms ease;
+  }
+
+  .benefits-grid__card:hover {
+    box-shadow: 0 4px 10px rgb(var(--color-foreground) / 0.10), 0 10px 28px rgb(var(--color-foreground) / 0.08);
+    transform: translateY(-2px);
   }
 
   .benefits-grid__icon {
