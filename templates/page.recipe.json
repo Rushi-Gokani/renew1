@@ -39,6 +39,7 @@
       "block_order": [
         "ai_gen_block_41b82e1_RW8dw6"
       ],
+      "disabled": true,
       "settings": {
         "content_direction": "column",
         "vertical_on_mobile": true,
@@ -113,6 +114,7 @@
       "block_order": [
         "ai_gen_block_f467fff_BDb6FF"
       ],
+      "disabled": true,
       "settings": {
         "content_direction": "column",
         "vertical_on_mobile": true,
@@ -218,6 +220,7 @@
       "block_order": [
         "ai_gen_block_2bb6bc6_xKgNji"
       ],
+      "disabled": true,
       "settings": {
         "content_direction": "column",
         "vertical_on_mobile": true,
@@ -376,6 +379,7 @@
       "block_order": [
         "ai_gen_block_afb54b6_9B8Ui3"
       ],
+      "disabled": true,
       "settings": {
         "content_direction": "column",
         "vertical_on_mobile": true,
@@ -485,6 +489,7 @@
       "block_order": [
         "ai_gen_block_8ed67ab_GLE6Uf"
       ],
+      "disabled": true,
       "settings": {
         "content_direction": "column",
         "vertical_on_mobile": true,
