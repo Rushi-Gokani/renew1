@@ -130,7 +130,7 @@
         "color_scheme": "",
         "grid_gap": 16,
         "columns_desktop": 3,
-        "columns_mobile": "2",
+        "columns_mobile": "1",
         "padding-block-start": 48,
         "padding-block-end": 48
       }
