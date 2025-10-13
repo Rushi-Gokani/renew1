@@ -34,7 +34,7 @@
 -%}
 
 <section class="recipe-grid" id="recipe-grid-{{ section_id }}" data-section-id="{{ section_id }}">
-  <div class="recipe-grid__container page-width">
+  <div class="recipe-grid__container page-width" style="--recipe-max-width: {{ section.settings.container_width | default: 1200 }}px">
     {%- if heading != blank -%}
       <h2 class="recipe-grid__heading h1">{{ heading }}</h2>
     {%- endif -%}
@@ -116,7 +116,7 @@
   </div>
 
   <style>
-    #recipe-grid-{{ section_id }} .recipe-grid__container{text-align:center}
+    #recipe-grid-{{ section_id }} .recipe-grid__container{text-align:center;max-width:var(--recipe-max-width);margin-inline:auto}
     #recipe-grid-{{ section_id }} .recipe-grid__heading{margin:0 0 .25rem}
     #recipe-grid-{{ section_id }} .recipe-grid__subheading{margin:0 0 1.25rem;color:rgb(var(--color-foreground),.75)}
     #recipe-grid-{{ section_id }} .recipe-grid__controls{display:flex;gap:.75rem;flex-wrap:wrap;align-items:center;justify-content:center;margin-block:1rem}
@@ -197,7 +197,8 @@
     {"type":"range","id":"cards_per_row_desktop","label":"Cards per row (desktop)","min":2,"max":4,"step":1,"default":3},
     {"type":"range","id":"cards_per_row_mobile","label":"Cards per row (mobile)","min":1,"max":3,"step":1,"default":1},
     {"type":"checkbox","id":"enable_time_badge","label":"Show time badge","default":true},
-    {"type":"checkbox","id":"enable_equal_heights","label":"Equalize card content heights","default":false}
+    {"type":"checkbox","id":"enable_equal_heights","label":"Equalize card content heights","default":false},
+    {"type":"range","id":"container_width","label":"Max width (px)","min":960,"max":1440,"step":60,"default":1200}
   ],
   "blocks": [],
   "presets": [
