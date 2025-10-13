@@ -67,6 +67,74 @@
         "padding-block-end": 0
       }
     },
+    "benifits_dVKbHL": {
+      "type": "benifits",
+      "blocks": {
+        "benefit_xQEiYR": {
+          "type": "benefit",
+          "settings": {
+            "title": "30% Commission on Every Sale",
+            "text": "Earn generous, uncapped commission for every purchase made through your unique referral link or discount code — one of the highest rates in the wellness space."
+          }
+        },
+        "benefit_Bh7mtK": {
+          "type": "benefit",
+          "settings": {
+            "title": "Exclusive Discount for Your Community",
+            "text": "Share a 15% off code with your followers, friends, and family — helping them discover clean, plant-based superfoods that truly make a difference."
+          }
+        },
+        "benefit_CDhiUB": {
+          "type": "benefit",
+          "settings": {
+            "title": "Early Access & Insider Perks",
+            "text": "Be the first to try new product launches, enjoy behind-the-scenes access, and get invited to RENEÜW community events."
+          }
+        },
+        "benefit_D4Qj4E": {
+          "type": "benefit",
+          "settings": {
+            "title": "Content Spotlights & Brand Collabs",
+            "text": "We love to highlight our creators — top performers get featured on our social media, website, and campaigns."
+          }
+        },
+        "benefit_8a3BRG": {
+          "type": "benefit",
+          "settings": {
+            "title": "Personal Support & Growth",
+            "text": "You’ll have direct contact with our marketing team for content ideas, feedback, and growth support."
+          }
+        },
+        "benefit_93V8Lg": {
+          "type": "benefit",
+          "disabled": true,
+          "settings": {
+            "title": "Performance Tracking",
+            "text": "Access a personalized dashboard to track your clicks, sales, and commissions in real-time."
+          }
+        }
+      },
+      "block_order": [
+        "benefit_xQEiYR",
+        "benefit_Bh7mtK",
+        "benefit_CDhiUB",
+        "benefit_D4Qj4E",
+        "benefit_8a3BRG",
+        "benefit_93V8Lg"
+      ],
+      "name": "Benefits grid",
+      "settings": {
+        "heading": "What You'll Gain",
+        "subheading": "<p>As a RENEÜW Partner, you’ll unlock benefits built to help you thrive—grow your audience, boost your income, and be part of a brand that’s redefining wellness. We’re with you at every step.<br/></p>",
+        "section_width": "page-width",
+        "color_scheme": "",
+        "grid_gap": 16,
+        "columns_desktop": 3,
+        "columns_mobile": "2",
+        "padding-block-start": 48,
+        "padding-block-end": 48
+      }
+    },
     "175948296688e5495d": {
       "type": "_blocks",
       "blocks": {
@@ -516,74 +584,6 @@
         "padding-block-end": 0
       }
     },
-    "benifits_dVKbHL": {
-      "type": "benifits",
-      "blocks": {
-        "benefit_xQEiYR": {
-          "type": "benefit",
-          "settings": {
-            "title": "30% Commission on Every Sale",
-            "text": "Earn generous, uncapped commission for every purchase made through your unique referral link or discount code — one of the highest rates in the wellness space."
-          }
-        },
-        "benefit_Bh7mtK": {
-          "type": "benefit",
-          "settings": {
-            "title": "Exclusive Discount for Your Community",
-            "text": "Share a 15% off code with your followers, friends, and family — helping them discover clean, plant-based superfoods that truly make a difference."
-          }
-        },
-        "benefit_CDhiUB": {
-          "type": "benefit",
-          "settings": {
-            "title": "Early Access & Insider Perks",
-            "text": "Be the first to try new product launches, enjoy behind-the-scenes access, and get invited to RENEÜW community events."
-          }
-        },
-        "benefit_D4Qj4E": {
-          "type": "benefit",
-          "settings": {
-            "title": "Content Spotlights & Brand Collabs",
-            "text": "We love to highlight our creators — top performers get featured on our social media, website, and campaigns."
-          }
-        },
-        "benefit_8a3BRG": {
-          "type": "benefit",
-          "settings": {
-            "title": "Personal Support & Growth",
-            "text": "You’ll have direct contact with our marketing team for content ideas, feedback, and growth support."
-          }
-        },
-        "benefit_93V8Lg": {
-          "type": "benefit",
-          "disabled": true,
-          "settings": {
-            "title": "Performance Tracking",
-            "text": "Access a personalized dashboard to track your clicks, sales, and commissions in real-time."
-          }
-        }
-      },
-      "block_order": [
-        "benefit_xQEiYR",
-        "benefit_Bh7mtK",
-        "benefit_CDhiUB",
-        "benefit_D4Qj4E",
-        "benefit_8a3BRG",
-        "benefit_93V8Lg"
-      ],
-      "name": "Benefits grid",
-      "settings": {
-        "heading": "What You'll Gain",
-        "subheading": "<p>As a RENEÜW Partner, you’ll unlock benefits built to help you thrive—grow your audience, boost your income, and be part of a brand that’s redefining wellness. We’re with you at every step.<br/></p>",
-        "section_width": "page-width",
-        "color_scheme": "",
-        "grid_gap": 16,
-        "columns_desktop": 3,
-        "columns_mobile": "2",
-        "padding-block-start": 48,
-        "padding-block-end": 48
-      }
-    },
     "cta_get_started_VcLF6r": {
       "type": "cta-get-started",
       "name": "CTA - Get Started",
@@ -595,7 +595,7 @@
         "subtext_opacity": 80,
         "button_label": "",
         "button_link": "",
-        "button_bg": "#10B981",
+        "button_bg": "#10b981",
         "button_text_color": "#ffffff",
         "button_radius": 28,
         "button_padding_x": 28,
@@ -604,7 +604,7 @@
         "alignment": "center",
         "bg_color": "#f6faf8",
         "text_color": "#101828",
-        "subtext_color": "#3F4C5C",
+        "subtext_color": "#3f4c5c",
         "max_width": 760,
         "padding_top": 64,
         "padding_bottom": 64
@@ -630,7 +630,7 @@
         "alignment": "center",
         "bg_color": "#f6faf8",
         "text_color": "#101828",
-        "subtext_color": "#3F4C5C",
+        "subtext_color": "#3f4c5c",
         "max_width": 760,
         "padding_top": 64,
         "padding_bottom": 64
@@ -639,12 +639,12 @@
   },
   "order": [
     "1759489293a9807037",
+    "benifits_dVKbHL",
     "175948296688e5495d",
     "1759495584c718ab55",
     "1759493467f0ffb129",
     "main",
     "blocks_YFyWEJ",
-    "benifits_dVKbHL",
     "cta_get_started_VcLF6r",
     "cta_get_started_8WdNJ4"
   ]
