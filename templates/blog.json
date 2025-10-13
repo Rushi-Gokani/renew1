@@ -142,7 +142,8 @@
         "cards_per_row_desktop": 3,
         "cards_per_row_mobile": 1,
         "enable_time_badge": true,
-        "enable_equal_heights": false
+        "enable_equal_heights": false,
+        "container_width": 1200
       }
     }
   },
