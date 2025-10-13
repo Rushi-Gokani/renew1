@@ -45,7 +45,7 @@
       text-decoration: none;
       font-weight: 700;
       padding: {{ section.settings.button_padding_y }}px {{ section.settings.button_padding_x }}px;
-      box-shadow: {{ section.settings.button_shadow ? '0 2px 6px rgba(0,0,0,.1)' : 'none' }};
+      box-shadow: {% if section.settings.button_shadow %}0 2px 6px rgba(0,0,0,.1){% else %}none{% endif %};
       border: none;
       transition: transform .12s ease, filter .2s ease;
     }
