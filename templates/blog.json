@@ -136,7 +136,7 @@
         "show_search": false,
         "search_placeholder": "Search for recipes like 'smoothie' or 'pasta'",
         "source_blog": "news",
-        "articles_limit": 6,
+        "articles_limit": 12,
         "show_tags": true,
         "all_label": "All",
         "cards_per_row_desktop": 3,
