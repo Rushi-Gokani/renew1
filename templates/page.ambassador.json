@@ -522,40 +522,41 @@
         "benefit_xQEiYR": {
           "type": "benefit",
           "settings": {
-            "title": "Competitive Commission",
-            "text": "Earn a generous commission on every sale made through your unique affiliate link."
+            "title": "30% Commission on Every Sale",
+            "text": "Earn generous, uncapped commission for every purchase made through your unique referral link or discount code — one of the highest rates in the wellness space."
           }
         },
         "benefit_Bh7mtK": {
           "type": "benefit",
           "settings": {
-            "title": "Exclusive Discounts",
-            "text": "Enjoy exclusive discounts on all products for your personal use."
+            "title": "Exclusive Discount for Your Community",
+            "text": "Share a 15% off code with your followers, friends, and family — helping them discover clean, plant-based superfoods that truly make a difference."
           }
         },
         "benefit_CDhiUB": {
           "type": "benefit",
           "settings": {
-            "title": "Early Access",
-            "text": "Get early access to new product launches and special promotions."
+            "title": "Early Access & Insider Perks",
+            "text": "Be the first to try new product launches, enjoy behind-the-scenes access, and get invited to RENEÜW community events."
           }
         },
         "benefit_D4Qj4E": {
           "type": "benefit",
           "settings": {
-            "title": "Content Spotlights",
-            "text": "Gain visibility through spotlights on our social media and website."
+            "title": "Content Spotlights & Brand Collabs",
+            "text": "We love to highlight our creators — top performers get featured on our social media, website, and campaigns."
           }
         },
         "benefit_8a3BRG": {
           "type": "benefit",
           "settings": {
-            "title": "Personal Support",
-            "text": "Receive dedicated support from our affiliate team to help you succeed."
+            "title": "Personal Support & Growth",
+            "text": "You’ll have direct contact with our marketing team for content ideas, feedback, and growth support."
           }
         },
         "benefit_93V8Lg": {
           "type": "benefit",
+          "disabled": true,
           "settings": {
             "title": "Performance Tracking",
             "text": "Access a personalized dashboard to track your clicks, sales, and commissions in real-time."
