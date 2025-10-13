@@ -517,6 +517,59 @@
         "padding-block-start": 0,
         "padding-block-end": 0
       }
+    },
+    "recipe_grid_gGyPVM": {
+      "type": "recipe-grid",
+      "blocks": {
+        "recipe_LWcUDh": {
+          "type": "recipe",
+          "settings": {
+            "title": "Tropical Moringa Smoothie",
+            "excerpt": "Write a short and enticing description.",
+            "time": "10 mins",
+            "link": "",
+            "tags": "Smoothies"
+          }
+        },
+        "recipe_eNLXNd": {
+          "type": "recipe",
+          "settings": {
+            "title": "Moringa Energy Bites",
+            "excerpt": "Write a short and enticing description.",
+            "time": "15 mins",
+            "link": "",
+            "tags": "Baking"
+          }
+        },
+        "recipe_VEkbNY": {
+          "type": "recipe",
+          "settings": {
+            "title": "Moringa Pesto Pasta",
+            "excerpt": "Write a short and enticing description.",
+            "time": "25 mins",
+            "link": "",
+            "tags": "Savory Dishes"
+          }
+        }
+      },
+      "block_order": [
+        "recipe_LWcUDh",
+        "recipe_eNLXNd",
+        "recipe_VEkbNY"
+      ],
+      "name": "Recipe grid",
+      "settings": {
+        "heading": "Discover Our Recipes",
+        "subheading": "Explore our collection of delicious and nutritious recipes.",
+        "show_search": true,
+        "search_placeholder": "Search for recipes like 'smoothie' or 'pasta'",
+        "show_tags": true,
+        "all_label": "All",
+        "cards_per_row_desktop": 3,
+        "cards_per_row_mobile": 1,
+        "enable_time_badge": true,
+        "enable_equal_heights": false
+      }
     }
   },
   "order": [
@@ -525,6 +578,7 @@
     "1759493467f0ffb129",
     "main",
     "175948296688e5495d",
-    "blocks_YFyWEJ"
+    "blocks_YFyWEJ",
+    "recipe_grid_gGyPVM"
   ]
 }
