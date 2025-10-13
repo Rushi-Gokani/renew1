@@ -86,13 +86,17 @@
     border-radius: var(--radius-300, 16px);
     padding: 24px;
     text-align: left;
-    border: 1px solid rgb(var(--color-foreground) / 0.08);
-    box-shadow: 0 2px 6px rgb(var(--color-foreground) / 0.06), 0 6px 20px rgb(var(--color-foreground) / 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    /* Fallback for browsers that don't support rgb(var() / alpha) */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08), 0 10px 28px rgba(0, 0, 0, 0.06);
+    /* Modern color syntax using theme tokens */
+    box-shadow: 0 4px 10px rgb(var(--color-foreground) / 0.08), 0 10px 28px rgb(var(--color-foreground) / 0.06);
     transition: box-shadow 150ms ease, transform 150ms ease;
   }
 
   .benefits-grid__card:hover {
-    box-shadow: 0 4px 10px rgb(var(--color-foreground) / 0.10), 0 10px 28px rgb(var(--color-foreground) / 0.08);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12), 0 16px 40px rgba(0, 0, 0, 0.10);
+    box-shadow: 0 8px 16px rgb(var(--color-foreground) / 0.12), 0 16px 40px rgb(var(--color-foreground) / 0.10);
     transform: translateY(-2px);
   }
 
