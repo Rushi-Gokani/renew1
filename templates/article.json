@@ -12,6 +12,27 @@
     "section": {
       "type": "main-blog-post",
       "blocks": {
+        "blog-post-image": {
+          "type": "_blog-post-featured-image",
+          "static": true,
+          "settings": {
+            "image_ratio": "adapt",
+            "width": "fill",
+            "custom_width": 100,
+            "width_mobile": "fill",
+            "custom_width_mobile": 100,
+            "height": "fit",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 16,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
         "blog-post-title": {
           "type": "text",
           "name": "Title",
@@ -28,7 +49,7 @@
             "letter_spacing": "normal",
             "case": "none",
             "wrap": "pretty",
-            "color": "var(--color-foreground)",
+            "color": "var(--color-foreground-heading)",
             "background": false,
             "background_color": "#00000026",
             "corner_radius": 0,
@@ -54,27 +75,6 @@
           },
           "blocks": {}
         },
-        "blog-post-image": {
-          "type": "_blog-post-featured-image",
-          "static": true,
-          "settings": {
-            "image_ratio": "adapt",
-            "width": "fill",
-            "custom_width": 100,
-            "width_mobile": "fill",
-            "custom_width_mobile": 100,
-            "height": "fit",
-            "border": "none",
-            "border_width": 1,
-            "border_opacity": 100,
-            "border_radius": 16,
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {}
-        },
         "blog-post-content": {
           "type": "_blog-post-content",
           "static": true,
@@ -85,7 +85,7 @@
       "settings": {
         "content_direction": "column",
         "gap": 32,
-        "color_scheme": "",
+        "color_scheme": "scheme-8fd929b0-263c-4293-b962-72a1425d72f7",
         "padding-block-start": 40,
         "padding-block-end": 80
       }

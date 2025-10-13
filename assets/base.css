@@ -1,13 +1,7 @@
-@font-face{
-  font-family: "Engravers Gothic";
-  src: url("https://cdn.shopify.com/s/files/1/0775/9023/3323/files/EngraversGothic_BT.woff2?v=1758006696") format("woff2");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap; /* fast text rendering while font loads */
-}
+
 :root{
   /* display / decorative font */
-  --ff-header1: "Engravers Gothic", Georgia, "Times New Roman", serif;
+  --ff-header1: "Bricolage Grotesque", Georgia, "Times New Roman", serif;
 }
 
 h1,h2,h3{
