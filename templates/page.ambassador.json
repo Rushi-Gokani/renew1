@@ -15,8 +15,8 @@
         "ai_gen_block_41b82e1_RW8dw6": {
           "type": "ai_gen_block_41b82e1",
           "settings": {
-            "heading": "Become a RENEUW Ambassador",
-            "subheading": "We’re on the hunt for RENEUW Ambassadors to help us spread the message of living healthier & happier with superfoods! And we’d love for YOU to join us.",
+            "heading": "Join the RENEÜW Affiliate Program",
+            "subheading": "Turn your passion for wellness into income — become part of our growing RENEÜW community and earn while inspiring others to live healthier.",
             "button_text": "JOIN NOW",
             "button_link": "",
             "customer_image_1": "shopify://shop_images/Gemini_Generated_Image_k45f8yk45f8yk45f.png",
@@ -73,7 +73,7 @@
         "ai_gen_block_f467fff_BDb6FF": {
           "type": "ai_gen_block_f467fff",
           "settings": {
-            "heading": "Why Choose Us",
+            "heading": "What’s on Offer",
             "description": "Discover the benefits that make us your perfect choice",
             "background_color": "#f9f8f6",
             "section_padding_top": 60,
@@ -98,14 +98,14 @@
             "title_spacing": 12,
             "perk_text_size": 14,
             "perk_1_icon": "gift",
-            "perk_1_title": "Free Gifts",
-            "perk_1_text": "Enjoy complimentary gifts with every purchase",
+            "perk_1_title": "30% Commission on Every Sale",
+            "perk_1_text": "Earn generous, uncapped commission for every purchase made through your unique referral link or discount code — one of the highest rates in the wellness space.",
             "perk_2_icon": "currency",
-            "perk_2_title": "Best Prices",
-            "perk_2_text": "Competitive pricing guaranteed on all products",
+            "perk_2_title": "Exclusive Discount for Your Community",
+            "perk_2_text": "Share a 15% off code with your followers, friends, and family — helping them discover clean, plant-based superfoods that truly make a difference.",
             "perk_3_icon": "heart",
-            "perk_3_title": "Made with Love",
-            "perk_3_text": "Crafted with care and attention to detail"
+            "perk_3_title": "Early Access & Insider Perks",
+            "perk_3_text": "Be the first to try new product launches, enjoy behind-the-scenes access, and get invited to RENEÜW community events."
           },
           "blocks": {}
         }
@@ -336,26 +336,26 @@
             "card_shadow_blur": 8,
             "card_shadow_spread": 0,
             "card_shadow_opacity": 10,
-            "heading": "Who we’d love to work with",
+            "heading": "What We’re Looking For",
             "heading_color": "#000000",
             "heading_size": 36,
             "heading_margin_bottom": 16,
-            "subheading": "It’s simple, if you have a passion for health & wellness - let’s work together!",
+            "subheading": "",
             "subheading_color": "#666666",
             "subheading_size": 18,
             "subheading_margin_bottom": 24,
-            "list_item_1": "Brand ambassadors",
-            "list_item_2": "Influencers",
-            "list_item_3": "Health & wellbeing experts",
-            "list_item_4": "Nutritionists",
-            "list_item_5": "",
+            "list_item_1": "A genuine interest in wellness, nutrition, and mindful living.",
+            "list_item_2": "Based in the UK or Europe.",
+            "list_item_3": "Active on Instagram, TikTok, or YouTube (min. 1,000 followers combined).",
+            "list_item_4": "Willing to post at least once a week featuring RENEÜW products.",
+            "list_item_5": "Passionate about authentic storytelling and community engagement.",
             "list_text_color": "#333333",
             "list_text_size": 16,
             "list_item_spacing": 12,
             "list_margin_bottom": 32,
             "check_icon_color": "#00b894",
             "check_icon_size": 20,
-            "button_text": "Shop Now",
+            "button_text": "Join Now",
             "button_link": "",
             "button_background_color": "#00593b",
             "button_text_color": "#ffffff",
@@ -485,6 +485,7 @@
       "block_order": [
         "ai_gen_block_8ed67ab_GLE6Uf"
       ],
+      "disabled": true,
       "settings": {
         "content_direction": "column",
         "vertical_on_mobile": true,
