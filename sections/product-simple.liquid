@@ -1045,9 +1045,9 @@
 
   @media (max-width: 768px) {
     .product-sticky-bar { width: calc(100% - 16px); bottom: 10px; border-radius: 10px; }
-    .product-sticky-form { grid-template-columns: 1fr; gap:10px; }
+    .product-sticky-form { grid-template-columns: 1fr auto; gap:10px; }
     .sticky-qty { height:44px; }
-    .sticky-add-btn { height:44px; width: 100%; }
+    .sticky-add-btn { height:44px; width: 100%; grid-column: 1 / -1; }
   }
 </style>
 
