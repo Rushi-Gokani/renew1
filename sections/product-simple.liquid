@@ -294,6 +294,38 @@
   </div>
 </div>
 
+<!-- Sticky product bar (appears when main CTA is out of view) -->
+<div class="product-sticky-bar" aria-hidden="true">
+  <form action="{{ routes.cart_add_url }}" method="post" class="product-sticky-form" enctype="multipart/form-data">
+    <div class="sticky-left">
+      {% assign sticky_img = product.selected_or_first_available_variant.featured_image | default: product.featured_image %}
+      {% if sticky_img %}
+        <img class="sticky-image" src="{{ sticky_img | image_url: width: 96 }}" alt="{{ product.title | escape }}">
+      {% endif %}
+      <div class="sticky-title">{{ product.title }}</div>
+    </div>
+
+    <select name="id" id="stickyVariant" class="sr-only-hidden">
+      {% for variant in product.variants %}
+        <option value="{{ variant.id }}" {% if variant == product.selected_or_first_available_variant %}selected{% endif %} {% unless variant.available %}disabled{% endunless %}>{{ variant.title }}</option>
+      {% endfor %}
+    </select>
+
+    <div class="sticky-qty">
+      <button type="button" class="sticky-qty-btn minus" aria-label="Decrease quantity">−</button>
+      <input type="number" name="quantity" id="stickyQuantity" class="sticky-qty-input" value="1" min="1" max="99">
+      <button type="button" class="sticky-qty-btn plus" aria-label="Increase quantity">+</button>
+    </div>
+    <button type="submit" class="sticky-add-btn" {% unless product.available %}disabled{% endunless %}>
+      {% if product.available %}
+        {{ section.settings.cta_label | default: 'Buy Now ⚡' }}
+      {% else %}
+        Sold Out
+      {% endif %}
+    </button>
+  </form>
+</div>
+
 <style>
   .product-simple-section {
     padding: 40px 20px;
@@ -962,6 +994,59 @@
 
 </style>
 
+<style>
+  /* Sticky product bar */
+  .product-sticky-bar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 30;
+    background: #ffffff;
+    border-top: 1px solid #e5e5e5;
+    box-shadow: 0 -6px 24px rgba(0,0,0,.08);
+    transform: translateY(100%);
+    transition: transform .25s ease;
+  }
+  .product-sticky-bar.is-visible { transform: translateY(0); }
+  .product-sticky-form {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    align-items: center;
+    gap: 12px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 10px 16px;
+  }
+  .sticky-left { display:flex; align-items:center; gap:12px; min-width:0; }
+  .sticky-image { width:40px; height:40px; object-fit:cover; border-radius:6px; }
+  .sticky-title { font-weight:700; font-size:14px; color:#1d1f1a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .sticky-qty { display:flex; align-items:center; gap:6px; border:1px solid #000; border-radius:6px; height:40px; padding:0 6px; background:#fff; }
+  .sticky-qty-btn { width:28px; height:28px; display:flex; align-items:center; justify-content:center; background:transparent; border:none; font-size:18px; font-weight:600; cursor:pointer; }
+  .sticky-qty-btn:disabled { opacity:.3; cursor:not-allowed; }
+  .sticky-qty-input { width:36px; height:28px; border:none; text-align:center; font-size:14px; background:transparent; }
+  .sticky-qty-input:focus { outline:none; }
+  .sticky-add-btn {
+    background:#1e3d2b;
+    color:#fff;
+    border:none;
+    border-radius:8px;
+    height:40px;
+    padding:0 16px;
+    font-weight:700;
+    cursor:pointer;
+    transition: background .2s ease;
+  }
+  .sticky-add-btn:hover:not(:disabled) { background:#274a35; }
+  .sticky-add-btn:disabled { background:#888; color:#fff; cursor:not-allowed; }
+
+  @media (max-width: 768px) {
+    .product-sticky-form { grid-template-columns: 1fr auto; gap:10px; }
+    .sticky-qty { height:38px; }
+    .sticky-add-btn { height:38px; }
+  }
+</style>
+
 <script>
   // Image slider functions
   let currentSlide = 0;
@@ -1337,6 +1422,97 @@
       });
     });
     reflectSelectedCard();
+
+    // Sticky bar logic: show when main CTA is not visible
+    const stickyBar = document.querySelector('.product-sticky-bar');
+    const mainCTA = document.querySelector('.product-simple-section .add-to-cart-btn');
+    const stickyVariant = document.getElementById('stickyVariant');
+    const stickyQtyInput = document.getElementById('stickyQuantity');
+    const mainVariantSelect = document.getElementById('productVariant');
+    const mainQtyInput = document.getElementById('quantity');
+
+    function clampQty(val){
+      let v = parseInt(val || 1);
+      if (isNaN(v) || v < 1) v = 1;
+      if (v > 99) v = 99;
+      return v;
+    }
+
+    function syncVariantToSticky(){
+      if (!mainVariantSelect || !stickyVariant) return;
+      stickyVariant.value = mainVariantSelect.value;
+    }
+
+    function syncQtyToSticky(){
+      if (!mainQtyInput || !stickyQtyInput) return;
+      stickyQtyInput.value = clampQty(mainQtyInput.value);
+      updateStickyQtyButtons();
+    }
+
+    function syncQtyToMain(){
+      if (!mainQtyInput || !stickyQtyInput) return;
+      mainQtyInput.value = clampQty(stickyQtyInput.value);
+      updateQuantityButtons();
+    }
+
+    function updateStickyQtyButtons(){
+      const minus = document.querySelector('.product-sticky-bar .sticky-qty-btn.minus');
+      const plus = document.querySelector('.product-sticky-bar .sticky-qty-btn.plus');
+      const v = clampQty(stickyQtyInput && stickyQtyInput.value);
+      if (minus) minus.disabled = v <= 1;
+      if (plus) plus.disabled = v >= 99;
+    }
+
+    if (stickyBar && mainCTA) {
+      try {
+        const io = new IntersectionObserver((entries)=>{
+          const e = entries[0];
+          const visible = e && e.isIntersecting;
+          stickyBar.classList.toggle('is-visible', !visible);
+          stickyBar.setAttribute('aria-hidden', visible ? 'true' : 'false');
+        }, { root:null, threshold: 0 });
+        io.observe(mainCTA);
+      } catch(_) {
+        const sectionEl = document.querySelector('.product-simple-section');
+        const onScroll = () => {
+          if (!sectionEl) return;
+          const rect = sectionEl.getBoundingClientRect();
+          const outOfView = rect.bottom < (window.innerHeight || document.documentElement.clientHeight) - 60;
+          stickyBar.classList.toggle('is-visible', outOfView);
+          stickyBar.setAttribute('aria-hidden', outOfView ? 'false' : 'true');
+        };
+        window.addEventListener('scroll', onScroll, { passive:true });
+        onScroll();
+      }
+
+      // Initial sync
+      syncVariantToSticky();
+      syncQtyToSticky();
+
+      // Keep variant in sync when user changes pills or select
+      if (mainVariantSelect) {
+        mainVariantSelect.addEventListener('change', syncVariantToSticky);
+      }
+      document.querySelectorAll('.product-simple-section .variant-pill').forEach(p=>{
+        p.addEventListener('click', ()=>{ setTimeout(syncVariantToSticky, 0); });
+      });
+
+      // Qty controls in sticky bar
+      const sMinus = document.querySelector('.product-sticky-bar .sticky-qty-btn.minus');
+      const sPlus = document.querySelector('.product-sticky-bar .sticky-qty-btn.plus');
+      if (sMinus) sMinus.addEventListener('click', (e)=>{ e.preventDefault(); stickyQtyInput.value = clampQty((parseInt(stickyQtyInput.value)||1) - 1); syncQtyToMain(); updateStickyQtyButtons(); });
+      if (sPlus) sPlus.addEventListener('click', (e)=>{ e.preventDefault(); stickyQtyInput.value = clampQty((parseInt(stickyQtyInput.value)||1) + 1); syncQtyToMain(); updateStickyQtyButtons(); });
+      if (stickyQtyInput) {
+        stickyQtyInput.addEventListener('input', ()=>{ stickyQtyInput.value = clampQty(stickyQtyInput.value); syncQtyToMain(); updateStickyQtyButtons(); });
+        stickyQtyInput.addEventListener('change', ()=>{ stickyQtyInput.value = clampQty(stickyQtyInput.value); syncQtyToMain(); updateStickyQtyButtons(); });
+      }
+
+      // Keep sticky qty updated if main qty changes
+      if (mainQtyInput) {
+        mainQtyInput.addEventListener('input', syncQtyToSticky);
+        mainQtyInput.addEventListener('change', syncQtyToSticky);
+      }
+    }
 
     // Render press logos if configured
     const mediaCol2 = document.querySelector('.product-simple-media');
