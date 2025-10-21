@@ -295,8 +295,8 @@
     visibility: hidden;
     background-color: var(--color-background);
     position: absolute;
-    width: auto; /* Changed from 100% to auto */
-    left: 0; /* This will now align with the parent menu item */
+    width: 100%; /* Reverted back to 100% */
+    left: 0;
     top: calc(100% - 1px + var(--border-bottom-width));
     z-index: var(--layer-header-menu);
     padding-inline: var(--padding-inline);
