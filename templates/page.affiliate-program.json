@@ -65,6 +65,7 @@
         "subtitle": "<p>Join our community of wellness enthusiasts and earn rewards by sharing products you love.</p>",
         "submit_button_text": "Submit Application",
         "success_message": "Thank you for your application! We will review it and get back to you soon.",
+        "redirect_url": "shopify://pages/ambassador",
         "color_scheme": "scheme-2",
         "padding-block-start": 80,
         "padding-block-end": 88
