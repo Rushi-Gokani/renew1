@@ -67,8 +67,8 @@
     "variant_button_width": "equal-width-buttons",
     "content_for_index": [],
     "blocks": {
-      "14868561720390754469": {
-        "type": "shopify://apps/trustoo-loyalty-loloyal/blocks/boom-cend/930ac91f-2bf2-4655-9ba0-574771f782d6",
+      "10112296718403049266": {
+        "type": "shopify://apps/influence-io-loyalty-rewards/blocks/floating-widget/7f1703c2-e0cb-4bd4-bb47-6548c1722f52",
         "disabled": false,
         "settings": {}
       }
