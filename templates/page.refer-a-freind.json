@@ -125,7 +125,7 @@
           "type": "text",
           "name": "t:names.text",
           "settings": {
-            "text": "<h2>RE</h2>",
+            "text": "<h2>Refer A Freind </h2>",
             "width": "100%",
             "max_width": "normal",
             "alignment": "center",
