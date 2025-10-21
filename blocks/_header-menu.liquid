@@ -304,6 +304,13 @@
     transition: clip-path var(--submenu-animation-speed) var(--ease-out-cubic);
   }
 
+  /* Custom rule to align submenu with parent menu item */
+  .mega-menu.section {
+    width: auto;
+    max-width: none;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
   /* Show the submenus on hover */
   .menu-list__list-item:has([aria-expanded='true']) > .menu-list__submenu,
   /* Show the overflow menu when a menu item is hovered */
