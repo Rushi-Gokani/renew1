@@ -50,79 +50,86 @@
     {%- endif -%}
 
     <div class="contact-form__form-row">
-      <label
-        class="visually-hidden"
-        for="ContactForm-name"
-      >
-        {{- 'blocks.contact_form.name' | t -}}
-      </label>
-      <input
-        type="text"
-        id="ContactForm-name"
-        class="contact-form__input"
-        autocomplete="name"
-        name="contact[name]"
-        value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}"
-        placeholder="{{ 'blocks.contact_form.name' | t }}"
-      >
+      <div class="contact-form__field-group">
+        <input
+          type="text"
+          id="ContactForm-name"
+          class="contact-form__input"
+          autocomplete="name"
+          name="contact[name]"
+          value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}"
+        >
+        <label
+          class="contact-form__label"
+          for="ContactForm-name"
+        >
+          {{- 'blocks.contact_form.name' | t -}}
+        </label>
+      </div>
 
-      <label
-        class="visually-hidden"
-        for="ContactForm-email"
-      >
-        {{- 'blocks.contact_form.email' | t -}}
-        <span aria-hidden="true">*</span></label
-      >
-      <input
-        type="email"
-        id="ContactForm-email"
-        class="contact-form__input"
-        autocomplete="email"
-        name="contact[email]"
-        spellcheck="false"
-        autocapitalize="off"
-        value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}"
-        aria-required="true"
-        {% if form.errors contains 'email' %}
-          aria-invalid="true"
-          aria-describedby="ContactForm-email-error"
-        {% endif %}
-        placeholder="{{ 'blocks.contact_form.email' | t }}"
-      >
+      <div class="contact-form__field-group">
+        <input
+          type="email"
+          id="ContactForm-email"
+          class="contact-form__input"
+          autocomplete="email"
+          name="contact[email]"
+          spellcheck="false"
+          autocapitalize="off"
+          value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}"
+          aria-required="true"
+          {% if form.errors contains 'email' %}
+            aria-invalid="true"
+            aria-describedby="ContactForm-email-error"
+          {% endif %}
+        >
+        <label
+          class="contact-form__label"
+          for="ContactForm-email"
+        >
+          {{- 'blocks.contact_form.email' | t -}}
+          <span aria-hidden="true">*</span>
+        </label>
+      </div>
     </div>
 
-    <label
-      class="visually-hidden"
-      for="ContactForm-phone"
-    >
-      {{- 'blocks.contact_form.phone' | t -}}
-    </label>
-    <input
-      type="tel"
-      id="ContactForm-phone"
-      class="contact-form__input"
-      autocomplete="tel"
-      name="contact[phone]"
-      pattern="[0-9\-]*"
-      value="{% if form.phone %}{{ form.phone }}{% elsif customer %}{{ customer.phone }}{% endif %}"
-      placeholder="{{ 'blocks.contact_form.phone' | t }}"
-    >
+    <div class="contact-form__field-group">
+      <input
+        type="tel"
+        id="ContactForm-phone"
+        class="contact-form__input"
+        autocomplete="tel"
+        name="contact[phone]"
+        pattern="[0-9\-]*"
+        value="{% if form.phone %}{{ form.phone }}{% elsif customer %}{{ customer.phone }}{% endif %}"
+      >
+      <label
+        class="contact-form__label"
+        for="ContactForm-phone"
+      >
+        {{- 'blocks.contact_form.phone' | t -}}
+      </label>
+    </div>
 
-    <label
-      class="visually-hidden"
-      for="ContactForm-body"
-    >
-      {{- 'blocks.contact_form.comment' | t -}}
-    </label>
-    <textarea
-      rows="10"
-      id="ContactForm-body"
-      class="contact-form__input contact-form__input--textarea"
-      name="contact[body]"
-      placeholder="{{ 'blocks.contact_form.comment' | t }}"
-    >
-      {{- form.body -}}
-    </textarea>
+    <div class="contact-form__field-group">
+      <textarea
+        rows="10"
+        id="ContactForm-body"
+        class="contact-form__input contact-form__input--textarea"
+        name="contact[body]"
+      >
+        {{- form.body -}}
+      </textarea>
+      <label
+        class="contact-form__label"
+        for="ContactForm-body"
+      >
+        {{- 'blocks.contact_form.comment' | t -}}
+      </label>
+      <div class="contact-form__char-count">
+        <span id="char-count">0</span> / 500
+      </div>
+    </div>
 
     {{ submit_button }}
   {%- endform -%}
@@ -131,12 +138,12 @@
 {% stylesheet %}
   .contact-form {
     width: 100%;
-    padding: 2rem;
-    border-radius: 16px;
-    background: linear-gradient(135deg, rgba(var(--color-background-rgb), 0.9), rgba(var(--color-background-rgb), 0.7));
-    backdrop-filter: blur(10px);
-    box-shadow: 0 10px 30px rgba(var(--color-shadow-rgb), 0.1), 0 1px 8px rgba(var(--color-shadow-rgb), 0.06);
-    border: 1px solid rgba(var(--color-border-rgb), 0.2);
+    padding: 2.5rem;
+    border-radius: 20px;
+    background: linear-gradient(135deg, rgba(var(--color-background-rgb), 0.95), rgba(var(--color-background-rgb), 0.85));
+    backdrop-filter: blur(15px);
+    box-shadow: 0 15px 35px rgba(var(--color-shadow-rgb), 0.12), 0 5px 15px rgba(var(--color-shadow-rgb), 0.08);
+    border: 1px solid rgba(var(--color-border-rgb), 0.15);
     position: relative;
     overflow: hidden;
   }
@@ -147,21 +154,40 @@
     top: 0;
     left: 0;
     right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, var(--color-primary), var(--color-primary-hover));
-    border-radius: 16px 16px 0 0;
+    height: 5px;
+    background: linear-gradient(90deg, var(--color-primary), var(--color-primary-hover), var(--color-primary));
+    background-size: 200% 100%;
+    animation: gradientShift 3s ease infinite;
+    border-radius: 20px 20px 0 0;
+  }
+  
+  .contact-form::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+      radial-gradient(circle at 10% 20%, rgba(var(--color-primary-rgb), 0.03) 0%, transparent 20%),
+      radial-gradient(circle at 80% 80%, rgba(var(--color-primary-rgb), 0.03) 0%, transparent 20%),
+      radial-gradient(circle at 40% 40%, rgba(var(--color-primary-rgb), 0.02) 0%, transparent 30%);
+    pointer-events: none;
+    z-index: 0;
   }
 
   .contact-form__form {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 2rem;
+    position: relative;
+    z-index: 1;
   }
 
   .contact-form__form .submit-button {
     align-self: center;
-    margin-top: 0.5rem;
-    padding: 0.875rem 2.5rem;
+    margin-top: 1rem;
+    padding: 1rem 3rem;
     font-weight: 600;
     letter-spacing: 0.5px;
     border-radius: 50px;
@@ -169,28 +195,73 @@
     color: var(--color-primary-button-text);
     border: none;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: 0 4px 15px rgba(var(--color-primary-rgb), 0.3);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .contact-form__form .submit-button::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+  }
+  
+  .contact-form__form .submit-button:hover::before {
+    width: 300px;
+    height: 300px;
   }
   
   .contact-form__form .submit-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(var(--color-primary-rgb), 0.4);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(var(--color-primary-rgb), 0.4);
   }
   
   .contact-form__form .submit-button:active {
-    transform: translateY(0);
+    transform: translateY(-1px);
+  }
+  
+  .contact-form__form .submit-button.loading {
+    color: transparent;
+    pointer-events: none;
+  }
+  
+  .contact-form__form .submit-button.loading::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 50%;
+    left: 50%;
+    margin-left: -10px;
+    margin-top: -10px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spinner 0.8s linear infinite;
   }
 
   .contact-form__form-row {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 2rem;
 
     @media screen and (min-width: 750px) {
       flex-direction: row;
-      align-items: center;
+      align-items: flex-start;
     }
+  }
+  
+  .contact-form__field-group {
+    position: relative;
+    width: 100%;
   }
 
   .contact-form__input {
@@ -198,33 +269,80 @@
     overflow: hidden;
     text-overflow: ellipsis;
     color: var(--color-input-text);
-    background-color: rgba(var(--color-input-background-rgb), 0.8);
-    padding: 1rem 1.25rem;
-    border-radius: 12px;
-    border: 2px solid rgba(var(--color-input-border-rgb), 0.3);
+    background-color: rgba(var(--color-input-background-rgb), 0.7);
+    padding: 1.25rem 1.5rem;
+    border-radius: 16px;
+    border: 2px solid rgba(var(--color-input-border-rgb), 0.2);
     -webkit-font-smoothing: antialiased;
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     font-size: 1rem;
-    box-shadow: 0 2px 8px rgba(var(--color-shadow-rgb), 0.05);
+    box-shadow: inset 0 1px 3px rgba(var(--color-shadow-rgb), 0.05);
   }
   
   .contact-form__input:focus {
     outline: none;
     border-color: var(--color-primary);
-    box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb), 0.2), 0 4px 12px rgba(var(--color-shadow-rgb), 0.1);
-    background-color: rgba(var(--color-input-background-rgb), 0.95);
+    box-shadow: 0 0 0 4px rgba(var(--color-primary-rgb), 0.15), inset 0 1px 3px rgba(var(--color-shadow-rgb), 0.05);
+    background-color: rgba(var(--color-input-background-rgb), 0.9);
   }
   
   .contact-form__input:hover {
-    border-color: rgba(var(--color-input-border-rgb), 0.6);
-    background-color: rgba(var(--color-input-hover-background-rgb), 0.9);
+    border-color: rgba(var(--color-input-border-rgb), 0.5);
+    background-color: rgba(var(--color-input-hover-background-rgb), 0.8);
   }
-
+  
+  .contact-form__label {
+    position: absolute;
+    top: 1.25rem;
+    left: 1.5rem;
+    color: var(--color-input-text);
+    opacity: 0.7;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+    transform-origin: left top;
+  }
+  
+  .contact-form__input:focus + .contact-form__label,
+  .contact-form__input:not(:placeholder-shown) + .contact-form__label {
+    top: 0.5rem;
+    left: 1rem;
+    font-size: 0.75rem;
+    opacity: 1;
+    color: var(--color-primary);
+    background-color: rgba(var(--color-background-rgb), 0.9);
+    padding: 0 0.5rem;
+    z-index: 1;
+  }
+  
   .contact-form__input--textarea {
     resize: vertical;
     min-height: 150px;
     font-family: inherit;
     line-height: 1.5;
+    padding-top: 1.5rem;
+  }
+  
+  .contact-form__input--textarea + .contact-form__label {
+    top: 1.5rem;
+  }
+  
+  .contact-form__input--textarea:focus + .contact-form__label,
+  .contact-form__input--textarea:not(:placeholder-shown) + .contact-form__label {
+    top: 0.75rem;
+  }
+  
+  .contact-form__char-count {
+    position: absolute;
+    bottom: 0.75rem;
+    right: 1rem;
+    font-size: 0.75rem;
+    color: var(--color-input-text);
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
+  }
+  
+  .contact-form__input--textarea:focus ~ .contact-form__char-count {
+    opacity: 0.7;
   }
 
   .contact-form__error,
@@ -232,11 +350,12 @@
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    padding: 1rem 1.25rem;
-    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    border-radius: 16px;
     font-weight: 500;
-    margin-bottom: 1rem;
-    box-shadow: 0 4px 12px rgba(var(--color-shadow-rgb), 0.1);
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 15px rgba(var(--color-shadow-rgb), 0.1);
+    animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
   
   .contact-form__error {
@@ -258,42 +377,79 @@
     flex-shrink: 0;
   }
   
-  /* Add smooth animations for form elements */
+  /* Animations */
   @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
+    from { opacity: 0; transform: translateY(15px); }
     to { opacity: 1; transform: translateY(0); }
   }
   
-  .contact-form__input {
-    animation: fadeIn 0.5s ease forwards;
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
   }
   
-  .contact-form__input:nth-child(1) { animation-delay: 0.1s; }
-  .contact-form__input:nth-child(2) { animation-delay: 0.2s; }
-  .contact-form__input:nth-child(3) { animation-delay: 0.3s; }
-  .contact-form__input:nth-child(4) { animation-delay: 0.4s; }
+  @keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  
+  @keyframes spinner {
+    to { transform: rotate(360deg); }
+  }
+  
+  .contact-form__field-group {
+    animation: fadeIn 0.6s ease forwards;
+    opacity: 0;
+  }
+  
+  .contact-form__field-group:nth-child(1) { animation-delay: 0.1s; }
+  .contact-form__field-group:nth-child(2) { animation-delay: 0.2s; }
+  .contact-form__field-group:nth-child(3) { animation-delay: 0.3s; }
+  .contact-form__field-group:nth-child(4) { animation-delay: 0.4s; }
   
   /* Enhanced mobile responsiveness */
   @media screen and (max-width: 749px) {
     .contact-form {
-      padding: 1.5rem;
-      border-radius: 12px;
+      padding: 2rem 1.5rem;
+      border-radius: 16px;
     }
     
     .contact-form__form {
-      gap: 1.25rem;
+      gap: 1.5rem;
     }
     
     .contact-form__form-row {
-      gap: 1.25rem;
+      gap: 1.5rem;
     }
     
     .contact-form__input {
-      padding: 0.875rem 1.125rem;
+      padding: 1rem 1.25rem;
+    }
+    
+    .contact-form__label {
+      top: 1rem;
+      left: 1.25rem;
+    }
+    
+    .contact-form__input:focus + .contact-form__label,
+    .contact-form__input:not(:placeholder-shown) + .contact-form__label {
+      top: 0.4rem;
+      left: 0.8rem;
     }
     
     .contact-form__input--textarea {
       min-height: 120px;
+      padding-top: 1.25rem;
+    }
+    
+    .contact-form__input--textarea + .contact-form__label {
+      top: 1.25rem;
+    }
+    
+    .contact-form__input--textarea:focus + .contact-form__label,
+    .contact-form__input--textarea:not(:placeholder-shown) + .contact-form__label {
+      top: 0.65rem;
     }
     
     .contact-form__form .submit-button {
@@ -302,3 +458,38 @@
     }
   }
 {% endstylesheet %}
+
+{% javascript %}
+  document.addEventListener('DOMContentLoaded', function() {
+    // Character counter for textarea
+    const textarea = document.getElementById('ContactForm-body');
+    const charCount = document.getElementById('char-count');
+    
+    if (textarea && charCount) {
+      const updateCharCount = function() {
+        const count = textarea.value.length;
+        charCount.textContent = count;
+        
+        if (count > 500) {
+          charCount.style.color = 'var(--color-primary)';
+        } else {
+          charCount.style.color = 'var(--color-input-text)';
+        }
+      };
+      
+      textarea.addEventListener('input', updateCharCount);
+      updateCharCount();
+    }
+    
+    // Add loading state to submit button
+    const form = document.querySelector('.contact-form__form');
+    const submitButton = form.querySelector('.submit-button');
+    
+    if (form && submitButton) {
+      form.addEventListener('submit', function() {
+        submitButton.classList.add('loading');
+        submitButton.disabled = true;
+      });
+    }
+  });
+{% endjavascript %}
