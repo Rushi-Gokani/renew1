@@ -74,7 +74,7 @@
         "gap": 32,
         "color_scheme": "scheme-2",
         "padding-block-start": 40,
-        "padding-block-end": 0
+        "padding-block-end": 40
       }
     },
     "form": {
@@ -83,9 +83,9 @@
         "contact_form_UwiCkQ": {
           "type": "contact-form",
           "settings": {
-            "width": "custom",
+            "width": "fit-content",
             "custom_width": 53,
-            "width_mobile": "custom",
+            "width_mobile": "fit-content",
             "custom_width_mobile": 100,
             "inherit_color_scheme": true,
             "color_scheme": "",
@@ -128,7 +128,7 @@
         "section_width": "page-width",
         "section_height": "",
         "section_height_custom": 50,
-        "color_scheme": "scheme-2",
+        "color_scheme": "scheme-6",
         "background_media": "none",
         "video_position": "cover",
         "background_image_position": "cover",
