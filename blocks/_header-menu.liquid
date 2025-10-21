@@ -125,7 +125,7 @@
   }
 .menu-drawer{
   background-color:#00593B !important;
-  color:white;
+  color:white !important;
 }
 .menu-drawer__inner-submenu{
   background-color:#faeae0 !important;
@@ -295,25 +295,13 @@
     visibility: hidden;
     background-color: var(--color-background);
     position: absolute;
-    width: 100%; /* Reverted back to 100% */
+    width: 100%;
     left: 0;
     top: calc(100% - 1px + var(--border-bottom-width));
     z-index: var(--layer-header-menu);
     padding-inline: var(--padding-inline);
     clip-path: rect(0 100% var(--submenu-height) 0); /* stylelint-disable-line */
     transition: clip-path var(--submenu-animation-speed) var(--ease-out-cubic);
-  }
-
-  /* Custom rule to align submenu with parent menu item */
-  .mega-menu.section {
-    width: auto;
-    max-width: none;
-    grid-template-columns: minmax(0, 1fr);
-  }
-  
-  /* Override the full-width grid column behavior from base.css */
-  .mega-menu.section > * {
-    grid-column: auto;
   }
 
   /* Show the submenus on hover */
