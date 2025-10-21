@@ -310,6 +310,11 @@
     max-width: none;
     grid-template-columns: minmax(0, 1fr);
   }
+  
+  /* Override the full-width grid column behavior from base.css */
+  .mega-menu.section > * {
+    grid-column: auto;
+  }
 
   /* Show the submenus on hover */
   .menu-list__list-item:has([aria-expanded='true']) > .menu-list__submenu,
