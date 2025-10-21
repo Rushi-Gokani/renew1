@@ -12,32 +12,6 @@
     "main": {
       "type": "main-page",
       "blocks": {
-        "text_A8F3Wr": {
-          "type": "text",
-          "name": "t:names.heading",
-          "settings": {
-            "text": "<p>{{ closest.page.title }}</p>",
-            "width": "fit-content",
-            "max_width": "normal",
-            "alignment": "left",
-            "type_preset": "h1",
-            "font": "var(--font-body--family)",
-            "font_size": "1rem",
-            "line_height": "normal",
-            "letter_spacing": "normal",
-            "case": "none",
-            "wrap": "pretty",
-            "color": "var(--color-foreground)",
-            "background": false,
-            "background_color": "#00000026",
-            "corner_radius": 0,
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {}
-        },
         "text_KMwtTr": {
           "type": "text",
           "name": "t:names.text",
@@ -66,9 +40,9 @@
         }
       },
       "block_order": [
-        "text_A8F3Wr",
         "text_KMwtTr"
       ],
+      "disabled": true,
       "settings": {
         "content_direction": "column",
         "gap": 32,
@@ -76,9 +50,23 @@
         "padding-block-start": 40,
         "padding-block-end": 80
       }
+    },
+    "abc_LpxcRQ": {
+      "type": "abc",
+      "name": "Affiliate Application Form",
+      "settings": {
+        "title": "Become a Reneuw Affiliate",
+        "subtitle": "<p>Join our community of wellness enthusiasts and earn rewards by sharing products you love.</p>",
+        "submit_button_text": "Submit Application",
+        "success_message": "Thank you for your application! We will review it and get back to you soon.",
+        "color_scheme": "scheme-2",
+        "padding_top": 52,
+        "padding_bottom": 52
+      }
     }
   },
   "order": [
-    "main"
+    "main",
+    "abc_LpxcRQ"
   ]
 }
