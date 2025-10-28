@@ -236,62 +236,65 @@
 
         <div class="affiliate-form__row">
           <div class="affiliate-form__field">
-            <label>What content styles/topics best reflects your page? (you can select more than one)</label>
+            <label>What content styles/topics best reflects your page? (you can select more than one)*</label>
             <div class="affiliate-form__checkbox-group">
               <label class="affiliate-form__checkbox-label">
                 <input
                   type="checkbox"
-                  name="contact[content_style][]"
+                  name="contact[content_style_lifestyle]"
                   value="Lifestyle"
-                  {% if form.content_style contains 'Lifestyle' %}checked{% endif %}
+                  {% if form.content_style_lifestyle == 'Lifestyle' %}checked{% endif %}
                 >
                 <span>Lifestyle</span>
               </label>
               <label class="affiliate-form__checkbox-label">
                 <input
                   type="checkbox"
-                  name="contact[content_style][]"
+                  name="contact[content_style_fitness]"
                   value="Fitness/Workouts"
-                  {% if form.content_style contains 'Fitness/Workouts' %}checked{% endif %}
+                  {% if form.content_style_fitness == 'Fitness/Workouts' %}checked{% endif %}
                 >
                 <span>Fitness/Workouts</span>
               </label>
               <label class="affiliate-form__checkbox-label">
                 <input
                   type="checkbox"
-                  name="contact[content_style][]"
+                  name="contact[content_style_beauty]"
                   value="Beauty"
-                  {% if form.content_style contains 'Beauty' %}checked{% endif %}
+                  {% if form.content_style_beauty == 'Beauty' %}checked{% endif %}
                 >
                 <span>Beauty</span>
               </label>
               <label class="affiliate-form__checkbox-label">
                 <input
                   type="checkbox"
-                  name="contact[content_style][]"
+                  name="contact[content_style_food]"
                   value="Food/Recipes"
-                  {% if form.content_style contains 'Food/Recipes' %}checked{% endif %}
+                  {% if form.content_style_food == 'Food/Recipes' %}checked{% endif %}
                 >
                 <span>Food/Recipes</span>
               </label>
               <label class="affiliate-form__checkbox-label">
                 <input
                   type="checkbox"
-                  name="contact[content_style][]"
+                  name="contact[content_style_health]"
                   value="Health"
-                  {% if form.content_style contains 'Health' %}checked{% endif %}
+                  {% if form.content_style_health == 'Health' %}checked{% endif %}
                 >
                 <span>Health</span>
               </label>
               <label class="affiliate-form__checkbox-label">
                 <input
                   type="checkbox"
-                  name="contact[content_style][]"
+                  name="contact[content_style_other]"
                   value="Other"
-                  {% if form.content_style contains 'Other' %}checked{% endif %}
+                  {% if form.content_style_other == 'Other' %}checked{% endif %}
                 >
                 <span>Other</span>
               </label>
+            </div>
+            <div id="content-style-error" class="field-error-message">
+              Please select at least one content style
             </div>
           </div>
         </div>
@@ -448,6 +451,15 @@ document.addEventListener('DOMContentLoaded', function() {
       hideError('primary-channel');
     }
 
+    // Check if at least one content style is selected
+    const contentStyles = document.querySelectorAll('input[name^="contact[content_style_"]:checked');
+    if (contentStyles.length === 0) {
+      showError('content-style', 'Please select at least one content style');
+      isFormValid = false;
+    } else {
+      hideError('content-style');
+    }
+
     return isFormValid;
   }
 
@@ -480,6 +492,17 @@ document.addEventListener('DOMContentLoaded', function() {
     errorDiv.style.display = 'none';
     primaryChannelField.appendChild(errorDiv);
   }
+
+  
+  // Add validation for content style checkboxes
+  document.querySelectorAll('input[name^="contact[content_style_"]').forEach(checkbox => {
+    checkbox.addEventListener('change', () => {
+      const contentStyles = document.querySelectorAll('input[name^="contact[content_style_"]:checked');
+      if (contentStyles.length > 0) {
+        hideError('content-style');
+      }
+    });
+  });
 
   // Form submission validation
   if (form) {
