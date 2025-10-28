@@ -413,7 +413,7 @@
     /* Mobile: place quantity and add-to-cart side by side */
     .product-form {
       display: grid;
-      grid-template-columns: minmax(120px, 160px) 1fr;
+      grid-template-columns: minmax(140px, 180px) 1fr;
       gap: 12px;
       align-items: center;
     }
@@ -441,14 +441,15 @@
     }
     .quantity-input-wrapper {
       flex: 1 1 auto;
-      min-width: 0;
+      min-width: 60px;
       max-width: none;
       padding: 0 8px;
       border-radius: 0;
       background: transparent;
     }
     .quantity-input {
-      width: 50px;
+      width: 100%;
+      min-width: 60px;
       height: 32px;
       font-size: 16px;
     }
@@ -636,7 +637,7 @@
     margin-top: 30px;
     /* Place quantity and add-to-cart side by side like the reference */
     display: grid;
-    grid-template-columns: minmax(120px, 160px) 1fr;
+    grid-template-columns: minmax(140px, 180px) 1fr;
     gap: 12px;
     align-items: center;
   }
@@ -688,13 +689,14 @@
   .quantity-wrapper {
     display: inline-flex;
     align-items: center;
-    padding: 0 8px;
+    padding: 0 10px;
     position: relative;
     border: 1px solid #000;
     border-radius: 6px;
     height: 44px;
     background: #fff;
-    gap: 4px;
+    gap: 6px;
+    min-width: 140px;
   }
 
   .quantity-btn {
@@ -740,11 +742,14 @@
     position: relative;
     background: transparent;
     border-radius: 0;
-    padding: 0 4px;
+    padding: 0 8px;
+    flex: 1;
+    min-width: 60px;
   }
 
   .quantity-input {
-    width: 50px;
+    width: 100%;
+    min-width: 60px;
     height: 32px;
     border: none;
     text-align: center;
