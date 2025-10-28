@@ -24,6 +24,8 @@
 >
   {% assign form_id = block.id | default: section.id | prepend: 'ContactForm-' %}
 
+  <h2 class="contact-form__title">{{ 'blocks.contact_form.title' | t }}</h2>
+
   {%- form 'contact', id: form_id, class: 'contact-form__form' -%}
     {%- if form.errors -%}
       <div
@@ -135,6 +137,14 @@
     margin: 0 auto;
   }
 
+  .contact-form__title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1a1a1a;
+    text-align: center;
+    margin: 0 0 30px 0;
+  }
+
   .contact-form__form {
     display: flex;
     flex-direction: column;
@@ -220,7 +230,7 @@
 
   /* Submit button styling */
   .contact-form__form .submit-button {
-    background-color: #4a90e2;
+    background-color: #0d7377;
     color: white;
     border: none;
     padding: 16px 40px;
@@ -234,7 +244,7 @@
   }
 
   .contact-form__form .submit-button:hover {
-    background-color: #357abd;
+    background-color: #0a5d61;
   }
 
   .contact-form__form .submit-button:active {
@@ -245,6 +255,11 @@
   @media screen and (max-width: 749px) {
     .contact-form {
       padding: 0 20px;
+    }
+
+    .contact-form__title {
+      font-size: 24px;
+      margin-bottom: 24px;
     }
 
     .contact-form__form {
