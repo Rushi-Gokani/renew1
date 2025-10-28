@@ -32,8 +32,15 @@
         {%- if form.errors -%}
           <div class="affiliate-form__error" tabindex="-1" autofocus>
             {{- 'icon-error.svg' | inline_asset_content -}}
-            {{ form.errors.translated_fields.email | capitalize }}
-            {{ form.errors.messages.email }}
+            <div class="error-message">Please correct the following errors:</div>
+            {%- if form.errors contains 'email' -%}
+              <div class="field-error">Email: {{ form.errors.messages.email }}</div>
+            {%- endif -%}
+            {%- for field in form.errors -%}
+              {%- if field != 'email' -%}
+                <div class="field-error">{{ field | capitalize }}: {{ form.errors.messages[field] }}</div>
+              {%- endif -%}
+            {%- endfor -%}
           </div>
         {%- endif -%}
 
@@ -71,6 +78,11 @@
               {% endif %}
               required
             >
+            <div id="AffiliateForm-email-error" class="field-error-message">
+              {%- if form.errors contains 'email' -%}
+                {{ form.errors.messages.email }}
+              {%- endif -%}
+            </div>
           </div>
         </div>
 
@@ -99,6 +111,9 @@
               value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}"
               required
             >
+            <div id="AffiliateForm-name-error" class="field-error-message">
+              Please enter your full name
+            </div>
           </div>
         </div>
 
@@ -113,6 +128,9 @@
               value="{{ form.location }}"
               required
             >
+            <div id="AffiliateForm-location-error" class="field-error-message">
+              Please enter your location
+            </div>
           </div>
         </div>
 
@@ -128,6 +146,9 @@
               placeholder="@yourhandle"
               required
             >
+            <div id="AffiliateForm-instagram-error" class="field-error-message">
+              Please enter your Instagram handle
+            </div>
           </div>
         </div>
 
@@ -143,12 +164,15 @@
               min="1500"
               required
             >
+            <div id="AffiliateForm-instagram-followers-error" class="field-error-message">
+              You need at least 1,500 Instagram followers to apply
+            </div>
           </div>
         </div>
 
         <div class="affiliate-form__row">
           <div class="affiliate-form__field">
-            <label for="AffiliateForm-tiktok">What is your TikTok handle?</label>
+            <label for="AffiliateForm-tiktok">What is your TikTok handle? (Optional)</label>
             <input
               type="text"
               id="AffiliateForm-tiktok"
@@ -162,14 +186,14 @@
 
         <div class="affiliate-form__row">
           <div class="affiliate-form__field">
-            <label for="AffiliateForm-tiktok-followers">How many TikTok followers do you currently have? (min requirement 1,000)</label>
+            <label for="AffiliateForm-tiktok-followers">How many TikTok followers do you currently have? (Optional)</label>
             <input
               type="number"
               id="AffiliateForm-tiktok-followers"
               class="affiliate-form__input"
               name="contact[tiktok_followers]"
               value="{{ form.tiktok_followers }}"
-              min="1000"
+              min="0"
             >
           </div>
         </div>
@@ -274,7 +298,7 @@
 
         <div class="affiliate-form__row">
           <div class="affiliate-form__field">
-            <label for="AffiliateForm-other-channels">Do you have a blog, TikTok, YouTube channel or other social channels you use?</label>
+            <label for="AffiliateForm-other-channels">Do you have a blog, TikTok, YouTube channel or other social channels you use? (Optional)</label>
             <textarea
               id="AffiliateForm-other-channels"
               class="affiliate-form__input affiliate-form__input--textarea"
@@ -294,6 +318,9 @@
               rows="4"
               required
             >{{ form.favorite_product }}</textarea>
+            <div id="AffiliateForm-favorite-product-error" class="field-error-message">
+              Please tell us about your favorite Reneuw product
+            </div>
           </div>
         </div>
 
@@ -307,6 +334,9 @@
               rows="4"
               required
             >{{ form.why_join }}</textarea>
+            <div id="AffiliateForm-why-join-error" class="field-error-message">
+              Please explain why you want to be our affiliate
+            </div>
           </div>
         </div>
 
@@ -317,10 +347,14 @@
                 type="checkbox"
                 name="contact[terms_accepted]"
                 value="yes"
+                id="AffiliateForm-terms"
                 required
               >
               <span>I understand that when signing up to be a part of the Reneuw Affiliate Programme, I'll receive a set of T&Cs that outlines a requirement to post my Reneuw products.*</span>
             </label>
+            <div id="AffiliateForm-terms-error" class="field-error-message">
+              You must accept the terms and conditions to apply
+            </div>
           </div>
         </div>
 
@@ -335,6 +369,138 @@
     </div>
   </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const form = document.getElementById('AffiliateForm');
+  const requiredFields = [
+    { id: 'AffiliateForm-email', type: 'email', message: 'Please enter a valid email address' },
+    { id: 'AffiliateForm-name', type: 'text', message: 'Please enter your full name' },
+    { id: 'AffiliateForm-location', type: 'text', message: 'Please enter your location' },
+    { id: 'AffiliateForm-instagram', type: 'text', message: 'Please enter your Instagram handle' },
+    { id: 'AffiliateForm-instagram-followers', type: 'number', min: 1500, message: 'You need at least 1,500 Instagram followers to apply' },
+    { id: 'AffiliateForm-favorite-product', type: 'textarea', message: 'Please tell us about your favorite Reneuw product' },
+    { id: 'AffiliateForm-why-join', type: 'textarea', message: 'Please explain why you want to be our affiliate' },
+    { id: 'AffiliateForm-terms', type: 'checkbox', message: 'You must accept the terms and conditions to apply' }
+  ];
+
+  function showError(fieldId, message) {
+    const errorElement = document.getElementById(fieldId + '-error');
+    const inputElement = document.getElementById(fieldId);
+    if (errorElement && inputElement) {
+      errorElement.textContent = message;
+      errorElement.style.display = 'block';
+      inputElement.classList.add('error');
+    }
+  }
+
+  function hideError(fieldId) {
+    const errorElement = document.getElementById(fieldId + '-error');
+    const inputElement = document.getElementById(fieldId);
+    if (errorElement && inputElement) {
+      errorElement.style.display = 'none';
+      inputElement.classList.remove('error');
+    }
+  }
+
+  function validateField(field) {
+    const inputElement = document.getElementById(field.id);
+    if (!inputElement) return true;
+
+    let isValid = true;
+    let errorMessage = field.message;
+
+    if (field.type === 'email') {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      isValid = inputElement.value.trim() !== '' && emailRegex.test(inputElement.value);
+    } else if (field.type === 'checkbox') {
+      isValid = inputElement.checked;
+    } else if (field.type === 'number') {
+      const value = parseInt(inputElement.value) || 0;
+      isValid = value >= (field.min || 0);
+    } else {
+      isValid = inputElement.value.trim() !== '';
+    }
+
+    if (isValid) {
+      hideError(field.id);
+    } else {
+      showError(field.id, errorMessage);
+    }
+
+    return isValid;
+  }
+
+  function validateForm() {
+    let isFormValid = true;
+    requiredFields.forEach(field => {
+      if (!validateField(field)) {
+        isFormValid = false;
+      }
+    });
+
+    // Check if at least one primary channel is selected
+    const primaryChannel = document.querySelector('input[name="contact[primary_channel]"]:checked');
+    if (!primaryChannel) {
+      showError('primary-channel', 'Please select your primary channel');
+      isFormValid = false;
+    } else {
+      hideError('primary-channel');
+    }
+
+    return isFormValid;
+  }
+
+  // Add real-time validation
+  requiredFields.forEach(field => {
+    const inputElement = document.getElementById(field.id);
+    if (inputElement) {
+      inputElement.addEventListener('blur', () => validateField(field));
+      inputElement.addEventListener('input', () => {
+        if (inputElement.classList.contains('error')) {
+          validateField(field);
+        }
+      });
+    }
+  });
+
+  // Add validation for primary channel selection
+  document.querySelectorAll('input[name="contact[primary_channel]"]').forEach(radio => {
+    radio.addEventListener('change', () => {
+      hideError('primary-channel');
+    });
+  });
+
+  // Add error container for primary channel if it doesn't exist
+  const primaryChannelField = document.querySelector('input[name="contact[primary_channel]"]').closest('.affiliate-form__field');
+  if (!document.getElementById('primary-channel-error')) {
+    const errorDiv = document.createElement('div');
+    errorDiv.id = 'primary-channel-error';
+    errorDiv.className = 'field-error-message';
+    errorDiv.style.display = 'none';
+    primaryChannelField.appendChild(errorDiv);
+  }
+
+  // Form submission validation
+  if (form) {
+    form.addEventListener('submit', function(e) {
+      if (!validateForm()) {
+        e.preventDefault();
+        // Scroll to first error
+        const firstError = document.querySelector('.field-error-message[style="display: block;"]');
+        if (firstError) {
+          firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }
+    });
+  }
+
+  // Hide all error messages initially
+  document.querySelectorAll('.field-error-message').forEach(error => {
+    error.style.display = 'none';
+  });
+});
+</script>
 
 {% stylesheet %}
   .affiliate-form-wrapper {
@@ -429,7 +595,7 @@
   .affiliate-form__error,
   .affiliate-form__success {
     display: flex;
-    align-items: center;
+    flex-direction: column;
     gap: var(--gap-xs);
     padding: var(--padding-md);
     border-radius: var(--style-border-radius-inputs);
@@ -438,6 +604,7 @@
   .affiliate-form__error {
     background-color: rgba(var(--color-error-rgb), 0.1);
     color: var(--color-error);
+    border: 1px solid rgba(var(--color-error-rgb), 0.2);
   }
 
   .affiliate-form__success {
@@ -445,6 +612,37 @@
     color: #00593b;
     font-weight: 500;
     border: 1px solid rgba(0, 89, 59, 0.2);
+  }
+
+  .error-message {
+    font-weight: 600;
+    margin-bottom: var(--gap-xs);
+  }
+
+  .field-error {
+    font-size: 14px;
+    margin-bottom: 2px;
+  }
+
+  .field-error-message {
+    display: none;
+    color: #d32f2f;
+    font-size: 14px;
+    margin-top: 4px;
+    padding: 8px 12px;
+    background-color: rgba(211, 47, 47, 0.1);
+    border-radius: 4px;
+    border-left: 3px solid #d32f2f;
+  }
+
+  .affiliate-form__input.error {
+    border-color: #d32f2f;
+    box-shadow: 0 0 0 1px #d32f2f;
+  }
+
+  .affiliate-form__input.error:focus {
+    border-color: #d32f2f;
+    box-shadow: 0 0 0 2px rgba(211, 47, 47, 0.2);
   }
 
   .section-heading {
