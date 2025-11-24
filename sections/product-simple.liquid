@@ -4,6 +4,10 @@
 {% endcomment %}
 
 <div class="page-width product-simple-section">
+  <!-- DEBUG: Section is being rendered -->
+  <div style="background: red; color: white; padding: 10px; margin: 10px 0; border-radius: 5px;">
+    DEBUG: Product Simple Section is Loaded
+  </div>
   <div class="product-simple-grid">
     <!-- Product Images -->
     <div class="product-simple-media">
@@ -320,7 +324,7 @@
 </div>
 
 <!-- Sticky product bar (appears when main CTA is out of view) -->
-<div class="product-sticky-bar" aria-hidden="true">
+<div class="product-sticky-bar" aria-hidden="true" style="transform: translate(-50%, 0) !important; /* TEMP: Force visible */">
   <form action="{{ routes.cart_add_url }}" method="post" class="product-sticky-form" enctype="multipart/form-data">
     <div class="sticky-left">
       {% assign sticky_img = product.selected_or_first_available_variant.featured_image | default: product.featured_image %}
@@ -1082,6 +1086,9 @@
 </style>
 
 <script>
+  // BASIC TEST: This should show in console immediately
+  console.log('PRODUCT SIMPLE SCRIPT - LOADED AND RUNNING!');
+
   // Image slider functions
   let currentSlide = 0;
 
@@ -1189,8 +1196,12 @@
     }
   }
 
+  // Test immediate script execution
+  console.log('Script is loading...');
+
   // Initialize when DOM is ready
   document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM Content Loaded - Script is running!');
     // Immediately set button state based on Liquid data (before any other JS runs)
     const addToCartBtn = document.querySelector('.product-simple-section .add-to-cart-btn');
     const stickyAddBtn = document.querySelector('.product-sticky-bar .sticky-add-btn');
