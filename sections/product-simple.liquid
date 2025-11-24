@@ -144,31 +144,6 @@
                         data-variant-id="{{ v.id }}"
                         data-price="{{ v.price }}"
                         data-compare="{{ v.compare_at_price }}"
-                        data-available="{{ v.available }}"
-                        {% unless v.available %}disabled aria-disabled="true"{% endunless %}>
-                  {% if img %}
-                    <img src="{{ img | image_url: width: 64 }}" alt="{{ v.title | escape }}">
-                  {% endif %}
-                  <span class="variant-pill-text">{{ v.title }}</span>
-                </button>
-              {% endfor %}
-            </div>
-            <!-- Keep a native select for form compatibility and accessibility -->
-            <select name="id" id="productVariant" class="sr-only-hidden">
-        {% else %}
-          <div class="variant-selector">
-            <div class="selector-label">{{ section.settings.variant_label | default: 'Choose your flavour' }}</div>
-            <div class="variant-pills" role="radiogroup" aria-label="Choose your flavour">
-              {% for v in product.variants %}
-                {% assign img = v.featured_image | default: product.featured_image %}
-                <button type="button"
-                        class="variant-pill {% if v == product.selected_or_first_available_variant %}active{% endif %}"
-                        role="radio"
-                        aria-checked="{% if v == product.selected_or_first_available_variant %}true{% else %}false{% endif %}"
-                        data-variant-id="{{ v.id }}"
-                        data-price="{{ v.price }}"
-                        data-compare="{{ v.compare_at_price }}"
-                        data-available="{{ v.available }}"
                         {% unless v.available %}disabled aria-disabled="true"{% endunless %}>
                   {% if img %}
                     <img src="{{ img | image_url: width: 64 }}" alt="{{ v.title | escape }}">
@@ -320,7 +295,7 @@
 </div>
 
 <!-- Sticky product bar (appears when main CTA is out of view) -->
-<div class="product-sticky-bar" aria-hidden="true" id="product-sticky-bar-main">
+<div class="product-sticky-bar" aria-hidden="true">
   <form action="{{ routes.cart_add_url }}" method="post" class="product-sticky-form" enctype="multipart/form-data">
     <div class="sticky-left">
       {% assign sticky_img = product.selected_or_first_available_variant.featured_image | default: product.featured_image %}
@@ -1191,36 +1166,6 @@
 
   // Initialize when DOM is ready
   document.addEventListener('DOMContentLoaded', function() {
-    // Immediately set button state based on Liquid data (before any other JS runs)
-    const addToCartBtn = document.querySelector('.product-simple-section .add-to-cart-btn');
-    const stickyAddBtn = document.querySelector('.product-sticky-bar .sticky-add-btn');
-    const isSoldOut = {{ product.selected_or_first_available_variant.available | json }} === false;
-
-    if (addToCartBtn) {
-      if (isSoldOut) {
-        addToCartBtn.disabled = true;
-        addToCartBtn.textContent = 'Sold Out';
-        addToCartBtn.setAttribute('data-sold-out', 'true');
-        addToCartBtn.style.backgroundColor = '#888';
-      } else {
-        addToCartBtn.disabled = false;
-        addToCartBtn.textContent = '{{ section.settings.cta_label | default: "Buy Now ⚡" }}';
-        addToCartBtn.style.backgroundColor = '';
-      }
-    }
-
-    if (stickyAddBtn) {
-      if (isSoldOut) {
-        stickyAddBtn.disabled = true;
-        stickyAddBtn.textContent = 'Sold Out';
-        stickyAddBtn.setAttribute('data-sold-out', 'true');
-        stickyAddBtn.style.backgroundColor = '#888';
-      } else {
-        stickyAddBtn.disabled = false;
-        stickyAddBtn.textContent = '{{ section.settings.cta_label | default: "Buy Now ⚡" }}';
-        stickyAddBtn.style.backgroundColor = '';
-      }
-    }
     // Fixed-right behavior: pin right column while left scrolls, then release at bottom
     const grid = document.querySelector('.product-simple-grid');
     const mediaCol = document.querySelector('.product-simple-media');
@@ -1346,10 +1291,6 @@
       }
     }
 
-    // Get button references early
-    const addToCartBtn = document.querySelector('.product-simple-section .add-to-cart-btn');
-    const stickyAddBtn = document.querySelector('.product-sticky-bar .sticky-add-btn');
-
     // Variant pill syncing
     const pills = document.querySelectorAll('.product-simple-section .variant-pill');
     const selectEl = document.getElementById('productVariant');
@@ -1390,52 +1331,6 @@
       }
     }
 
-    function updateButtonState(isAvailable, ctaLabel) {
-      // Update main add to cart button
-      if (addToCartBtn) {
-        if (isAvailable) {
-          addToCartBtn.disabled = false;
-          addToCartBtn.textContent = ctaLabel || 'Buy Now ⚡';
-          addToCartBtn.removeAttribute('data-sold-out');
-        } else {
-          addToCartBtn.disabled = true;
-          addToCartBtn.textContent = 'Sold Out';
-          addToCartBtn.setAttribute('data-sold-out', 'true');
-        }
-      }
-
-      // Update sticky add to cart button
-      if (stickyAddBtn) {
-        if (isAvailable) {
-          stickyAddBtn.disabled = false;
-          stickyAddBtn.textContent = ctaLabel || 'Buy Now ⚡';
-          stickyAddBtn.removeAttribute('data-sold-out');
-        } else {
-          stickyAddBtn.disabled = true;
-          stickyAddBtn.textContent = 'Sold Out';
-          stickyAddBtn.setAttribute('data-sold-out', 'true');
-        }
-      }
-    }
-
-    function checkVariantAvailability(variantId) {
-      // First check the data-available attribute (most reliable)
-      const variantPill = document.querySelector(`[data-variant-id="${variantId}"]`);
-      if (variantPill) {
-        const available = variantPill.getAttribute('data-available');
-        if (available !== null) {
-          return available === 'true';
-        }
-      }
-
-      // Fallback: Check if variant is disabled in the DOM (indicates out of stock)
-      const variantOption = selectEl ? selectEl.querySelector(`option[value="${variantId}"]`) : null;
-      const isPillDisabled = variantPill && variantPill.hasAttribute('disabled');
-      const isOptionDisabled = variantOption && variantOption.hasAttribute('disabled');
-
-      return !isPillDisabled && !isOptionDisabled;
-    }
-
     pills.forEach(pill => {
       pill.addEventListener('click', () => {
         const id = pill.getAttribute('data-variant-id');
@@ -1444,10 +1339,6 @@
         if (selectEl) selectEl.value = id;
         setActivePill(id);
         updatePricesFromVariant(price, compare);
-
-        // Update button state based on variant availability
-        const isAvailable = checkVariantAvailability(id);
-        updateButtonState(isAvailable, '{{ section.settings.cta_label | default: "Buy Now ⚡" }}');
       });
     });
 
@@ -1541,60 +1432,13 @@
     });
     reflectSelectedCard();
 
-    // Initialize button state based on current variant
-    function initializeButtonState() {
-      const currentVariantId = selectEl ? selectEl.value : '{{ product.selected_or_first_available_variant.id }}';
-      const initialAvailable = checkVariantAvailability(currentVariantId);
-      updateButtonState(initialAvailable, '{{ section.settings.cta_label | default: "Buy Now ⚡" }}');
-    }
-
-    // Initialize button state after a short delay
-    setTimeout(initializeButtonState, 100);
-
-    // Add observer to prevent unwanted changes to sold-out buttons
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        const button = mutation.target;
-        if (button.hasAttribute('data-sold-out')) {
-          // If button should be sold out but is not in sold out state, force it back
-          if (!button.disabled || button.textContent !== 'Sold Out') {
-            button.disabled = true;
-            button.textContent = 'Sold Out';
-            button.style.backgroundColor = '#888';
-          }
-        }
-      });
-    });
-
-    if (addToCartBtn) observer.observe(addToCartBtn, {
-      attributes: true,
-      childList: true,
-      characterData: true,
-      subtree: true
-    });
-    if (stickyAddBtn) observer.observe(stickyAddBtn, {
-      attributes: true,
-      childList: true,
-      characterData: true,
-      subtree: true
-    });
-
     // Sticky bar logic: show when main CTA is not visible
     const stickyBar = document.querySelector('.product-sticky-bar');
-    const mainCTA = addToCartBtn || document.querySelector('.product-simple-section .add-to-cart-btn');
+    const mainCTA = document.querySelector('.product-simple-section .add-to-cart-btn');
     const stickyVariant = document.getElementById('stickyVariant');
     const stickyQtyInput = document.getElementById('stickyQuantity');
     const mainVariantSelect = document.getElementById('productVariant');
     const mainQtyInput = document.getElementById('quantity');
-
-    console.log('Sticky bar elements:', {
-      stickyBar: !!stickyBar,
-      mainCTA: !!mainCTA,
-      stickyVariant: !!stickyVariant,
-      stickyQtyInput: !!stickyQtyInput,
-      mainVariantSelect: !!mainVariantSelect,
-      mainQtyInput: !!mainQtyInput
-    });
 
     function clampQty(val){
       let v = parseInt(val || 1);
@@ -1629,40 +1473,25 @@
     }
 
     if (stickyBar && mainCTA) {
-      // Simple scroll-based detection
-      let lastScrollY = 0;
-
-      const handleScroll = () => {
-        try {
-          const currentScrollY = window.pageYOffset || document.documentElement.scrollTop;
-          const ctaRect = mainCTA.getBoundingClientRect();
-          const isCtaVisible = ctaRect.top < window.innerHeight && ctaRect.bottom > 0;
-
-          // Show sticky bar when CTA is out of view
-          if (!isCtaVisible) {
-            stickyBar.classList.add('is-visible');
-            stickyBar.setAttribute('aria-hidden', 'false');
-          } else {
-            stickyBar.classList.remove('is-visible');
-            stickyBar.setAttribute('aria-hidden', 'true');
-          }
-
-          lastScrollY = currentScrollY;
-        } catch (error) {
-          // If there's any error, show sticky bar as fallback
-          stickyBar.classList.add('is-visible');
-          stickyBar.setAttribute('aria-hidden', 'false');
-        }
-      };
-
-      // Add scroll listener with error handling
       try {
-        window.addEventListener('scroll', handleScroll, { passive: true });
-        handleScroll(); // Check initial state
-      } catch (error) {
-        // Fallback: just show the sticky bar
-        stickyBar.classList.add('is-visible');
-        stickyBar.setAttribute('aria-hidden', 'false');
+        const io = new IntersectionObserver((entries)=>{
+          const e = entries[0];
+          const visible = e && e.isIntersecting;
+          stickyBar.classList.toggle('is-visible', !visible);
+          stickyBar.setAttribute('aria-hidden', visible ? 'true' : 'false');
+        }, { root:null, threshold: 0 });
+        io.observe(mainCTA);
+      } catch(_) {
+        const sectionEl = document.querySelector('.product-simple-section');
+        const onScroll = () => {
+          if (!sectionEl) return;
+          const rect = sectionEl.getBoundingClientRect();
+          const outOfView = rect.bottom < (window.innerHeight || document.documentElement.clientHeight) - 60;
+          stickyBar.classList.toggle('is-visible', outOfView);
+          stickyBar.setAttribute('aria-hidden', outOfView ? 'false' : 'true');
+        };
+        window.addEventListener('scroll', onScroll, { passive:true });
+        onScroll();
       }
 
       // Initial sync
@@ -1693,16 +1522,6 @@
         mainQtyInput.addEventListener('change', syncQtyToSticky);
       }
     }
-
-    // ULTIMATE FALLBACK: Force sticky bar visible after 2 seconds
-    setTimeout(() => {
-      const bar = document.querySelector('.product-sticky-bar');
-      if (bar) {
-        bar.classList.add('is-visible');
-        bar.setAttribute('aria-hidden', 'false');
-        console.log('Fallback: Forced sticky bar visible');
-      }
-    }, 2000);
 
     // Render press logos if configured
     const mediaCol2 = document.querySelector('.product-simple-media');
@@ -1774,67 +1593,11 @@
     });
   }
 
-  // Add form submission validation to prevent out-of-stock purchases
-  document.addEventListener('DOMContentLoaded', function() {
-    const productForm = document.querySelector('.product-simple-section .product-form');
-    const stickyForm = document.querySelector('.product-sticky-bar .product-sticky-form');
-
-    function validateAndSubmit(form, event) {
-      const variantSelect = form.querySelector('select[name="id"]');
-      if (!variantSelect) return true; // No variant selection, let it proceed
-
-      const selectedVariantId = variantSelect.value;
-      const isAvailable = checkVariantAvailability(selectedVariantId);
-
-      if (!isAvailable) {
-        event.preventDefault();
-
-        // Update button to show sold out state
-        const submitBtn = form.querySelector('button[type="submit"]');
-        if (submitBtn) {
-          submitBtn.disabled = true;
-          submitBtn.textContent = 'Sold Out';
-        }
-
-        // Optionally show an alert to the user
-        alert('This variant is currently out of stock. Please select a different variant.');
-
-        return false;
-      }
-
-      return true;
-    }
-
-    if (productForm) {
-      productForm.addEventListener('submit', function(e) {
-        return validateAndSubmit(this, e);
-      });
-    }
-
-    if (stickyForm) {
-      stickyForm.addEventListener('submit', function(e) {
-        return validateAndSubmit(this, e);
-      });
-    }
-  });
-
   // Keyboard navigation for slider
   document.addEventListener('keydown', e => {
     if (e.key === 'ArrowLeft') changeSlide(-1);
     if (e.key === 'ArrowRight') changeSlide(1);
   });
-
-  // IMMEDIATE FALLBACK: Show sticky bar regardless of JavaScript errors
-  (function() {
-    setTimeout(function() {
-      const stickyBar = document.getElementById('product-sticky-bar-main') || document.querySelector('.product-sticky-bar');
-      if (stickyBar) {
-        stickyBar.classList.add('is-visible');
-        stickyBar.setAttribute('aria-hidden', 'false');
-        console.log('Immediate fallback: Sticky bar forced visible');
-      }
-    }, 1000);
-  })();
 </script>
 
 {% schema %}
