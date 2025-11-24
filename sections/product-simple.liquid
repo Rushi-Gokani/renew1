@@ -1300,6 +1300,8 @@
     const subscriptionPrice = document.querySelector('.product-simple-section .subscription-price');
     const purchaseRadios = document.querySelectorAll('.product-simple-section input[name="purchase_option"]');
     const sellingPlanInput = document.getElementById('selling_plan_input');
+    const addToCartBtn = document.querySelector('.product-simple-section .add-to-cart-btn');
+    const stickyAddBtn = document.querySelector('.product-sticky-bar .sticky-add-btn');
 
     function formatMoney(cents) {
       try { return Shopify.formatMoney(cents); } catch(e) { return (cents/100).toLocaleString(undefined,{style:'currency',currency:Shopify.currency.active||'GBP'}); }
@@ -1331,6 +1333,42 @@
       }
     }
 
+    function updateButtonState(isAvailable, ctaLabel) {
+      // Update main add to cart button
+      if (addToCartBtn) {
+        if (isAvailable) {
+          addToCartBtn.disabled = false;
+          addToCartBtn.textContent = ctaLabel || 'Buy Now ⚡';
+        } else {
+          addToCartBtn.disabled = true;
+          addToCartBtn.textContent = 'Sold Out';
+        }
+      }
+
+      // Update sticky add to cart button
+      if (stickyAddBtn) {
+        if (isAvailable) {
+          stickyAddBtn.disabled = false;
+          stickyAddBtn.textContent = ctaLabel || 'Buy Now ⚡';
+        } else {
+          stickyAddBtn.disabled = true;
+          stickyAddBtn.textContent = 'Sold Out';
+        }
+      }
+    }
+
+    function checkVariantAvailability(variantId) {
+      // Check if variant is disabled in the DOM (indicates out of stock)
+      const variantPill = document.querySelector(`[data-variant-id="${variantId}"]`);
+      const variantOption = selectEl ? selectEl.querySelector(`option[value="${variantId}"]`) : null;
+
+      // A variant is unavailable if either the pill is disabled OR the option is disabled
+      const isPillDisabled = variantPill && variantPill.hasAttribute('disabled');
+      const isOptionDisabled = variantOption && variantOption.hasAttribute('disabled');
+
+      return !isPillDisabled && !isOptionDisabled;
+    }
+
     pills.forEach(pill => {
       pill.addEventListener('click', () => {
         const id = pill.getAttribute('data-variant-id');
@@ -1339,6 +1377,10 @@
         if (selectEl) selectEl.value = id;
         setActivePill(id);
         updatePricesFromVariant(price, compare);
+
+        // Update button state based on variant availability
+        const isAvailable = checkVariantAvailability(id);
+        updateButtonState(isAvailable, '{{ section.settings.cta_label | default: "Buy Now ⚡" }}');
       });
     });
 
@@ -1431,6 +1473,11 @@
       });
     });
     reflectSelectedCard();
+
+    // Initialize button state based on current variant
+    const currentVariantId = selectEl ? selectEl.value : '{{ product.selected_or_first_available_variant.id }}';
+    const initialAvailable = checkVariantAvailability(currentVariantId);
+    updateButtonState(initialAvailable, '{{ section.settings.cta_label | default: "Buy Now ⚡" }}');
 
     // Sticky bar logic: show when main CTA is not visible
     const stickyBar = document.querySelector('.product-sticky-bar');
@@ -1592,6 +1639,50 @@
       });
     });
   }
+
+  // Add form submission validation to prevent out-of-stock purchases
+  document.addEventListener('DOMContentLoaded', function() {
+    const productForm = document.querySelector('.product-simple-section .product-form');
+    const stickyForm = document.querySelector('.product-sticky-bar .product-sticky-form');
+
+    function validateAndSubmit(form, event) {
+      const variantSelect = form.querySelector('select[name="id"]');
+      if (!variantSelect) return true; // No variant selection, let it proceed
+
+      const selectedVariantId = variantSelect.value;
+      const isAvailable = checkVariantAvailability(selectedVariantId);
+
+      if (!isAvailable) {
+        event.preventDefault();
+
+        // Update button to show sold out state
+        const submitBtn = form.querySelector('button[type="submit"]');
+        if (submitBtn) {
+          submitBtn.disabled = true;
+          submitBtn.textContent = 'Sold Out';
+        }
+
+        // Optionally show an alert to the user
+        alert('This variant is currently out of stock. Please select a different variant.');
+
+        return false;
+      }
+
+      return true;
+    }
+
+    if (productForm) {
+      productForm.addEventListener('submit', function(e) {
+        return validateAndSubmit(this, e);
+      });
+    }
+
+    if (stickyForm) {
+      stickyForm.addEventListener('submit', function(e) {
+        return validateAndSubmit(this, e);
+      });
+    }
+  });
 
   // Keyboard navigation for slider
   document.addEventListener('keydown', e => {
