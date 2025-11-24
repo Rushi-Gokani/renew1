@@ -320,7 +320,7 @@
 </div>
 
 <!-- Sticky product bar (appears when main CTA is out of view) -->
-<div class="product-sticky-bar" aria-hidden="true">
+<div class="product-sticky-bar" aria-hidden="true" id="product-sticky-bar-main">
   <form action="{{ routes.cart_add_url }}" method="post" class="product-sticky-form" enctype="multipart/form-data">
     <div class="sticky-left">
       {% assign sticky_img = product.selected_or_first_available_variant.featured_image | default: product.featured_image %}
@@ -1629,46 +1629,41 @@
     }
 
     if (stickyBar && mainCTA) {
-      console.log('Setting up sticky bar visibility logic');
+      // Simple scroll-based detection
+      let lastScrollY = 0;
 
-      // Use scroll-based detection (more reliable than intersection observer)
-      const onScroll = () => {
-        const rect = mainCTA.getBoundingClientRect();
-        const isVisible = rect.top >= 0 && rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-                         rect.left >= 0 && rect.right <= (window.innerWidth || document.documentElement.clientWidth);
+      const handleScroll = () => {
+        try {
+          const currentScrollY = window.pageYOffset || document.documentElement.scrollTop;
+          const ctaRect = mainCTA.getBoundingClientRect();
+          const isCtaVisible = ctaRect.top < window.innerHeight && ctaRect.bottom > 0;
 
-        console.log('Sticky bar check:', {
-          isVisible,
-          rectTop: rect.top,
-          rectBottom: rect.bottom,
-          windowHeight: window.innerHeight
-        });
+          // Show sticky bar when CTA is out of view
+          if (!isCtaVisible) {
+            stickyBar.classList.add('is-visible');
+            stickyBar.setAttribute('aria-hidden', 'false');
+          } else {
+            stickyBar.classList.remove('is-visible');
+            stickyBar.setAttribute('aria-hidden', 'true');
+          }
 
-        // Show sticky bar when main CTA is not visible
-        if (!isVisible) {
+          lastScrollY = currentScrollY;
+        } catch (error) {
+          // If there's any error, show sticky bar as fallback
           stickyBar.classList.add('is-visible');
           stickyBar.setAttribute('aria-hidden', 'false');
-          console.log('Sticky bar shown');
-        } else {
-          stickyBar.classList.remove('is-visible');
-          stickyBar.setAttribute('aria-hidden', 'true');
-          console.log('Sticky bar hidden');
         }
       };
 
-      window.addEventListener('scroll', onScroll, { passive: true });
-      onScroll(); // Check initial state
-
-      console.log('Sticky bar scroll listener added');
-
-      // TEMPORARY TEST: Force show sticky bar after 3 seconds for debugging
-      setTimeout(() => {
-        if (stickyBar) {
-          stickyBar.classList.add('is-visible');
-          stickyBar.setAttribute('aria-hidden', 'false');
-          console.log('TEMP: Forced sticky bar visible for testing');
-        }
-      }, 3000);
+      // Add scroll listener with error handling
+      try {
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        handleScroll(); // Check initial state
+      } catch (error) {
+        // Fallback: just show the sticky bar
+        stickyBar.classList.add('is-visible');
+        stickyBar.setAttribute('aria-hidden', 'false');
+      }
 
       // Initial sync
       syncVariantToSticky();
@@ -1698,6 +1693,16 @@
         mainQtyInput.addEventListener('change', syncQtyToSticky);
       }
     }
+
+    // ULTIMATE FALLBACK: Force sticky bar visible after 2 seconds
+    setTimeout(() => {
+      const bar = document.querySelector('.product-sticky-bar');
+      if (bar) {
+        bar.classList.add('is-visible');
+        bar.setAttribute('aria-hidden', 'false');
+        console.log('Fallback: Forced sticky bar visible');
+      }
+    }, 2000);
 
     // Render press logos if configured
     const mediaCol2 = document.querySelector('.product-simple-media');
@@ -1818,6 +1823,18 @@
     if (e.key === 'ArrowLeft') changeSlide(-1);
     if (e.key === 'ArrowRight') changeSlide(1);
   });
+
+  // IMMEDIATE FALLBACK: Show sticky bar regardless of JavaScript errors
+  (function() {
+    setTimeout(function() {
+      const stickyBar = document.getElementById('product-sticky-bar-main') || document.querySelector('.product-sticky-bar');
+      if (stickyBar) {
+        stickyBar.classList.add('is-visible');
+        stickyBar.setAttribute('aria-hidden', 'false');
+        console.log('Immediate fallback: Sticky bar forced visible');
+      }
+    }, 1000);
+  })();
 </script>
 
 {% schema %}
