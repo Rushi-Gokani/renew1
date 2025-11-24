@@ -1587,6 +1587,15 @@
     const mainVariantSelect = document.getElementById('productVariant');
     const mainQtyInput = document.getElementById('quantity');
 
+    console.log('Sticky bar elements:', {
+      stickyBar: !!stickyBar,
+      mainCTA: !!mainCTA,
+      stickyVariant: !!stickyVariant,
+      stickyQtyInput: !!stickyQtyInput,
+      mainVariantSelect: !!mainVariantSelect,
+      mainQtyInput: !!mainQtyInput
+    });
+
     function clampQty(val){
       let v = parseInt(val || 1);
       if (isNaN(v) || v < 1) v = 1;
@@ -1620,27 +1629,46 @@
     }
 
     if (stickyBar && mainCTA) {
-      try {
-        const io = new IntersectionObserver((entries)=>{
-          const e = entries[0];
-          const visible = e && e.isIntersecting;
-          stickyBar.classList.toggle('is-visible', !visible);
-          stickyBar.setAttribute('aria-hidden', visible ? 'true' : 'false');
-        }, { root:null, threshold: 0 });
-        io.observe(mainCTA);
-      } catch(error) {
-        // Fallback to scroll-based detection
-        const sectionEl = document.querySelector('.product-simple-section');
-        const onScroll = () => {
-          if (!sectionEl) return;
-          const rect = sectionEl.getBoundingClientRect();
-          const outOfView = rect.bottom < (window.innerHeight || document.documentElement.clientHeight) - 60;
-          stickyBar.classList.toggle('is-visible', outOfView);
-          stickyBar.setAttribute('aria-hidden', outOfView ? 'false' : 'true');
-        };
-        window.addEventListener('scroll', onScroll, { passive:true });
-        onScroll();
-      }
+      console.log('Setting up sticky bar visibility logic');
+
+      // Use scroll-based detection (more reliable than intersection observer)
+      const onScroll = () => {
+        const rect = mainCTA.getBoundingClientRect();
+        const isVisible = rect.top >= 0 && rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+                         rect.left >= 0 && rect.right <= (window.innerWidth || document.documentElement.clientWidth);
+
+        console.log('Sticky bar check:', {
+          isVisible,
+          rectTop: rect.top,
+          rectBottom: rect.bottom,
+          windowHeight: window.innerHeight
+        });
+
+        // Show sticky bar when main CTA is not visible
+        if (!isVisible) {
+          stickyBar.classList.add('is-visible');
+          stickyBar.setAttribute('aria-hidden', 'false');
+          console.log('Sticky bar shown');
+        } else {
+          stickyBar.classList.remove('is-visible');
+          stickyBar.setAttribute('aria-hidden', 'true');
+          console.log('Sticky bar hidden');
+        }
+      };
+
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll(); // Check initial state
+
+      console.log('Sticky bar scroll listener added');
+
+      // TEMPORARY TEST: Force show sticky bar after 3 seconds for debugging
+      setTimeout(() => {
+        if (stickyBar) {
+          stickyBar.classList.add('is-visible');
+          stickyBar.setAttribute('aria-hidden', 'false');
+          console.log('TEMP: Forced sticky bar visible for testing');
+        }
+      }, 3000);
 
       // Initial sync
       syncVariantToSticky();
