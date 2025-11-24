@@ -229,8 +229,8 @@
      
         </div>
 
-        <button type="submit" class="add-to-cart-btn" {% unless product.available %}disabled{% endunless %}>
-          {% if product.available %}
+        <button type="submit" class="add-to-cart-btn" {% unless product.selected_or_first_available_variant.available %}disabled{% endunless %}>
+          {% if product.selected_or_first_available_variant.available %}
             {{ section.settings.cta_label | default: 'Buy Now ⚡' }}
           {% else %}
             Sold Out
@@ -316,8 +316,8 @@
       <input type="number" name="quantity" id="stickyQuantity" class="sticky-qty-input" value="1" min="1" max="99">
       <button type="button" class="sticky-qty-btn plus" aria-label="Increase quantity">+</button>
     </div>
-    <button type="submit" class="sticky-add-btn" {% unless product.available %}disabled{% endunless %}>
-      {% if product.available %}
+    <button type="submit" class="sticky-add-btn" {% unless product.selected_or_first_available_variant.available %}disabled{% endunless %}>
+      {% if product.selected_or_first_available_variant.available %}
         {{ section.settings.cta_label | default: 'Buy Now ⚡' }}
       {% else %}
         Sold Out
