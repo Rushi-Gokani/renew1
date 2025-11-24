@@ -1591,7 +1591,15 @@
 
     // Sticky bar logic: show when main CTA is not visible
     const stickyBar = document.querySelector('.product-sticky-bar');
-    const mainCTA = document.querySelector('.product-simple-section .add-to-cart-btn');
+    const mainCTA = addToCartBtn || document.querySelector('.product-simple-section .add-to-cart-btn');
+
+    // Debug logging
+    console.log('Sticky bar elements found:', {
+      stickyBar: !!stickyBar,
+      mainCTA: !!mainCTA,
+      stickyBarElement: stickyBar,
+      mainCTAElement: mainCTA
+    });
     const stickyVariant = document.getElementById('stickyVariant');
     const stickyQtyInput = document.getElementById('stickyQuantity');
     const mainVariantSelect = document.getElementById('productVariant');
@@ -1630,20 +1638,26 @@
     }
 
     if (stickyBar && mainCTA) {
+      console.log('Setting up intersection observer for sticky bar');
       try {
         const io = new IntersectionObserver((entries)=>{
           const e = entries[0];
           const visible = e && e.isIntersecting;
+          console.log('Intersection observer:', { visible, isIntersecting: e?.isIntersecting });
           stickyBar.classList.toggle('is-visible', !visible);
           stickyBar.setAttribute('aria-hidden', visible ? 'true' : 'false');
+          console.log('Sticky bar classes:', stickyBar.className);
         }, { root:null, threshold: 0 });
         io.observe(mainCTA);
-      } catch(_) {
+        console.log('Intersection observer setup complete');
+      } catch(error) {
+        console.log('Intersection observer failed, using fallback:', error);
         const sectionEl = document.querySelector('.product-simple-section');
         const onScroll = () => {
           if (!sectionEl) return;
           const rect = sectionEl.getBoundingClientRect();
           const outOfView = rect.bottom < (window.innerHeight || document.documentElement.clientHeight) - 60;
+          console.log('Scroll fallback:', { outOfView, rectBottom: rect.bottom, windowHeight: window.innerHeight });
           stickyBar.classList.toggle('is-visible', outOfView);
           stickyBar.setAttribute('aria-hidden', outOfView ? 'false' : 'true');
         };
@@ -1654,6 +1668,15 @@
       // Initial sync
       syncVariantToSticky();
       syncQtyToSticky();
+
+      // TEMPORARY: Force sticky bar to be visible for testing
+      setTimeout(() => {
+        if (stickyBar) {
+          stickyBar.classList.add('is-visible');
+          stickyBar.setAttribute('aria-hidden', 'false');
+          console.log('Forced sticky bar to be visible for testing');
+        }
+      }, 2000);
 
       // Keep variant in sync when user changes pills or select
       if (mainVariantSelect) {
