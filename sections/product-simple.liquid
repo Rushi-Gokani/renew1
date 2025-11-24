@@ -144,6 +144,31 @@
                         data-variant-id="{{ v.id }}"
                         data-price="{{ v.price }}"
                         data-compare="{{ v.compare_at_price }}"
+                        data-available="{{ v.available }}"
+                        {% unless v.available %}disabled aria-disabled="true"{% endunless %}>
+                  {% if img %}
+                    <img src="{{ img | image_url: width: 64 }}" alt="{{ v.title | escape }}">
+                  {% endif %}
+                  <span class="variant-pill-text">{{ v.title }}</span>
+                </button>
+              {% endfor %}
+            </div>
+            <!-- Keep a native select for form compatibility and accessibility -->
+            <select name="id" id="productVariant" class="sr-only-hidden">
+        {% else %}
+          <div class="variant-selector">
+            <div class="selector-label">{{ section.settings.variant_label | default: 'Choose your flavour' }}</div>
+            <div class="variant-pills" role="radiogroup" aria-label="Choose your flavour">
+              {% for v in product.variants %}
+                {% assign img = v.featured_image | default: product.featured_image %}
+                <button type="button"
+                        class="variant-pill {% if v == product.selected_or_first_available_variant %}active{% endif %}"
+                        role="radio"
+                        aria-checked="{% if v == product.selected_or_first_available_variant %}true{% else %}false{% endif %}"
+                        data-variant-id="{{ v.id }}"
+                        data-price="{{ v.price }}"
+                        data-compare="{{ v.compare_at_price }}"
+                        data-available="{{ v.available }}"
                         {% unless v.available %}disabled aria-disabled="true"{% endunless %}>
                   {% if img %}
                     <img src="{{ img | image_url: width: 64 }}" alt="{{ v.title | escape }}">
@@ -1358,11 +1383,17 @@
     }
 
     function checkVariantAvailability(variantId) {
-      // Check if variant is disabled in the DOM (indicates out of stock)
+      // First check the data-available attribute (most reliable)
       const variantPill = document.querySelector(`[data-variant-id="${variantId}"]`);
-      const variantOption = selectEl ? selectEl.querySelector(`option[value="${variantId}"]`) : null;
+      if (variantPill) {
+        const available = variantPill.getAttribute('data-available');
+        if (available !== null) {
+          return available === 'true';
+        }
+      }
 
-      // A variant is unavailable if either the pill is disabled OR the option is disabled
+      // Fallback: Check if variant is disabled in the DOM (indicates out of stock)
+      const variantOption = selectEl ? selectEl.querySelector(`option[value="${variantId}"]`) : null;
       const isPillDisabled = variantPill && variantPill.hasAttribute('disabled');
       const isOptionDisabled = variantOption && variantOption.hasAttribute('disabled');
 
@@ -1474,10 +1505,12 @@
     });
     reflectSelectedCard();
 
-    // Initialize button state based on current variant
-    const currentVariantId = selectEl ? selectEl.value : '{{ product.selected_or_first_available_variant.id }}';
-    const initialAvailable = checkVariantAvailability(currentVariantId);
-    updateButtonState(initialAvailable, '{{ section.settings.cta_label | default: "Buy Now ⚡" }}');
+    // Initialize button state based on current variant (with small delay for DOM stability)
+    setTimeout(() => {
+      const currentVariantId = selectEl ? selectEl.value : '{{ product.selected_or_first_available_variant.id }}';
+      const initialAvailable = checkVariantAvailability(currentVariantId);
+      updateButtonState(initialAvailable, '{{ section.settings.cta_label | default: "Buy Now ⚡" }}');
+    }, 100);
 
     // Sticky bar logic: show when main CTA is not visible
     const stickyBar = document.querySelector('.product-sticky-bar');
