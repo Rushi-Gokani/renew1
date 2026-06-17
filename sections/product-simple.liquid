@@ -95,11 +95,13 @@
     <!-- Product Information -->
     <div class="product-simple-info">
       <div class="product-meta">
+        {% comment %}
         <div class="rating-and-count">
           <div class="stars" aria-hidden="true">★★★★★</div>
           {% assign rating_line = section.settings.rating_text | default: 'Join 300,000+ Happy Women' %}
           <a class="reviews-link" href="#shopify-product-reviews" aria-label="Read reviews">{{ rating_line }}</a>
         </div>
+        {% endcomment %}
         <h1 class="product-title">{{ product.title }}</h1>
         <div class="feature-badges">
           {% for b in section.blocks %}

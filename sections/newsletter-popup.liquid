@@ -1,0 +1,814 @@
+{%- if section.settings.enable -%}
+  {%- assign section_id = section.id -%}
+  {%- assign bg_color = section.settings.bg_color | default: '#ffffff' -%}
+  {%- assign text_color = section.settings.text_color | default: '#111111' -%}
+  {%- assign accent_color = section.settings.accent_color | default: '#00593b' -%}
+
+  <div class="newsletter-popup-wrapper" id="NewsletterPopup-{{ section_id }}" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="PopupTitle-{{ section_id }}">
+    <div class="newsletter-popup-overlay" id="NewsletterPopupOverlay-{{ section_id }}"></div>
+    
+    <div class="newsletter-popup-modal" style="background-color: {{ bg_color }}; color: {{ text_color }};">
+      <canvas class="newsletter-popup-confetti" id="NewsletterConfetti-{{ section_id }}"></canvas>
+      
+      <button class="newsletter-popup-close" id="NewsletterPopupClose-{{ section_id }}" aria-label="Close popup">
+        <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+
+      <div class="newsletter-popup-content">
+        <!-- Image Column -->
+        <div class="newsletter-popup-image-col">
+          {%- if section.settings.image != blank -%}
+            <img 
+              src="{{ section.settings.image | image_url: width: 600 }}" 
+              alt="{{ section.settings.image.alt | default: section.settings.heading | escape }}" 
+              loading="lazy"
+              width="400"
+              height="500"
+            />
+          {%- else -%}
+            <img 
+              src="https://cdn.shopify.com/s/files/1/0650/7479/0448/files/41217386-2f94-453b-bac2-c6ed46971d59.png?v=1781701481" 
+              alt="{{ section.settings.heading | escape }}" 
+              loading="lazy"
+              width="400"
+              height="500"
+            />
+          {%- endif -%}
+        </div>
+
+        <!-- Info Column -->
+        <div class="newsletter-popup-info-col">
+          <!-- Step 1: Subscribe Form -->
+          <div class="newsletter-popup-step newsletter-popup-step-1 active" id="NewsletterStep1-{{ section_id }}">
+            <h2 class="newsletter-popup-heading" id="PopupTitle-{{ section_id }}" style="font-family: var(--font-heading-family); color: {{ accent_color }};">
+              {{ section.settings.heading }}
+            </h2>
+            <p class="newsletter-popup-subheading">
+              {{ section.settings.subheading }}
+            </p>
+
+            <div class="newsletter-popup-form-mock" id="NewsletterPopupForm-{{ section_id }}">
+              <div class="newsletter-popup-form-field">
+                <input 
+                  type="email" 
+                  id="NewsletterPopupEmail-{{ section_id }}"
+                  placeholder="{{ section.settings.email_placeholder }}" 
+                  required 
+                  class="newsletter-popup-input"
+                  style="border-color: {{ text_color | color_modify: 'alpha', 0.2 }}; color: {{ text_color }};"
+                >
+              </div>
+              <button type="button" class="newsletter-popup-btn" id="NewsletterSubmitBtn-{{ section_id }}" style="background-color: {{ accent_color }}; color: #ffffff;">
+                <span class="btn-text">{{ section.settings.button_text }}</span>
+                <span class="btn-loading" style="display: none;">
+                  <svg class="spinner" viewBox="0 0 50 50">
+                    <circle class="path" cx="25" cy="25" r="20" fill="none" stroke="currentColor" stroke-width="5"></circle>
+                  </svg>
+                </span>
+              </button>
+            </div>
+
+            {%- if section.settings.footer_text != blank -%}
+              <p class="newsletter-popup-footer-text" style="color: {{ text_color | color_modify: 'alpha', 0.6 }};">
+                {{ section.settings.footer_text }}
+              </p>
+            {%- endif -%}
+          </div>
+
+          <!-- Step 2: Discount Coupon -->
+          <div class="newsletter-popup-step newsletter-popup-step-2" id="NewsletterStep2-{{ section_id }}">
+            <div class="newsletter-popup-success-badge" style="background-color: {{ accent_color | color_modify: 'alpha', 0.1 }}; color: {{ accent_color }};">
+              <svg viewBox="0 0 24 24" width="36" height="36" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+              </svg>
+            </div>
+
+            <h2 class="newsletter-popup-heading" style="font-family: var(--font-heading-family); color: {{ accent_color }}; margin-top: 15px;">
+              {{ section.settings.success_heading }}
+            </h2>
+            <p class="newsletter-popup-subheading">
+              {{ section.settings.success_subheading }}
+            </p>
+
+            <div class="newsletter-popup-coupon-box" style="border: 2px dashed {{ accent_color }}; background-color: {{ accent_color | color_modify: 'alpha', 0.04 }};">
+              <span class="newsletter-popup-coupon-code" id="NewsletterCouponCode-{{ section_id }}" style="color: {{ accent_color }};">
+                {{ section.settings.coupon_code | escape }}
+              </span>
+              <button class="newsletter-popup-coupon-copy" id="NewsletterCouponCopy-{{ section_id }}" style="background-color: {{ accent_color }}; color: #ffffff;" aria-label="Copy code">
+                <span class="copy-text">COPY</span>
+                <span class="copied-text" style="display: none;">
+                  <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="3" fill="none">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                </span>
+              </button>
+            </div>
+
+            {% comment %}
+            Button removed as coupon is applied automatically
+            {% endcomment %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    /* Popup Outer Container */
+    .newsletter-popup-wrapper {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 999999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1),
+                  visibility 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .newsletter-popup-wrapper.open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* Blur Backdrop */
+    .newsletter-popup-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(15, 23, 42, 0.5);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    /* Main Modal Card */
+    .newsletter-popup-modal {
+      position: relative;
+      width: 90%;
+      max-width: 860px;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      transform: scale(0.9) translateY(20px);
+      opacity: 0;
+      transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
+                  opacity 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+      z-index: 2;
+    }
+
+    .newsletter-popup-wrapper.open .newsletter-popup-modal {
+      transform: scale(1) translateY(0);
+      opacity: 1;
+    }
+
+    /* Confetti Canvas overlay */
+    .newsletter-popup-confetti {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    /* Close Button */
+    .newsletter-popup-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: rgba(255, 255, 255, 0.8);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      border-radius: 50%;
+      width: 38px;
+      height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: #334155;
+      transition: all 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+      z-index: 20;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    }
+
+    .newsletter-popup-close:hover {
+      background: #ffffff;
+      transform: rotate(90deg);
+      color: #000000;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Split screen Flex */
+    .newsletter-popup-content {
+      display: flex;
+      min-height: 480px;
+    }
+
+    .newsletter-popup-image-col {
+      width: 45%;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+    }
+
+    .newsletter-popup-image-col img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 6s ease;
+    }
+
+    .newsletter-popup-wrapper.open .newsletter-popup-image-col img {
+      transform: scale(1.05);
+    }
+
+    .newsletter-popup-image-fallback {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .newsletter-popup-info-col {
+      width: 55%;
+      padding: 48px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+    }
+
+    /* Multi-step Layout */
+    .newsletter-popup-step {
+      display: none;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    .newsletter-popup-step.active {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .newsletter-popup-heading {
+      font-size: clamp(22px, 3.5vw, 32px);
+      font-weight: 800;
+      line-height: 1.25;
+      margin: 0 0 12px;
+      letter-spacing: -0.02em;
+    }
+
+    .newsletter-popup-subheading {
+      font-size: 14px;
+      line-height: 1.6;
+      margin: 0 0 24px;
+      opacity: 0.85;
+    }
+
+    /* Form Design */
+    .newsletter-popup-form-field {
+      margin-bottom: 14px;
+    }
+
+    .newsletter-popup-input {
+      width: 100%;
+      height: 52px;
+      border: 2px solid;
+      border-radius: 10px;
+      padding: 0 16px;
+      font-size: 15px;
+      font-family: inherit;
+      background: transparent;
+      outline: none;
+      transition: all 0.25s ease;
+    }
+
+    .newsletter-popup-input:focus {
+      border-color: {{ accent_color }} !important;
+      box-shadow: 0 0 0 4px {{ accent_color | color_modify: 'alpha', 0.15 }};
+    }
+
+    .newsletter-popup-btn {
+      width: 100%;
+      height: 52px;
+      border: none;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    }
+
+    .newsletter-popup-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 15px -3px {{ accent_color | color_modify: 'alpha', 0.25 }};
+      opacity: 0.95;
+    }
+
+    .newsletter-popup-btn:active {
+      transform: translateY(0);
+    }
+
+    .newsletter-popup-footer-text {
+      font-size: 11px;
+      line-height: 1.4;
+      margin: 16px 0 0;
+      text-align: center;
+    }
+
+    /* Step 2 Success styles */
+    .newsletter-popup-success-badge {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px 0;
+    }
+
+    /* Coupon Container box */
+    .newsletter-popup-coupon-box {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-radius: 10px;
+      padding: 6px 6px 6px 18px;
+      margin-bottom: 20px;
+    }
+
+    .newsletter-popup-coupon-code {
+      font-family: monospace;
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: 2px;
+    }
+
+    .newsletter-popup-coupon-copy {
+      height: 40px;
+      border: none;
+      border-radius: 6px;
+      padding: 0 18px;
+      font-size: 12px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .newsletter-popup-coupon-copy:hover {
+      opacity: 0.9;
+    }
+
+    .newsletter-popup-coupon-copy.success {
+      background-color: #22c55e !important;
+    }
+
+    /* Loading Spinner */
+    .spinner {
+      animation: rotate 2s linear infinite;
+      width: 24px;
+      height: 24px;
+    }
+
+    .spinner .path {
+      stroke-linecap: round;
+      animation: dash 1.5s ease-in-out infinite;
+    }
+
+    @keyframes rotate {
+      100% { transform: rotate(360deg); }
+    }
+
+    @keyframes dash {
+      0% {
+        stroke-dasharray: 1, 150;
+        stroke-dashoffset: 0;
+      }
+      50% {
+        stroke-dasharray: 90, 150;
+        stroke-dashoffset: -35;
+      }
+      100% {
+        stroke-dasharray: 90, 150;
+        stroke-dashoffset: -124;
+      }
+    }
+
+    /* Responsiveness */
+    @media screen and (max-width: 768px) {
+      .newsletter-popup-modal {
+        max-width: 420px;
+      }
+
+      .newsletter-popup-content {
+        flex-direction: column;
+        min-height: auto;
+      }
+
+      .newsletter-popup-image-col {
+        width: 100%;
+        height: 160px;
+      }
+
+      .newsletter-popup-info-col {
+        width: 100%;
+        padding: 32px 24px;
+      }
+
+      .newsletter-popup-close {
+        top: 12px;
+        right: 12px;
+        background: #ffffff;
+      }
+    }
+  </style>
+
+  <script>
+    (function() {
+      // Check if popup should be shown
+      const testMode = {{ section.settings.test_mode | json }};
+      const cookieExp = parseInt({{ section.settings.cookie_expiration | json }}) || 7;
+      const popupDelay = (parseInt({{ section.settings.popup_delay | json }}) || 3) * 1000;
+      const popupKey = 'newsletter_popup_subscribed';
+      const dismissKey = 'newsletter_popup_dismissed';
+
+      function checkShow() {
+        if (testMode) return true;
+        
+        // Check if subscribed
+        if (localStorage.getItem(popupKey)) return false;
+        
+        // Check if dismissed within expiration period
+        const dismissedTime = localStorage.getItem(dismissKey);
+        if (dismissedTime) {
+          const elapsed = Date.now() - parseInt(dismissedTime);
+          const maxAge = cookieExp * 24 * 60 * 60 * 1000;
+          if (elapsed < maxAge) return false;
+        }
+        
+        return true;
+      }
+
+      function initPopup() {
+        const wrapper = document.getElementById('NewsletterPopup-{{ section_id }}');
+        const overlay = document.getElementById('NewsletterPopupOverlay-{{ section_id }}');
+        const closeBtn = document.getElementById('NewsletterPopupClose-{{ section_id }}');
+        const emailInput = document.getElementById('NewsletterPopupEmail-{{ section_id }}');
+        const submitBtn = document.getElementById('NewsletterSubmitBtn-{{ section_id }}');
+        const copyBtn = document.getElementById('NewsletterCouponCopy-{{ section_id }}');
+        const couponCode = document.getElementById('NewsletterCouponCode-{{ section_id }}').textContent.trim();
+        
+        if (!wrapper) return;
+
+        function showPopup() {
+          wrapper.style.display = 'flex';
+          setTimeout(() => {
+            wrapper.classList.add('open');
+          }, 50);
+        }
+
+        function closePopup() {
+          wrapper.classList.remove('open');
+          localStorage.setItem(dismissKey, Date.now().toString());
+          setTimeout(() => {
+            wrapper.style.display = 'none';
+          }, 400);
+        }
+
+        // Close listeners
+        closeBtn.addEventListener('click', closePopup);
+        overlay.addEventListener('click', closePopup);
+        
+        // Manual formless newsletter submit
+        function validateEmail(email) {
+          const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          return re.test(email);
+        }
+
+        function handleSubscribe() {
+          const email = emailInput.value.trim();
+          if (!validateEmail(email)) {
+            emailInput.style.borderColor = '#ef4444';
+            emailInput.focus();
+            return;
+          }
+
+          const btnText = submitBtn.querySelector('.btn-text');
+          const btnLoading = submitBtn.querySelector('.btn-loading');
+          
+          if (btnText && btnLoading) {
+            btnText.style.display = 'none';
+            btnLoading.style.display = 'inline-block';
+          }
+
+          const formData = new FormData();
+          formData.append('form_type', 'customer');
+          formData.append('utf8', '✓');
+          formData.append('contact[tags]', 'newsletter, popup');
+          formData.append('contact[email]', email);
+
+          fetch('/contact', {
+            method: 'POST',
+            body: formData,
+            headers: {
+              'Accept': 'text/html'
+            }
+          })
+          .then(() => {
+            localStorage.setItem(popupKey, 'true');
+            transitionToStep2();
+          })
+          .catch(() => {
+            localStorage.setItem(popupKey, 'true');
+            transitionToStep2();
+          });
+        }
+
+        submitBtn.addEventListener('click', handleSubscribe);
+        emailInput.addEventListener('keypress', function(e) {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            handleSubscribe();
+          }
+        });
+        emailInput.addEventListener('input', function() {
+          emailInput.style.borderColor = '{{ text_color | color_modify: "alpha", 0.2 }}';
+        });
+
+        // Step Transition
+        function transitionToStep2() {
+          const step1 = document.getElementById('NewsletterStep1-{{ section_id }}');
+          const step2 = document.getElementById('NewsletterStep2-{{ section_id }}');
+          
+          step1.classList.remove('active');
+          setTimeout(() => {
+            step1.style.display = 'none';
+            step2.classList.add('active');
+            
+            // Run Confetti
+            const canvas = document.getElementById('NewsletterConfetti-{{ section_id }}');
+            if (canvas) triggerConfetti(canvas);
+
+            // Automatically apply discount code in the background
+            localStorage.setItem(popupKey, 'true');
+            fetch('/?discount=' + encodeURIComponent(couponCode))
+              .then(() => {
+                console.log('Discount automatically applied:', couponCode);
+              })
+              .catch(err => {
+                console.error('Failed to automatically apply discount:', err);
+              });
+          }, 300);
+        }
+
+        // Copy Code Button
+        copyBtn.addEventListener('click', function() {
+          navigator.clipboard.writeText(couponCode).then(() => {
+            copyBtn.classList.add('success');
+            copyBtn.querySelector('.copy-text').style.display = 'none';
+            copyBtn.querySelector('.copied-text').style.display = 'inline-block';
+            
+            setTimeout(() => {
+              copyBtn.classList.remove('success');
+              copyBtn.querySelector('.copy-text').style.display = 'inline-block';
+              copyBtn.querySelector('.copied-text').style.display = 'none';
+            }, 2000);
+          });
+        });
+
+        // Trigger delay
+        setTimeout(() => {
+          if (checkShow()) {
+            showPopup();
+          }
+        }, popupDelay);
+      }
+
+      // Self-contained Confetti Animation
+      function triggerConfetti(canvas) {
+        const ctx = canvas.getContext('2d');
+        canvas.width = canvas.parentElement.offsetWidth;
+        canvas.height = canvas.parentElement.offsetHeight;
+        
+        const colors = ['#00593b', '#22c55e', '#a3e635', '#ffffff', '#fef08a'];
+        const confettiCount = 60;
+        const pieces = [];
+
+        for (let i = 0; i < confettiCount; i++) {
+          pieces.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height - canvas.height,
+            r: Math.random() * 5 + 3,
+            d: Math.random() * canvas.height,
+            color: colors[Math.floor(Math.random() * colors.length)],
+            tilt: Math.random() * 10 - 5,
+            tiltAngleIncremental: Math.random() * 0.07 + 0.02,
+            tiltAngle: 0
+          });
+        }
+
+        let animationFrameId;
+        function draw() {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          let active = false;
+
+          pieces.forEach(p => {
+            p.tiltAngle += p.tiltAngleIncremental;
+            p.y += (Math.cos(p.d) + 3 + p.r / 2) / 2.5;
+            p.x += Math.sin(p.tiltAngle) * 0.5;
+            p.tilt = Math.sin(p.tiltAngle - (pieces.indexOf(p) / 3)) * 12;
+
+            if (p.y <= canvas.height) active = true;
+
+            ctx.beginPath();
+            ctx.lineWidth = p.r;
+            ctx.strokeStyle = p.color;
+            ctx.moveTo(p.x + p.tilt + p.r / 2, p.y);
+            ctx.lineTo(p.x + p.tilt, p.y + p.tilt + p.r / 2);
+            ctx.stroke();
+          });
+
+          if (active) {
+            animationFrameId = requestAnimationFrame(draw);
+          } else {
+            cancelAnimationFrame(animationFrameId);
+          }
+        }
+        draw();
+      }
+
+      // Initialize on DOM load or custom event
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initPopup);
+      } else {
+        initPopup();
+      }
+
+      // Listen for Shopify Section Load Event in Theme Editor
+      document.addEventListener('shopify:section:load', function(e) {
+        if (e.detail.sectionId === '{{ section_id }}') {
+          initPopup();
+        }
+      });
+    })();
+  </script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Newsletter Popup",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enable",
+      "label": "Enable Newsletter Popup",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "test_mode",
+      "label": "Enable Test Mode",
+      "default": false,
+      "info": "Bypasses cookies/localStorage to always show the popup for testing."
+    },
+    {
+      "type": "range",
+      "id": "popup_delay",
+      "label": "Delay (seconds)",
+      "min": 1,
+      "max": 15,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "cookie_expiration",
+      "label": "Hide after dismissal (days)",
+      "min": 1,
+      "max": 30,
+      "step": 1,
+      "default": 1
+    },
+    {
+      "type": "header",
+      "content": "Aesthetics & Layout"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Popup Image",
+      "info": "Display on the left side of the popup."
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent / Button Color",
+      "default": "#00593b"
+    },
+    {
+      "type": "header",
+      "content": "Step 1: Email Form"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Get 10% Off Your First Order"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Subscribe to our newsletter to receive clean recipes, exclusive wellness updates, and your 10% discount code."
+    },
+    {
+      "type": "text",
+      "id": "email_placeholder",
+      "label": "Email Input Placeholder",
+      "default": "Enter your email address..."
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Submit Button Text",
+      "default": "CLAIM MY DISCOUNT"
+    },
+    {
+      "type": "text",
+      "id": "footer_text",
+      "label": "Footer / Privacy Disclaimer",
+      "default": "By signing up, you agree to our privacy policy. No spam, unsubscribe anytime."
+    },
+    {
+      "type": "header",
+      "content": "Step 2: Discount & Success"
+    },
+    {
+      "type": "text",
+      "id": "success_heading",
+      "label": "Success Heading",
+      "default": "You're on the list!"
+    },
+    {
+      "type": "textarea",
+      "id": "success_subheading",
+      "label": "Success Subheading",
+      "default": "Thank you for subscribing! Your 10% discount code has been automatically applied to your cart."
+    },
+    {
+      "type": "text",
+      "id": "coupon_code",
+      "label": "Coupon Code",
+      "default": "FIRST10"
+    },
+    {
+      "type": "text",
+      "id": "apply_button_text",
+      "label": "Apply Coupon Button Text",
+      "default": "Apply Code & Shop Now"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Newsletter Popup",
+      "settings": {}
+    }
+  ]
+}
+{% endschema %}
