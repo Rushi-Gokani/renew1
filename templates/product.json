@@ -922,6 +922,23 @@
         "padding-block-end": 0
       }
     },
+    "launch_notice": {
+      "type": "launch-notice",
+      "disabled": true,
+      "settings": {
+        "enable": true,
+        "icon": "🌿",
+        "text": "<p>We've just launched — be one of our first customers. Real reviews coming soon.</p>",
+        "bg_color": "#edf7f4",
+        "text_color": "#00593b",
+        "border_color": "#00593b26",
+        "border_radius": 12,
+        "max_width": 1000,
+        "font_size": 20,
+        "padding_top": 60,
+        "padding_bottom": 60
+      }
+    },
     "blocks_Ar8jDR": {
       "type": "_blocks",
       "blocks": {
@@ -1085,22 +1102,6 @@
         "gradient_direction": "to top",
         "padding-block-start": 0,
         "padding-block-end": 0
-      }
-    },
-    "launch_notice": {
-      "type": "launch-notice",
-      "settings": {
-        "enable": true,
-        "icon": "🌿",
-        "text": "<p>We've just launched — be one of our first customers. Real reviews coming soon.</p>",
-        "bg_color": "#edf7f4",
-        "text_color": "#00593b",
-        "border_color": "rgba(0, 89, 59, 0.15)",
-        "border_radius": 12,
-        "max_width": 1000,
-        "font_size": 20,
-        "padding_top": 60,
-        "padding_bottom": 60
       }
     }
   },

@@ -637,6 +637,22 @@
         "padding-block-end": 0
       }
     },
+    "launch_notice_wm4FAA": {
+      "type": "launch-notice",
+      "settings": {
+        "enable": true,
+        "icon": "🌿",
+        "text": "<p>We've just launched — be one of our first customers. Real reviews coming soon.</p>",
+        "bg_color": "#edf7f4",
+        "text_color": "#00593b",
+        "border_color": "#00593b26",
+        "border_radius": 12,
+        "max_width": 1000,
+        "font_size": 20,
+        "padding_top": 60,
+        "padding_bottom": 60
+      }
+    },
     "17555115151d4fcae0": {
       "type": "_blocks",
       "blocks": {
@@ -1082,6 +1098,7 @@
     "175740271039812516",
     "17594794863b5b6bdd",
     "featured_product_LxGRmg",
+    "launch_notice_wm4FAA",
     "17555115151d4fcae0",
     "collection_list_bGtkjG",
     "marquee_nPGemQ",
