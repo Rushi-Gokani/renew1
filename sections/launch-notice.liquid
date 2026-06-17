@@ -1,0 +1,173 @@
+{%- if section.settings.enable -%}
+  <section id="section-{{ section.id }}" class="launch-notice-section" style="padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
+    <div class="page-width">
+      <div class="launch-notice-inner" style="max-width: {{ section.settings.max_width }}px; margin: 0 auto;">
+        <div class="launch-notice-box" style="
+          background-color: {{ section.settings.bg_color }};
+          color: {{ section.settings.text_color }};
+          border: 1px solid {{ section.settings.border_color }};
+          border-radius: {{ section.settings.border_radius }}px;
+        ">
+          {%- if section.settings.icon != blank -%}
+            <div class="launch-notice-icon-wrapper">
+              <span class="launch-notice-icon">{{ section.settings.icon }}</span>
+            </div>
+          {%- endif -%}
+          <div class="launch-notice-content rte" style="font-size: {{ section.settings.font_size }}px;">
+            {{ section.settings.text }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <style>
+      .launch-notice-box {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        padding: 24px 36px;
+        box-shadow: 0 4px 15px rgba(0, 89, 59, 0.03), 0 1px 3px rgba(0, 89, 59, 0.02);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .launch-notice-box:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 8px 25px rgba(0, 89, 59, 0.05), 0 2px 6px rgba(0, 89, 59, 0.03);
+      }
+
+      .launch-notice-icon-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 32px;
+        flex-shrink: 0;
+        animation: floatLeaf 3s ease-in-out infinite alternate;
+      }
+
+      .launch-notice-content {
+        line-height: 1.6;
+        font-weight: 500;
+        letter-spacing: -0.01em;
+      }
+
+      .launch-notice-content p {
+        margin: 0;
+      }
+
+      @keyframes floatLeaf {
+        0% { transform: translateY(0) rotate(0deg); }
+        100% { transform: translateY(-3px) rotate(5deg); }
+      }
+
+      @media screen and (max-width: 749px) {
+        .launch-notice-box {
+          padding: 18px 24px;
+          gap: 16px;
+        }
+        .launch-notice-icon-wrapper {
+          font-size: 26px;
+        }
+        .launch-notice-content {
+          font-size: {{ section.settings.font_size | minus: 2 | at_least: 14 }}px !important;
+        }
+      }
+    </style>
+  </section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Launch Notice",
+  "tag": "section",
+  "class": "section-launch-notice",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enable",
+      "label": "Enable Section",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "icon",
+      "label": "Icon/Emoji",
+      "default": "🌿"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Notice Text",
+      "default": "<p>We've just launched — be one of our first customers. Real reviews coming soon.</p>"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#edf7f4"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#00593b"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border Color",
+      "default": "rgba(0, 89, 59, 0.15)"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "Border Radius (px)",
+      "min": 0,
+      "max": 32,
+      "step": 2,
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max content width (px)",
+      "min": 480,
+      "max": 1200,
+      "step": 10,
+      "default": 1000
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "label": "Font Size (px)",
+      "min": 12,
+      "max": 28,
+      "step": 1,
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top spacing (px)",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom spacing (px)",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "default": 60
+    }
+  ],
+  "presets": [
+    {
+      "name": "Launch Notice",
+      "category": "Promotional"
+    }
+  ]
+}
+{% endschema %}
