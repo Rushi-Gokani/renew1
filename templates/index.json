@@ -419,11 +419,11 @@
             "icon_2": "shopify://shop_images/vitamin.png",
             "icon_text_2": "Strong Antioxidant",
             "icon_3": "shopify://shop_images/heart.png",
-            "icon_text_3": "Boosts Heart Health",
+            "icon_text_3": "Supports Heart Health",
             "icon_4": "shopify://shop_images/hair.png",
             "icon_text_4": "Enhances Skin & Hair",
             "icon_5": "shopify://shop_images/immunity.png",
-            "icon_text_5": "Boosts Immunity"
+            "icon_text_5": "Supports Immune Function"
           },
           "blocks": {}
         }
@@ -685,6 +685,7 @@
       "block_order": [
         "ai_gen_block_00c041e_qJGhbH"
       ],
+      "disabled": true,
       "settings": {
         "content_direction": "column",
         "vertical_on_mobile": true,
