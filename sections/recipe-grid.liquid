@@ -54,16 +54,30 @@
           </div>
         {%- endif -%}
 
-        {%- if show_tags and source_blog and articles_count != 0 -%}
+        {%- if show_tags -%}
           {%- assign all_tags = '' -%}
-          {%- for article in articles -%}
-            {%- for tag in article.tags -%}
-              {%- assign tag_trim = tag | strip -%}
-              {%- unless all_tags contains tag_trim -%}
-                {%- assign all_tags = all_tags | append: tag_trim | append: '|' -%}
-              {%- endunless -%}
+          {%- if source_blog and articles_count != 0 -%}
+            {%- for article in articles -%}
+              {%- for tag in article.tags -%}
+                {%- assign tag_trim = tag | strip -%}
+                {%- unless all_tags contains tag_trim -%}
+                  {%- assign all_tags = all_tags | append: tag_trim | append: '|' -%}
+                {%- endunless -%}
+              {%- endfor -%}
             {%- endfor -%}
-          {%- endfor -%}
+          {%- else -%}
+            {%- for block in section.blocks -%}
+              {%- assign block_tags = block.settings.tags | split: ',' -%}
+              {%- for tag in block_tags -%}
+                {%- assign tag_trim = tag | strip -%}
+                {%- if tag_trim != blank -%}
+                  {%- unless all_tags contains tag_trim -%}
+                    {%- assign all_tags = all_tags | append: tag_trim | append: '|' -%}
+                  {%- endunless -%}
+                {%- endif -%}
+              {%- endfor -%}
+            {%- endfor -%}
+          {%- endif -%}
           {%- assign tag_list = all_tags | split: '|' | uniq | sort -%}
 
           <div class="recipe-grid__tags" role="tablist" aria-label="Recipe filters" data-tag-list>
@@ -108,6 +122,34 @@
               <div class="recipe-card__content" style="{%- if enable_equal_heights -%}min-height:6rem;{%- endif -%}">
                 <h3 class="recipe-card__title">{{ article.title }}</h3>
                 <p class="recipe-card__excerpt">{{ article.excerpt | default: article.excerpt_or_content | strip_html | truncate: 140 }}</p>
+              </div>
+            </a>
+          </li>
+        {%- endfor -%}
+      {%- elsif section.blocks.size > 0 -%}
+        {%- for block in section.blocks -%}
+          {%- assign tag_attr = '' -%}
+          {%- assign block_tags = block.settings.tags | split: ',' -%}
+          {%- for tag in block_tags -%}
+            {%- assign tag_attr = tag_attr | append: tag | strip | handle | append: ' ' -%}
+          {%- endfor -%}
+          <li class="recipe-card" data-recipe data-tags="{{ tag_attr | strip }}" {{ block.shopify_attributes }}>
+            <a {% if block.settings.link != blank %}href="{{ block.settings.link }}"{% endif %} class="recipe-card__link" aria-label="{{ block.settings.title | escape }}">
+              {%- if block.settings.image != blank -%}
+                <span class="recipe-card__image-link">
+                  {{ block.settings.image | image_url: width: 1200 | image_tag: loading: 'lazy', class: 'recipe-card__image', widths: '600,900,1200', sizes: '(min-width: 990px) 33vw, 100vw', alt: block.settings.title }}
+                  {%- if enable_time_badge and block.settings.time != blank -%}
+                    <span class="recipe-card__time" aria-label="{{ block.settings.time | escape }}">⏱ {{ block.settings.time }}</span>
+                  {%- endif -%}
+                </span>
+              {%- elsif enable_time_badge and block.settings.time != blank -%}
+                <span class="recipe-card__image-link">
+                  <span class="recipe-card__time" aria-label="{{ block.settings.time | escape }}">⏱ {{ block.settings.time }}</span>
+                </span>
+              {%- endif -%}
+              <div class="recipe-card__content" style="{%- if enable_equal_heights -%}min-height:6rem;{%- endif -%}">
+                <h3 class="recipe-card__title">{{ block.settings.title }}</h3>
+                <p class="recipe-card__excerpt">{{ block.settings.excerpt }}</p>
               </div>
             </a>
           </li>
@@ -209,7 +251,20 @@
     {"type":"checkbox","id":"enable_equal_heights","label":"Equalize card content heights","default":false},
     {"type":"range","id":"container_width","label":"Max width (px)","min":960,"max":1440,"step":60,"default":1200}
   ],
-  "blocks": [],
+  "blocks": [
+    {
+      "type": "recipe",
+      "name": "Recipe",
+      "settings": [
+        {"type":"image_picker","id":"image","label":"Image"},
+        {"type":"text","id":"title","label":"Title","default":"Recipe title"},
+        {"type":"textarea","id":"excerpt","label":"Excerpt","default":"Write a short and enticing description."},
+        {"type":"text","id":"time","label":"Time","default":"10 mins"},
+        {"type":"url","id":"link","label":"Link"},
+        {"type":"text","id":"tags","label":"Tags","info":"Comma-separated, used for the tag filters","default":"Smoothies"}
+      ]
+    }
+  ],
   "presets": [
     {
       "name": "Recipe grid",
