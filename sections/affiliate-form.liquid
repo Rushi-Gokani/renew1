@@ -50,13 +50,31 @@
             {{ section.settings.success_message | default: 'Thank you for your application! We will review it and get back to you soon.' }}
           </div>
           
-          {%- if section.settings.redirect_url != blank -%}
-            <script>
-              setTimeout(function() {
-                window.location.href = "{{ section.settings.redirect_url }}";
-              }, 2000);
-            </script>
-          {%- endif -%}
+          <script>
+            setTimeout(function() {
+              let redirectUrl = "{{ section.settings.redirect_url | default: 'https://reneuw.bixgrow.com/register' }}";
+              
+              // If it's the Bixgrow URL, try to append email and name
+              if (redirectUrl.includes('bixgrow.com')) {
+                const email = sessionStorage.getItem('affiliate_email');
+                const name = sessionStorage.getItem('affiliate_name');
+                const params = new URLSearchParams();
+                if (email) params.append('email', email);
+                if (name) params.append('name', name);
+                
+                const queryString = params.toString();
+                if (queryString) {
+                  redirectUrl += (redirectUrl.includes('?') ? '&' : '?') + queryString;
+                }
+              }
+              
+              // Clean up
+              sessionStorage.removeItem('affiliate_email');
+              sessionStorage.removeItem('affiliate_name');
+              
+              window.location.href = redirectUrl;
+            }, 2000);
+          </script>
         {%- endif -%}
 
         <div class="affiliate-form__row">
@@ -523,6 +541,12 @@ document.addEventListener('DOMContentLoaded', function() {
         if (firstError) {
           firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
+      } else {
+        // Save data to sessionStorage to pass to BixGrow on redirect
+        const emailInput = document.getElementById('AffiliateForm-email');
+        const nameInput = document.getElementById('AffiliateForm-name');
+        if (emailInput) sessionStorage.setItem('affiliate_email', emailInput.value);
+        if (nameInput) sessionStorage.setItem('affiliate_name', nameInput.value);
       }
     });
   }
