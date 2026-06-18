@@ -3,6 +3,7 @@
 {%- enddoc -%}
 
 <div class="cart__summary-totals">
+  <h2 class="cart__summary-title">Order Summary</h2>
   {% # We need to keep this node in place to allow morphing to work properly # %}
   <div class="cart__original-total-container cart-primary-typography">
     {%- if cart.cart_level_discount_applications.size > 0 -%}
@@ -96,6 +97,12 @@
     {% endif %}
     form="cart-form"
   >
+    <span class="checkout-lock-icon">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+      </svg>
+    </span>
     {{ 'content.checkout' | t }}
   </button>
 
@@ -106,14 +113,18 @@
   {% endif %}
 </div>
 
+
+
 {% stylesheet %}
   .cart-actions {
     display: flex;
     flex-direction: column;
     gap: var(--gap-sm);
-    border-block: 1px solid var(--color-border);
-    padding-block: var(--padding-sm);
-    margin-block-start: var(--margin-3xs);
+    border-block: none !important;
+    border-bottom: 1px solid #e2e8e4 !important;
+    padding-block: 0 1rem !important;
+    margin-block-start: 0 !important;
+    width: 100%;
   }
 
   .cart-actions__divider {
@@ -121,12 +132,71 @@
   }
 
   .cart__summary-totals:not(:has(.cart-actions)) {
-    margin-block-start: var(--margin-3xs);
-    border-block-start: 1px solid var(--color-border);
-    padding-block-start: var(--margin-xl);
+    margin-block-start: 0 !important;
+    border-block-start: none !important;
+    padding-block-start: 0 !important;
   }
 
   .cart__installments {
     color: var(--color-foreground);
+  }
+
+  .cart__summary-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #0c1b12;
+    margin-block-start: 0;
+    margin-block-end: 1rem;
+    align-self: start;
+    width: 100%;
+  }
+
+  .cart__total-value {
+    color: #0b5731 !important;
+    font-weight: 700 !important;
+    font-size: 1.3rem !important;
+  }
+
+  .cart__checkout-button {
+    background-color: #095232 !important;
+    border-color: #095232 !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    border-radius: 8px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    transition: background-color 0.2s ease !important;
+    cursor: pointer;
+  }
+
+  .cart__checkout-button:hover {
+    background-color: #074026 !important;
+    border-color: #074026 !important;
+  }
+
+  .checkout-lock-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .checkout-lock-icon svg {
+    stroke: currentColor;
+    display: block;
+  }
+
+  /* Make layout backgrounds inside Order Summary card transparent to show the white card background */
+  .cart__summary-inner,
+  .cart__summary-totals,
+  .cart-actions,
+  .cart__total-container,
+  .cart__original-total-container,
+  .cart-discount,
+  .discount-details,
+  .details-content {
+    background-color: transparent !important;
+    background: transparent !important;
   }
 {% endstylesheet %}

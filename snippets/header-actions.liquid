@@ -192,6 +192,7 @@
 
   header-actions {
     display: flex;
+    gap: 12px !important;
 
     @media screen and (max-width: 749px) {
       justify-self: flex-end;
@@ -199,7 +200,11 @@
   }
 
   .header__column--right header-actions {
-    margin-inline-start: calc(var(--gap-md) * -1);
+    margin-inline-start: 0 !important;
+  }
+
+  cart-icon {
+    overflow: visible !important;
   }
 
   .header-actions__action {
@@ -208,6 +213,7 @@
     cursor: pointer;
     display: flex;
     justify-content: center;
+    overflow: visible !important;
   }
 
   .header-actions__action .svg-wrapper {
@@ -222,17 +228,16 @@
 
   .header-actions__cart-icon {
     --cart-bubble-size: 20px;
-    --cart-bubble-top: 4.5px;
-    --cart-bubble-right: 2.5px;
-
     position: relative;
+    overflow: visible !important;
   }
 
   .header-actions__cart-icon .cart-bubble {
-    position: absolute;
+    position: absolute !important;
     width: var(--cart-bubble-size, 20px);
-    top: var(--cart-bubble-top);
-    right: var(--cart-bubble-right);
+    top: -6px !important;
+    right: -6px !important;
+    z-index: 10 !important;
   }
 
   .header-actions__cart-icon .cart-bubble__text,
@@ -242,13 +247,7 @@
   }
 
   .header-actions__cart-icon.header-actions__cart-icon--has-cart svg {
-    /* Create donut mask where the cart bubble sits */
-    mask: radial-gradient(
-      calc(var(--cart-bubble-size) + 2px) at calc(100% - var(--cart-bubble-right)) var(--cart-bubble-top),
-      transparent 45.45%,
-      white 45.45%,
-      white 100%
-    );
+    mask: none !important;
   }
 
   .cart-drawer__heading .cart-bubble__background {

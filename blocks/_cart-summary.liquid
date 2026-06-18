@@ -70,7 +70,7 @@
     align-self: start;
 
     @media screen and (min-width: 750px) {
-      padding: var(--padding-5xl);
+      padding: 0 !important;
       grid-row: 1 / -1;
     }
   }
@@ -80,8 +80,14 @@
   }
 
   .cart__summary-container {
+    background: #ffffff !important;
+    border: 1px solid #e2e8e4 !important;
+    border-radius: 16px !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.015) !important;
+    padding: 1.5rem !important;
+
     @media screen and (max-width: 749px) {
-      border: none;
+      margin-top: 1.5rem;
     }
 
     @media screen and (min-width: 750px) {
