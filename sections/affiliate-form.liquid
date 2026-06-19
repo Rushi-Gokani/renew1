@@ -47,33 +47,34 @@
         {%- if form.posted_successfully? -%}
           <div class="affiliate-form__success" tabindex="-1" autofocus>
             {{- 'icon-checkmark.svg' | inline_asset_content -}}
-            {{ section.settings.success_message | default: 'Thank you for your application! We will review it and get back to you soon.' }}
+            {{ section.settings.success_message | default: 'Thank you! Redirecting you to complete registration...' }}
           </div>
           
           <script>
-            setTimeout(function() {
-              let redirectUrl = "{{ section.settings.redirect_url | default: 'https://reneuw.bixgrow.com/register' }}";
+            (function() {
+              var redirectUrl = "{{ section.settings.redirect_url }}";
+              if (!redirectUrl || redirectUrl.trim() === '') {
+                redirectUrl = "https://reneuw.bixgrow.com/register";
+              }
               
-              // If it's the Bixgrow URL, try to append email and name
-              if (redirectUrl.includes('bixgrow.com')) {
-                const email = sessionStorage.getItem('affiliate_email');
-                const name = sessionStorage.getItem('affiliate_name');
-                const params = new URLSearchParams();
-                if (email) params.append('email', email);
-                if (name) params.append('name', name);
+              if (redirectUrl.indexOf('bixgrow.com') !== -1) {
+                var email = sessionStorage.getItem('affiliate_email');
+                var name = sessionStorage.getItem('affiliate_name');
+                var params = [];
+                if (email) params.push('email=' + encodeURIComponent(email));
+                if (name) params.push('name=' + encodeURIComponent(name));
                 
-                const queryString = params.toString();
-                if (queryString) {
-                  redirectUrl += (redirectUrl.includes('?') ? '&' : '?') + queryString;
+                if (params.length > 0) {
+                  redirectUrl += (redirectUrl.indexOf('?') !== -1 ? '&' : '?') + params.join('&');
                 }
               }
               
-              // Clean up
               sessionStorage.removeItem('affiliate_email');
               sessionStorage.removeItem('affiliate_name');
               
-              window.location.href = redirectUrl;
-            }, 2000);
+              // Redirect immediately
+              window.location.replace(redirectUrl);
+            })();
           </script>
         {%- endif -%}
 
