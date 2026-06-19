@@ -51,13 +51,11 @@
           </div>
           
           <script>
-            (function() {
-              var redirectUrl = "{{ section.settings.redirect_url }}";
-              if (!redirectUrl || redirectUrl.trim() === '') {
-                redirectUrl = "https://reneuw.bixgrow.com/register";
-              }
+            document.addEventListener('DOMContentLoaded', function() {
+              // Hardcoded to ensure we never redirect back to the same page
+              var redirectUrl = "https://reneuw.bixgrow.com/register";
               
-              if (redirectUrl.indexOf('bixgrow.com') !== -1) {
+              try {
                 var email = sessionStorage.getItem('affiliate_email');
                 var name = sessionStorage.getItem('affiliate_name');
                 var params = [];
@@ -65,16 +63,22 @@
                 if (name) params.push('name=' + encodeURIComponent(name));
                 
                 if (params.length > 0) {
-                  redirectUrl += (redirectUrl.indexOf('?') !== -1 ? '&' : '?') + params.join('&');
+                  redirectUrl += '?' + params.join('&');
                 }
+                
+                sessionStorage.removeItem('affiliate_email');
+                sessionStorage.removeItem('affiliate_name');
+              } catch (e) {
+                console.error("SessionStorage error:", e);
               }
               
-              sessionStorage.removeItem('affiliate_email');
-              sessionStorage.removeItem('affiliate_name');
-              
-              // Redirect immediately
-              window.location.replace(redirectUrl);
-            })();
+              // Force redirect out of any iframes (e.g., Theme Customizer)
+              if (window.top !== window.self) {
+                window.top.location.href = redirectUrl;
+              } else {
+                window.location.replace(redirectUrl);
+              }
+            });
           </script>
         {%- endif -%}
 
